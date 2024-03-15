@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\UnitController;
 /*
 |--------------------------------------------------------------------------
@@ -14,10 +13,6 @@ use App\Http\Controllers\UnitController;
 |
 */
 
-Route::group(['prefix' => '/v1'], function() {
-
-    Route::post('/login', [UserController::class, 'login']);
-});
 
 Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function() {
 
@@ -34,7 +29,6 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function() {
     });
 
 
-    Route::post('/logout',[UserController::class, 'logout']);
 
 
 });

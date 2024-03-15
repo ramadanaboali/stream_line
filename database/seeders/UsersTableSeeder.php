@@ -18,8 +18,8 @@ class UsersTableSeeder extends Seeder
             "email"=> config('admin.email')
         ], [
             "phone"=> config('admin.phone'),
-            "full_name"=> "سوبر أدمن",
-            "full_name_latin"=> "super Admin",
+            "name"=> "super Admin",
+            "type" => 'admin',
             "password" => bcrypt(config('admin.password'))
         ]);
     }
