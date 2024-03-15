@@ -7,6 +7,7 @@ return [
     'code_success' => 'تم التحقق من الرمز بنجاح',
     'code_error' => 'خطأ الرمز غير صحيح',
     'update_success' => 'تم التحديث بنجاح',
+    'register_success' => 'تم التسجيل بنجاح',
     'xxxxxxxx' => 'xxxxxxxx',
 
 ];

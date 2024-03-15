@@ -1,6 +1,8 @@
 <?php
+
 namespace database\seeders;
-use App\Models\User;
+
+use Database\Seeders\UsersTableSeeder;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -12,14 +14,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-       User::updateOrCreate([
-            "email"=> config('admin.email')
-        ], [
-            "phone"=> config('admin.phone'),
-            "name"=> "super Admin",
-            "type" => 'admin',
-            "password" => bcrypt(config('admin.password'))
-        ]);
-//         $this->call(UsersTableSeeder::class);
+        $this->call(UsersTableSeeder::class);
     }
 }

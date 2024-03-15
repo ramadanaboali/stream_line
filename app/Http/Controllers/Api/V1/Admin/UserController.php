@@ -66,7 +66,8 @@ class UserController extends Controller
             if (!$user) {
                 return apiResponse(false, null, __('api.not_found'), null, 404);
             }
-            $MsgID = rand(1000, 9999);
+
+            $MsgID = rand(100000, 999999);
             $user->update(['reset_code' => $MsgID]);
             Mail::to($user->email)->send(new SendCodeResetPassword($user->email, $MsgID));
             return apiResponse(true, [$MsgID], __('api.reset_password_code_send'), null, 200);

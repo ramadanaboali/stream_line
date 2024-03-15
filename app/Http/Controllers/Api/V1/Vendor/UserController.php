@@ -7,8 +7,12 @@ use App\Http\Requests\CheckCodeRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\ConfirmResetRequest;
 use App\Http\Requests\ResetRequest;
+use App\Http\Requests\RegisterRequest;
 use App\Mail\SendCodeResetPassword;
+use App\Models\OfficialHour;
 use App\Models\User;
+use App\Models\Vendor;
+use App\Models\VendorBranch;
 use App\Traits\ApiResponser;
 use Exception;
 use Illuminate\Http\Request;
@@ -58,12 +62,61 @@ class UserController extends Controller
         return $this->successResponse($dataR, Response::HTTP_CREATED);
     }
 
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
         try {
-
-           
+            DB::beginTransaction();
+            $vendorInput = [
+                'name'=>$request->provider_name,
+                'commercial_no'=>$request->commercial_no,
+                'tax_number'=>$request->tax_number,
+                'description'=>$request->description,
+                'website_url'=>$request->website_url,
+                'twitter'=>$request->twitter,
+                'instagram'=>$request->instagram,
+                'snapchat'=>$request->snapchat,
+            ];
+            if($vendor=Vendor::create($vendorInput)){
+                $userInput = [
+                    'email'=>$request->email,
+                    'first_name'=>$request->first_name,
+                    'last_name'=>$request->last_name,
+                    'phone'=>$request->phone,
+                    'model_id'=>$vendor->id,
+                    'type'=>'vendor',
+                    'password'=>Hash::make($request->password),
+                ];
+                User::create($userInput);
+                $vendor->services()->attach($request->service_id);
+                    // $branchInput = [
+                    //     'name_ar'=>$request->branch_name_ar,
+                    //     'name_en'=>$request->branch_name_en,
+                    //     'address'=>$request->address,
+                    //     'image'=>$request->image,
+                    //     'lat'=>$request->lat,
+                    //     'long'=>$request->long,
+                    //     'vendor_id'=>$vendor->id,
+                    //     'country_id'=>$request->country_id,
+                    //     'city_id'=>$request->city_id,
+                    //     'region_id'=>$request->region_id,
+                    // ];
+                    // if ($branch = VendorBranch::create($branchInput)) {
+                    //         foreach($request->branch_official_hours as $branch_official_hours){
+                    //             $officialHours=[
+                    //                 'start_time'=> $branch_official_hours['start_time'],
+                    //                 'end_time'=> $branch_official_hours['end_time'],
+                    //                 'day'=> $branch_official_hours['day'],
+                    //                 'type'=> OfficialHour::TYPE_BRANCH,
+                    //                 'model_id'=> $branch->id,
+                    //             ];
+                    //             OfficialHour::create($officialHours);
+                    //         }
+                    // }
+            }
+            DB::commit();
+            return apiResponse(true, $vendor, __('api.register_success'), null, Response::HTTP_CREATED);
         } catch (Exception $e) {
+            DB::rollBack();
             return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
@@ -76,7 +129,8 @@ class UserController extends Controller
             if (!$user) {
                 return apiResponse(false, null, __('api.not_found'), null, 404);
             }
-            $MsgID = rand(1000, 9999);
+
+            $MsgID = rand(100000, 999999);
             $user->update(['reset_code' => $MsgID]);
             Mail::to($user->email)->send(new SendCodeResetPassword($user->email, $MsgID));
             return apiResponse(true, [$MsgID], __('api.reset_password_code_send'), null, 200);

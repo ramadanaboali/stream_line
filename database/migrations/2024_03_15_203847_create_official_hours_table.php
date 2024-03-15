@@ -11,11 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('units', function (Blueprint $table) {
+        Schema::create('official_hours', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable();
-            $table->string('name_en')->nullable();
-            $table->enum('is_active',[0,1])->default(0);
+            $table->time('start_time');
+            $table->time('end_time');
+            $table->string('day');
+            $table->tinyInteger('type');
+            $table->enum('is_active', [0,1])->default(0);
+            $table->unsignedBigInteger('model_id')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamps();
@@ -31,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('units');
+        Schema::dropIfExists('official_hours');
     }
 };

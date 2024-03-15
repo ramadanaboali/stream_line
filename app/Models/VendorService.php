@@ -11,6 +11,10 @@ class VendorService extends Model
 {
     use HasFactory,SoftDeletes;
     protected $guarded = [];
+    public function sesrvice(): ?BelongsTo
+    {
+        return $this->belongsTo(Vendor::class,'service_id');
+    }
     public function vendor(): ?BelongsTo
     {
         return $this->belongsTo(Vendor::class,'vendor_id');
