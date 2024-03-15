@@ -12,12 +12,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        User::updateOrCreate([
+       User::updateOrCreate([
             "email"=> config('admin.email')
         ], [
-            'phone' => config('admin.phone'),
-            "full_name"=> "سوبر أدمن",
-            "full_name_latin"=> "super Admin",
+            "phone"=> config('admin.phone'),
+            "name"=> "super Admin",
+            "type" => 'admin',
             "password" => bcrypt(config('admin.password'))
         ]);
 //         $this->call(UsersTableSeeder::class);

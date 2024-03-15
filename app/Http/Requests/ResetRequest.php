@@ -7,7 +7,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\ValidationException;
 
-class LoginRequest extends FormRequest
+class ResetRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,8 +27,7 @@ class LoginRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_name'             => 'required|min:5',
-            'password'          => 'required|min:8',
+            'user_name' => 'required|min:5',
         ];
     }
 
@@ -40,9 +39,6 @@ class LoginRequest extends FormRequest
     public function messages()
     {
         return [
-            'password.required'         => 'كلمة المرور مطلوبة',
-            'password.confirmed'        => 'كلمة المرور غير متطابقة',
-            'password.min'              => 'كلمة المرور يجب ان تكون 8 احرف علي الاـقل',
             'user_name.required'            => 'يجب كتابة رقم الجوال / البريد الالكترونى',
         ];
     }

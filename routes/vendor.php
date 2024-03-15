@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\Api\V1\Vendor\UserController;
 use App\Http\Controllers\UnitController;
 /*
 |--------------------------------------------------------------------------
@@ -16,7 +16,12 @@ use App\Http\Controllers\UnitController;
 
 Route::group(['prefix' => '/v1'], function() {
 
-    Route::post('/login', [UserController::class, 'login']);
+
+Route::post('/reset', [UserController::class, 'resetPassword']);
+Route::post('/check-code', [UserController::class, 'checkCode']);
+Route::post('/confirm-reset', [UserController::class, 'confirmReset']);
+Route::post('/login', [UserController::class, 'login']);
+
 });
 
 Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function() {

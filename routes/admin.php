@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\UnitController;
+use App\Http\Controllers\Api\V1\Admin\UserController;
+use App\Http\Controllers\Api\V1\Admin\UnitController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,14 +15,17 @@ use App\Http\Controllers\UnitController;
 |
 */
 
-Route::group(['prefix' => '/v1'], function() {
+Route::group(['prefix' => '/v1'], function () {
 
+    Route::post('/reset', [UserController::class, 'resetPassword']);
+    Route::post('/check-code', [UserController::class, 'checkCode']);
+    Route::post('/confirm-reset', [UserController::class, 'confirmReset']);
     Route::post('/login', [UserController::class, 'login']);
 });
 
-Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function() {
+Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
 
-    Route::group(['prefix' => '/organization'], function() {
+    Route::group(['prefix' => '/organization'], function () {
 
         Route::get('organizations', [UnitController::class, 'index']);
         Route::post('organizations', [UnitController::class, 'store']);
@@ -34,7 +38,7 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function() {
     });
 
 
-    Route::post('/logout',[UserController::class, 'logout']);
+    Route::post('/logout', [UserController::class, 'logout']);
 
 
 });
