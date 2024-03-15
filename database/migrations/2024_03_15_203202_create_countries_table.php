@@ -11,19 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('vendor_services', function (Blueprint $table) {
+        Schema::create('countries', function (Blueprint $table) {
             $table->id();
-            $table->enum('is_active', [0,1])->default(1);
-            $table->unsignedBigInteger('vendor_id')->nullable();
-            $table->unsignedBigInteger('service_id')->nullable();
+            $table->string('name_ar');
+            $table->string('name_en')->nullable();
+            $table->string('code')->nullable();
+            $table->enum('is_active', [0,1])->default(0);
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
-            $table->foreign('vendor_id')->references('id')->on('vendors')->onDelete('cascade');
-            $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade');
             $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('updated_by')->references('id')->on('users')->onDelete('cascade');
+
         });
     }
 
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('vendor_services');
+        Schema::dropIfExists('countries');
     }
 };

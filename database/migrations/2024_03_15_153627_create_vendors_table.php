@@ -15,9 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('commercial_no');
-            $table->boolean('registered_tax')->default(false);
+            $table->string('tax_number')->nullable();
             $table->longText('description')->nullable();
             $table->string('website_url')->nullable();
+            $table->string('twitter')->nullable();
+            $table->string('instagram')->nullable();
+            $table->string('snapchat')->nullable();
             $table->enum('is_active', [0,1])->default(0);
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
@@ -27,6 +30,7 @@ return new class extends Migration
             $table->foreign('updated_by')->references('id')->on('users')->onDelete('cascade');
         });
     }
+
 
     /**
      * Reverse the migrations.
