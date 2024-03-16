@@ -6,7 +6,7 @@ use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Country;
 use App\Models\Region;
-use App\Models\Service;
+use App\Models\Department;
 use App\Models\City;
 
 class UsersTableSeeder extends Seeder
@@ -46,11 +46,11 @@ class UsersTableSeeder extends Seeder
             'is_active'=>1
         ];
         City::create($cities);
-        $services=[
+        $departments=[
             'name_ar'=>'قص شعر',
             'name_en'=>'cutting hair',
             'is_active'=>1
         ];
-        Service::create($services);
+        Department::create($departments);
     }
 }

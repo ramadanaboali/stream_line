@@ -38,21 +38,18 @@ class UserController extends Controller
     public function login(LoginRequest $request)
     {
 
-        $user = User::where('email', $request->user_name)->where('type', 'vendor')->where('active', 1)->first();
+
+        $user = User::where('email', $request->user_name)->orWhere('phone', $request->user_name)->where('type', 'vendor')->first();
+
 
         if($user) {
             if (!Auth::attempt(["email" => $request->user_name, "password" => $request->password])) {
-                return apiResponse(false, null, __('api.check_user_name_passowrd'), null, Response::HTTP_UNPROCESSABLE_ENTITY);
+                if (!Auth::attempt(["phone" => $request->user_name, "password" => $request->password])) {
+                    return apiResponse(false, null, __('api.check_user_name_passowrd'), null, Response::HTTP_UNPROCESSABLE_ENTITY);
+                }
             }
-        } else {
-
-            $user = User::where('phone', $request->user_name)->where('type', 'vendor')->where('active', 1)->first();
-            if(!$user) {
-                return apiResponse(false, null, __('api.check_user_name_passowrd'), null, Response::HTTP_UNPROCESSABLE_ENTITY);
-            }
-            if (!Auth::attempt(["phone" => $request->user_name, "password" => $request->password])) {
-                return apiResponse(false, null, __('api.check_user_name_passowrd'), null, Response::HTTP_UNPROCESSABLE_ENTITY);
-            }
+        }else{
+            return apiResponse(false, null, __('api.check_user_name_passowrd'), null, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $access_token = auth()->user()->createToken('authToken')->accessToken;
@@ -67,51 +64,27 @@ class UserController extends Controller
         try {
             DB::beginTransaction();
             $vendorInput = [
-                'name'=>$request->provider_name,
-                'commercial_no'=>$request->commercial_no,
-                'tax_number'=>$request->tax_number,
-                'description'=>$request->description,
-                'website_url'=>$request->website_url,
-                'twitter'=>$request->twitter,
-                'instagram'=>$request->instagram,
-                'snapchat'=>$request->snapchat,
+                'name' => $request->provider_name,
+                'commercial_no' => $request->commercial_no,
+                'tax_number' => $request->tax_number,
+                'description' => $request->description,
+                'website_url' => $request->website_url,
+                'twitter' => $request->twitter,
+                'instagram' => $request->instagram,
+                'snapchat' => $request->snapchat,
             ];
-            if($vendor=Vendor::create($vendorInput)){
+            if($vendor = Vendor::create($vendorInput)) {
                 $userInput = [
-                    'email'=>$request->email,
-                    'first_name'=>$request->first_name,
-                    'last_name'=>$request->last_name,
-                    'phone'=>$request->phone,
-                    'model_id'=>$vendor->id,
-                    'type'=>'vendor',
-                    'password'=>Hash::make($request->password),
+                    'email' => $request->email,
+                    'first_name' => $request->first_name,
+                    'last_name' => $request->last_name,
+                    'phone' => $request->phone,
+                    'model_id' => $vendor->id,
+                    'type' => 'vendor',
+                    'password' => Hash::make($request->password),
                 ];
                 User::create($userInput);
-                $vendor->services()->attach($request->service_id);
-                    // $branchInput = [
-                    //     'name_ar'=>$request->branch_name_ar,
-                    //     'name_en'=>$request->branch_name_en,
-                    //     'address'=>$request->address,
-                    //     'image'=>$request->image,
-                    //     'lat'=>$request->lat,
-                    //     'long'=>$request->long,
-                    //     'vendor_id'=>$vendor->id,
-                    //     'country_id'=>$request->country_id,
-                    //     'city_id'=>$request->city_id,
-                    //     'region_id'=>$request->region_id,
-                    // ];
-                    // if ($branch = VendorBranch::create($branchInput)) {
-                    //         foreach($request->branch_official_hours as $branch_official_hours){
-                    //             $officialHours=[
-                    //                 'start_time'=> $branch_official_hours['start_time'],
-                    //                 'end_time'=> $branch_official_hours['end_time'],
-                    //                 'day'=> $branch_official_hours['day'],
-                    //                 'type'=> OfficialHour::TYPE_BRANCH,
-                    //                 'model_id'=> $branch->id,
-                    //             ];
-                    //             OfficialHour::create($officialHours);
-                    //         }
-                    // }
+                $vendor->departments()->attach($request->department_id);
             }
             DB::commit();
             return apiResponse(true, $vendor, __('api.register_success'), null, Response::HTTP_CREATED);
