@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\General;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class UnitRequest extends FormRequest
+class ClientCancellationReasonRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -32,8 +31,8 @@ class UnitRequest extends FormRequest
             case 'POST':
             {
                 return [
-                    'name' => 'required|string|min:2|unique:units,name',
-                    'name_en' => 'required|string|min:2|unique:units,name_en',
+                    'reason_ar' => 'required|string|min:2|unique:client_cancellation_reasons,reason_ar',
+                    'reason_en' => 'required|string|min:2|unique:client_cancellation_reasons,reason_en',
                     'is_active' => 'required|in:0,1',
                 ];
             }
@@ -42,8 +41,8 @@ class UnitRequest extends FormRequest
             {
                 $rules= [
 
-                    'name' => 'required|string|min:2',
-                    'name_en' => 'required|string|min:2',
+                    'reason_ar' => 'required|string|min:2',
+                    'reason_en' => 'required|string|min:2',
                     'is_active' => 'required|in:0,1',
                 ];
                 return $rules;

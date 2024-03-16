@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('departments', function (Blueprint $table) {
+        Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('name_ar');
             $table->string('name_en')->nullable();
-            $table->enum('is_active',[0,1])->default(0);
+            $table->text('icon')->nullable();
+            $table->enum('is_active',[0,1])->default(1);
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamps();

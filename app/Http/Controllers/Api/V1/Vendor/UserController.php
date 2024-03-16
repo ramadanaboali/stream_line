@@ -84,7 +84,7 @@ class UserController extends Controller
                     'password' => Hash::make($request->password),
                 ];
                 User::create($userInput);
-                $vendor->departments()->attach($request->department_id);
+                $vendor->vendorCategories()->attach($request->category_id);
             }
             DB::commit();
             return apiResponse(true, $vendor, __('api.register_success'), null, Response::HTTP_CREATED);

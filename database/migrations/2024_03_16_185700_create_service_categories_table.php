@@ -11,19 +11,24 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('vendor_departments', function (Blueprint $table) {
+        Schema::create('service_categories', function (Blueprint $table) {
             $table->id();
-            $table->enum('is_active', [0,1])->default(1);
-            $table->unsignedBigInteger('vendor_id')->nullable();
-            $table->unsignedBigInteger('department_id')->nullable();
+            $table->string('name_ar');
+            $table->string('name_en')->nullable();
+            $table->text('icon')->nullable();
+            $table->enum('type',["main","sub"]);
+            $table->enum('is_active',[0,1])->default(1);
+            $table->unsignedBigInteger('category_id')->nullable();
+            $table->unsignedBigInteger('main_service_category_id')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
-            $table->foreign('vendor_id')->references('id')->on('vendors')->onDelete('cascade');
-            $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade');
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->foreign('main_service_category_id')->references('id')->on('service_categories')->onDelete('cascade');
             $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('updated_by')->references('id')->on('users')->onDelete('cascade');
+
         });
     }
 
@@ -32,6 +37,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('vendor_departments');
+        Schema::dropIfExists('services');
     }
 };

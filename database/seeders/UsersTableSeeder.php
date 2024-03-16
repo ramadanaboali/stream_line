@@ -6,7 +6,7 @@ use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Country;
 use App\Models\Region;
-use App\Models\Department;
+use App\Models\Category;
 use App\Models\City;
 
 class UsersTableSeeder extends Seeder
@@ -28,7 +28,7 @@ class UsersTableSeeder extends Seeder
         $countries=[
             'name_ar'=>'السعودية',
             'name_en'=>'Saudia Arabia',
-            'code'=>'SAR',
+            'code'=>'+996',
             'is_active'=>1
         ];
         $country=Country::create($countries);
@@ -46,11 +46,11 @@ class UsersTableSeeder extends Seeder
             'is_active'=>1
         ];
         City::create($cities);
-        $departments=[
+        $categories=[
             'name_ar'=>'قص شعر',
             'name_en'=>'cutting hair',
             'is_active'=>1
         ];
-        Department::create($departments);
+        Category::create($categories);
     }
 }
