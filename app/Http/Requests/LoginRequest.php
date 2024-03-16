@@ -27,7 +27,7 @@ class LoginRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_name'             => 'required|min:5',
+            'username'             => 'required|min:5',
             'password'          => 'required|min:8',
         ];
     }
@@ -43,7 +43,7 @@ class LoginRequest extends FormRequest
             'password.required'         => 'كلمة المرور مطلوبة',
             'password.confirmed'        => 'كلمة المرور غير متطابقة',
             'password.min'              => 'كلمة المرور يجب ان تكون 8 احرف علي الاـقل',
-            'user_name.required'            => 'يجب كتابة رقم الجوال / البريد الالكترونى',
+            'username.required'            => 'يجب كتابة رقم الجوال / البريد الالكترونى',
         ];
     }
     protected function failedValidation(Validator $validator)

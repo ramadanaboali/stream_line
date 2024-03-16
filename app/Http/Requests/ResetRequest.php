@@ -27,7 +27,7 @@ class ResetRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_name' => 'required|min:5',
+            'username' => 'required|min:5',
         ];
     }
 
@@ -39,7 +39,7 @@ class ResetRequest extends FormRequest
     public function messages()
     {
         return [
-            'user_name.required'            => 'يجب كتابة رقم الجوال / البريد الالكترونى',
+            'username.required'            => 'يجب كتابة رقم الجوال / البريد الالكترونى',
         ];
     }
     protected function failedValidation(Validator $validator)
