@@ -34,22 +34,17 @@ class UserController extends Controller
     public function login(LoginRequest $request)
     {
 
-        $user = User::where('email', $request->user_name)->where('type', 'customer')->where('active', 1)->first();
+        $user = User::where('email', $request->user_name)->where('type', 'customer')->orWhere('phone',$request->user_name)->where('active', 1)->first();
+            if($user) {
+                if (!Auth::attempt(["email" => $request->user_name, "password" => $request->password])) {
+                    if (!Auth::attempt(["phone" => $request->user_name, "password" => $request->password])) {
+                        return apiResponse(false, null, __('api.check_user_name_passowrd'), null, Response::HTTP_UNPROCESSABLE_ENTITY);
+                    }
+                }
+            } else {
+                return apiResponse(false, null, __('api.check_user_name_passowrd'), null, Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
 
-        if($user) {
-            if (!Auth::attempt(["email" => $request->user_name, "password" => $request->password])) {
-                return apiResponse(false, null, __('api.check_user_name_passowrd'), null, Response::HTTP_UNPROCESSABLE_ENTITY);
-            }
-        } else {
-
-            $user = User::where('phone', $request->user_name)->where('type', 'customer')->where('active', 1)->first();
-            if(!$user) {
-                return apiResponse(false, null, __('api.check_user_name_passowrd'), null, Response::HTTP_UNPROCESSABLE_ENTITY);
-            }
-            if (!Auth::attempt(["phone" => $request->user_name, "password" => $request->password])) {
-                return apiResponse(false, null, __('api.check_user_name_passowrd'), null, Response::HTTP_UNPROCESSABLE_ENTITY);
-            }
-        }
 
         $access_token = auth()->user()->createToken('authToken')->accessToken;
         $dataR['user'] = auth()->user();

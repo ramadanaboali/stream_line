@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name_ar');
             $table->string('name_en')->nullable();
-            $table->enum('is_active', [0,1])->default(0);
+            $table->enum('is_active', [0,1])->default(1);
             $table->unsignedBigInteger('country_id')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
