@@ -39,17 +39,17 @@ class UserController extends Controller
     {
 
 
-        $user = User::where('email', $request->user_name)->orWhere('phone', $request->user_name)->where('type', 'vendor')->first();
+        $user = User::where('email', $request->username)->orWhere('phone', $request->username)->where('type', 'vendor')->first();
 
 
         if($user) {
-            if (!Auth::attempt(["email" => $request->user_name, "password" => $request->password])) {
-                if (!Auth::attempt(["phone" => $request->user_name, "password" => $request->password])) {
-                    return apiResponse(false, null, __('api.check_user_name_passowrd'), null, Response::HTTP_UNPROCESSABLE_ENTITY);
+            if (!Auth::attempt(["email" => $request->username, "password" => $request->password])) {
+                if (!Auth::attempt(["phone" => $request->username, "password" => $request->password])) {
+                    return apiResponse(false, null, __('api.check_username_passowrd'), null, Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
             }
         }else{
-            return apiResponse(false, null, __('api.check_user_name_passowrd'), null, Response::HTTP_UNPROCESSABLE_ENTITY);
+            return apiResponse(false, null, __('api.check_username_passowrd'), null, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $access_token = auth()->user()->createToken('authToken')->accessToken;
@@ -98,7 +98,7 @@ class UserController extends Controller
     {
         try {
 
-            $user = User::where('email', $request->user_name)->orWhere('phone', $request->user_name)->where('type', 'vendor')->first();
+            $user = User::where('email', $request->username)->orWhere('phone', $request->username)->where('type', 'vendor')->first();
             if (!$user) {
                 return apiResponse(false, null, __('api.not_found'), null, 404);
             }
@@ -115,7 +115,7 @@ class UserController extends Controller
     public function checkCode(CheckCodeRequest $request)
     {
         try {
-            $user = User::where('email', $request->user_name)->orWhere('phone', $request->user_name)->where('type', 'vendor')->first();
+            $user = User::where('email', $request->username)->orWhere('phone', $request->username)->where('type', 'vendor')->first();
             if (!$user) {
                 return apiResponse(false, null, __('api.not_found'), null, 404);
             }
@@ -130,7 +130,7 @@ class UserController extends Controller
     public function confirmReset(ConfirmResetRequest $request)
     {
         try {
-            $user = User::where('email', $request->user_name)->orWhere('phone', $request->user_name)->where('type', 'vendor')->first();
+            $user = User::where('email', $request->username)->orWhere('phone', $request->username)->where('type', 'vendor')->first();
             if (!$user) {
                 return apiResponse(false, null, __('api.not_found'), null, 404);
             }
