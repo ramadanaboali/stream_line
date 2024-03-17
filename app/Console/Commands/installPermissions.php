@@ -42,7 +42,7 @@ class installPermissions extends Command
     {
         $permissions = Permission::where('guard_name', 'api')->get()->pluck('name')->toArray();
         $routes = Route::getRoutes();
-        $arr =[];
+        $arr = [];
         $tempPermissions = [];
         foreach ($routes as $route) {
             $middleware = $route->middleware();
@@ -53,14 +53,26 @@ class installPermissions extends Command
                         if (!in_array($permission[1], $tempPermissions) && !in_array($permission[1], $permissions)) {
                             array_push($tempPermissions, $permission[1]);
                             $group = explode('.', $permission[1]);
-                            dd($group);
-                            $arr[] =[
+                            $arr[] = [
                                 'name' => $permission[1],
-                                'display_name_en' => $permission[1],
-                                'display_name_ar' => $permission[1],
-                                'model_typ' => $permission[1],
+                                'model_typ' => 'admin',
                                 'group' => $group[0] ?? null,
-                                'guard_name' => 'web',
+                                'guard_name' => 'api',
+                                'created_at' => now(),
+                                'updated_at' => now(),
+                            ];
+                        }
+                    }
+                    if (strpos($middleware, 'vendorPermission:') > -1) {
+                        $permission = explode(':', $middleware);
+                        if (!in_array($permission[1], $tempPermissions) && !in_array($permission[1], $permissions)) {
+                            array_push($tempPermissions, $permission[1]);
+                            $group = explode('.', $permission[1]);
+                            $arr[] = [
+                                'name' => $permission[1],
+                                'model_typ' => 'vendor',
+                                'group' => $group[0] ?? null,
+                                'guard_name' => 'api',
                                 'created_at' => now(),
                                 'updated_at' => now(),
                             ];
@@ -75,34 +87,25 @@ class installPermissions extends Command
         }
     }
 
-    private function installStaticPermissions(): void
-    {
-        if (file_exists(base_path('/static_permissions.json'))) {
-            $internalPermissions = file_get_contents(base_path('/static_permissions.json'));
-            $internalPermissions = json_decode((string) $internalPermissions);
 
-            foreach ($internalPermissions as $permission) {
-                $web = Permission::where('name', $permission)->where('guard_name', 'web')->first();
-                if ($web == null) {
-                    Permission::create(['name' => $permission, 'guard_name' => 'web']);
-                }
-            }
-            $this->info('Static Permissions Installed');
-        }
-    }
 
     private function assignPermissionsToAdmin(): void
     {
-        $users = User::where('email', 'admin@admin.com')->orWhere('email', 'support@admin.com')->get();
-        $role = Role::where('name', 'admin')->first();
-        foreach($users as $user) {
-
-            if ($user && $role) {
-                $role->syncPermissions(Permission::all());
-                $user->syncRoles($role->id);
-                Artisan::call('cache:clear');
-                $this->info("All Permissions assigned to user {$user->email}");
-            }
+        $user = User::where('email', config('admin.email'))->first();
+        $role = Role::where('name', 'superadmin')->first();
+        if(!$role) {
+            $role = Role::Create([
+                'name' => 'superadmin',
+                'display_name' => 'الادمن'
+            ]);
+        }
+        // dd($role);
+        if ($user && $role) {
+            $user->syncRoles($role->id);
+            // $role->givePermissionTo('roles.view');
+            $role->syncPermissions(Permission::where('model_typ', 'admin')->get());
+            Artisan::call('cache:clear');
+            $this->info("All Permissions assigned to user {$user->email}");
         }
     }
 }

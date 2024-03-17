@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\Admin\AuthController;
-use App\Http\Controllers\Api\V1\Admin\UnitController;
+use App\Http\Controllers\Api\V1\Admin\RoleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,17 +25,12 @@ Route::group(['prefix' => '/v1'], function () {
 
 Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
 
-    Route::group(['prefix' => '/organization'], function () {
 
-        // Route::get('organizations', [UnitController::class, 'index']);
-        // Route::post('organizations', [UnitController::class, 'store']);
-        // Route::get('organizations/{organization}', [UnitController::class, 'show']);
-        // Route::put('organizations/{organization}', [UnitController::class, 'update']);
-        // Route::delete('organizations/{organization}', [UnitController::class, 'delete']);
-
-
-
-    });
+    Route::get('roles', [RoleController::class, 'index'])->middleware('adminPermission:roles.view');
+    Route::post('roles', [RoleController::class, 'store'])->middleware('adminPermission:roles.create');
+    Route::get('roles/{role}', [RoleController::class, 'show'])->middleware('adminPermission:roles.view');
+    Route::put('roles/{role}', [RoleController::class, 'update'])->middleware('adminPermission:roles.edit');
+    Route::delete('roles/{role}', [RoleController::class, 'delete'])->middleware('adminPermission:roles.delete');
 
 
     Route::post('/update-profile', [AuthController::class, 'updateProfile'])->middleware('adminPermission:profile.updateProfile');

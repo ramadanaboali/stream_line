@@ -11,7 +11,10 @@ class City extends Model
 {
     use HasFactory,SoftDeletes;
     protected $guarded = [];
-
+    public function region(): ?BelongsTo
+    {
+        return $this->belongsTo(Region::class,'region_id');
+    }
     public function createdBy(): ?BelongsTo
     {
         return $this->belongsTo(User::class,'created_by');

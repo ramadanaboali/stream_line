@@ -70,10 +70,10 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
-        'vendorPermission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
-        'adminPermission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
-        'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
+        'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
+        'adminPermission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+        'vendorPermission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+        'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
 //        'cors'    => \App\Http\Middleware\Cors::class, // added for enable cors
 //        'client.credentials' => Laravel\Passport\Http\Middleware\CheckClientCredentials::class,
     ];

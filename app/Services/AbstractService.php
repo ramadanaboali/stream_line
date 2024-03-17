@@ -30,6 +30,9 @@ class AbstractService
         $data['updated_by']= app('auth_id');
         return $this->repo->update($data,$item);
     }
+    public function delete($item){
+        return $this->repo->delete($item);
+    }
     public function inputs(Array $request)
     {
         return [

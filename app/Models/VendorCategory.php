@@ -7,13 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Region extends Model
+class VendorCategory extends Model
 {
-     use HasFactory,SoftDeletes;
+    use HasFactory,SoftDeletes;
     protected $guarded = [];
-    public function country(): ?BelongsTo
+    public function category(): ?BelongsTo
     {
-        return $this->belongsTo(Country::class,'country_id');
+        return $this->belongsTo(Vendor::class,'category_id');
+    }
+    public function vendor(): ?BelongsTo
+    {
+        return $this->belongsTo(Vendor::class,'vendor_id');
     }
     public function createdBy(): ?BelongsTo
     {

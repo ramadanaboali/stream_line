@@ -12,9 +12,9 @@ class Vendor extends Model
 {
   use HasFactory,SoftDeletes;
     protected $guarded = [];
-    public function departments():?BelongsToMany
+    public function vendorCategories():?BelongsToMany
     {
-        return $this->belongsToMany(VendorDepartment::class, 'vendor_departments','vendor_id','department_id');
+        return $this->belongsToMany(VendorCategory::class, 'vendor_categories','vendor_id','category_id');
     }
 
     public function createdBy(): ?BelongsTo

@@ -68,6 +68,10 @@ class AbstractRepository
     {
         return $item->update($data);
     }
+    public function delete( $item)
+    {
+        return $item->delete();
+    }
     public function Paginate(array $input, array $wheres,$soft_deleted = true, $model = null)
     {
         $currentPage = $input["offset"];

@@ -7,14 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Department extends Model
+class Category extends Model
 {
     use HasFactory,SoftDeletes;
     protected $guarded = [];
 
      public function vendors()
     {
-        return $this->belongsToMany(VendorDepartment::class, 'vendor_departments','department_id','vendor_id');
+        return $this->belongsToMany(VendorCategory::class, 'vendor_categories','category_id','vendor_id');
     }
     public function createdBy(): ?BelongsTo
     {
