@@ -29,7 +29,7 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function() {
 
     Route::group(['prefix' => '/organization'], function() {
 
-        Route::get('organizations', [UnitController::class, 'index']);
+        Route::get('organizations', [UnitController::class, 'index'])->middleware('vendorPermission:organizations.delete');
         Route::post('organizations', [UnitController::class, 'store']);
         Route::get('organizations/{organization}', [UnitController::class, 'show']);
         Route::put('organizations/{organization}', [UnitController::class, 'update']);

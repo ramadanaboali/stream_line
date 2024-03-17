@@ -37,7 +37,8 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
 
     });
 
-    Route::post('/update-profile', [AuthController::class, 'updateProfile']);
+
+    Route::post('/update-profile', [AuthController::class, 'updateProfile'])->middleware('adminPermission:profile.updateProfile');
     Route::post('/send-code', [AuthController::class, 'sendCode']);
     Route::post('/update-email', [AuthController::class, 'updateEmail']);
     Route::post('/update-phone', [AuthController::class, 'updatePhone']);
