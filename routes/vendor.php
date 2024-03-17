@@ -30,5 +30,6 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function() {
 
     Route::post('/logout',[UserController::class, 'logout']);
 
+    Route::post('/update-profile', [AuthController::class, 'updateProfile'])->middleware('vendorPermission:profile.updateProfile');
 
 });

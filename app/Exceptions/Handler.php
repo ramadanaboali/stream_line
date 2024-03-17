@@ -2,15 +2,22 @@
 
 namespace App\Exceptions;
 
+
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Validation\UnauthorizedException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Throwable;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
 {
-    /**
+   /**
      * A list of the exception types that are not reported.
      *
-     * @var array
+     * @var array<int, class-string<Throwable>>
      */
     protected $dontReport = [
         //
@@ -19,37 +26,55 @@ class Handler extends ExceptionHandler
     /**
      * A list of the inputs that are never flashed for validation exceptions.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $dontFlash = [
+        'current_password',
         'password',
         'password_confirmation',
     ];
 
     /**
-     * Report or log an exception.
+     * Register the exception handling callbacks for the application.
      *
-     * @param  \Throwable  $exception
      * @return void
-     *
-     * @throws \Throwable
      */
-    public function report(\Throwable $exception)
+    public function register()
     {
-        parent::report($exception);
+        $this->reportable(function (Throwable $e) {
+            //
+        });
     }
 
-    /**
-     * Render an exception into an HTTP response.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $exception
-     * @return \Symfony\Component\HttpFoundation\Response
-     *
-     * @throws \Exception
-     */
-    public function render($request, Exception|\Throwable $exception)
+    public function render($request, Throwable $exception)
     {
+        if ($request->expectsJson()) {
+            if ($exception instanceof ModelNotFoundException || $exception instanceof NotFoundHttpException) {
+                return apiResponse(false, null, __('api.not_found'), null, 404);
+            }
+
+            if ($exception instanceof UnauthorizedHttpException || $exception instanceof UnauthorizedException) {
+                return apiResponse(false, null, __('api.unauthorized'), null, 401);
+            }
+            if ($exception instanceof MethodNotAllowedHttpException) {
+                return apiResponse(false, null, 'Method Not Allowed', null, 403);
+            }
+            if ($exception instanceof \Illuminate\Validation\ValidationException) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Validation Error',
+                    'errors' => $exception->errors()
+                ], 422);
+             }
+
+        }
+
+        if ($exception instanceof \Illuminate\Session\TokenMismatchException) {
+            return apiResponse(false, null, __('api.unauthorized'), null, 401);
+
+        }
+
         return parent::render($request, $exception);
     }
+   
 }
