@@ -22,8 +22,9 @@ class AdminPermission
 
     public function handle($request, Closure $next, $permissionName)
     {
-        if (auth()->user()->hasDirectPermission($permissionName)) {
-                return $next($request);
+
+        if (auth()->user()->getAllPermissions()->where('name',$permissionName)->first()) {
+            return $next($request);
         }
 
         return apiResponse(false, null, 'You Dont have Permissions', null, 403);

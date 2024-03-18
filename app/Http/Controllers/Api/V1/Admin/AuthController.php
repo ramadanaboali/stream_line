@@ -32,8 +32,8 @@ class AuthController extends Controller
         $user = User::where('email', $request->username)->where('type', 'admin')->orWhere('phone', $request->username)->where('active', 1)->first();
 
         if($user) {
-            if (!auth('web')->attempt(["email" => $request->username, "password" => $request->password])) {
-                if (!auth('web')->attempt(["phone" => $request->username, "password" => $request->password])) {
+            if (!Auth::attempt(["email" => $request->username, "password" => $request->password])) {
+                if (!Auth::attempt(["phone" => $request->username, "password" => $request->password])) {
                     return apiResponse(false, null, __('api.check_username_passowrd'), null, Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
             }
@@ -42,9 +42,9 @@ class AuthController extends Controller
         }
 
 
-        $access_token = auth('web')->user()->createToken('authToken')->accessToken;
-        $dataR['user'] = auth('web')->user();
-        $dataR['user_permissions'] = auth('web')->user()->getAllPermissions();
+        $access_token = auth()->user()->createToken('authToken')->accessToken;
+        $dataR['user'] = auth()->user();
+        $dataR['user_permissions'] = auth()->user()->getAllPermissions();
         $dataR['access_token'] = $access_token;
         return $this->successResponse($dataR, Response::HTTP_CREATED);
     }
@@ -52,7 +52,7 @@ class AuthController extends Controller
     public function sendCode(SendCodeRequest $request)
     {
         try {
-            $user = User::findOrFail(auth('web')->user()->id);
+            $user = User::findOrFail(auth()->user()->id);
             $MsgID = rand(100000, 999999);
             $user->update(['reset_code' => $MsgID]);
             if($request->filled('username'))
@@ -120,7 +120,7 @@ class AuthController extends Controller
     public function profile(Request $request)
     {
 
-        $user = auth('web')->user();
+        $user = auth()->user();
         $data = new UserResource($user);
         return apiResponse(true, $data, null, null, 200);
 
@@ -129,7 +129,7 @@ class AuthController extends Controller
     public function updateProfile(ProfileRequest $request)
     {
         try{
-            $currentUser = User::findOrFail(auth('web')->user()->id);
+            $currentUser = User::findOrFail(auth()->user()->id);
             $inputs = [
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
@@ -154,10 +154,10 @@ class AuthController extends Controller
     public function updateEmail(EmailRequest $request)
     {
         try{
-            if(auth('web')->user()->reset_code != $request->code) {
+            if(auth()->user()->reset_code != $request->code) {
                 return apiResponse(true, null, __('api.code_success'), null, 200);
             }
-            $currentUser = User::findOrFail(auth('web')->user()->id);
+            $currentUser = User::findOrFail(auth()->user()->id);
             $inputs = [
                 'email' => $request->email,
                 'reset_code' => null
@@ -175,10 +175,10 @@ class AuthController extends Controller
     public function updatePhone(PhoneRequest $request)
     {
         try{
-            if(auth('web')->user()->reset_code != $request->code) {
+            if(auth()->user()->reset_code != $request->code) {
                 return apiResponse(true, null, __('api.code_success'), null, 200);
             }
-            $currentUser = User::findOrFail(auth('web')->user()->id);
+            $currentUser = User::findOrFail(auth()->user()->id);
             $inputs = [
                 'phone' => $request->phone,
                 'reset_code' => null
