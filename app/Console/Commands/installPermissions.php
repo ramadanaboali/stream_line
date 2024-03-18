@@ -57,7 +57,7 @@ class installPermissions extends Command
                                 'name' => $permission[1],
                                 'model_typ' => 'admin',
                                 'group' => $group[0] ?? null,
-                                'guard_name' => 'api',
+                                'guard_name' => 'web',
                                 'created_at' => now(),
                                 'updated_at' => now(),
                             ];
@@ -72,7 +72,7 @@ class installPermissions extends Command
                                 'name' => $permission[1],
                                 'model_typ' => 'vendor',
                                 'group' => $group[0] ?? null,
-                                'guard_name' => 'api',
+                                'guard_name' => 'web',
                                 'created_at' => now(),
                                 'updated_at' => now(),
                             ];

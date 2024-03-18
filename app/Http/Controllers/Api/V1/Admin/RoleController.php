@@ -31,8 +31,8 @@ class RoleController extends Controller
 
         }
 
-        // $data = $this->service->Paginate($input, $wheres,false);
-        return  $this->service->Paginate($input, $wheres,false);
+        $data = $this->service->Paginate($input, $wheres,false);
+        // return  $this->service->Paginate($input, $wheres,false);
         //        $meta = $this->service->Meta($data,$input);
         return response()->apiSuccess($data);
     }

@@ -32,7 +32,6 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
     Route::put('roles/{role}', [RoleController::class, 'update'])->middleware('adminPermission:roles.edit');
     Route::delete('roles/{role}', [RoleController::class, 'delete'])->middleware('adminPermission:roles.delete');
 
-
     Route::post('/update-profile', [AuthController::class, 'updateProfile'])->middleware('adminPermission:profile.updateProfile');
     Route::post('/send-code', [AuthController::class, 'sendCode']);
     Route::post('/update-email', [AuthController::class, 'updateEmail']);
