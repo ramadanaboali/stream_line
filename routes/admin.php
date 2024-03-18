@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\Admin\AuthController;
 use App\Http\Controllers\Api\V1\Admin\RoleController;
+use App\Http\Controllers\Api\V1\Admin\PackageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,6 +22,9 @@ Route::group(['prefix' => '/v1'], function () {
     Route::post('/reset', [AuthController::class, 'resetPassword']);
     Route::post('/check-code', [AuthController::class, 'checkCode']);
     Route::post('/confirm-reset', [AuthController::class, 'confirmReset']);
+
+    Route::get('packages', [PackageController::class, 'index']);
+
 });
 
 Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
@@ -37,6 +41,12 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
     Route::post('/update-email', [AuthController::class, 'updateEmail']);
     Route::post('/update-phone', [AuthController::class, 'updatePhone']);
     Route::get('/profile', [AuthController::class, 'profile']);
+
+    Route::post('packages', [PackageController::class, 'store'])->middleware('adminPermission:packages.create');
+    Route::get('packages/{package}', [PackageController::class, 'show'])->middleware('adminPermission:packages.view');
+    Route::put('packages/{package}', [PackageController::class, 'update'])->middleware('adminPermission:packages.edit');
+    Route::delete('packages/{package}', [PackageController::class, 'delete'])->middleware('adminPermission:packages.delete');
+
 
     Route::post('/logout', [AuthController::class, 'logout']);
 
