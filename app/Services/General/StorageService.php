@@ -5,70 +5,31 @@ namespace App\Services\General;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class StorageService
 {
-    protected String $baseUrl;
+    protected string $disk;
 
     public function __construct()
     {
-        $this->baseUrl = config('services.storage.base_url');
+        $this->disk='s3';
     }
 
-    public function storeFile($file,$folder='general')
+    public function storeFile($file,$path): bool|string|null
     {
-        Log::info("base url");
-        Log::info($this->baseUrl);
-        $response = $this->getHttpInstance()
-            ->attach('file', file_get_contents($file), $file->getClientOriginalName())
-            ->post($this->baseUrl.'/store', [
-                'name' => 'file',
-                'service' => config('service_setting.service_name'),
-                'path' => config('service_setting.service_name') . '/'.$folder,
-                'filename' => pathinfo($file)['basename'],
-            ]);
-
-        Log::info("storage response");
-        Log::info($response);
-        if ($response->status() == 200)
-        {
-            Log::info($response->body());
-            return (json_decode($response->body())->data->path);
-        }
-        return null;
-
+        $filename = time() . '.' . $file->getClientOriginalExtension();
+        return upload($file, $this->disk, $path, $filename);
     }
 
-    public function getFileUrl($path)
+    public function getFile($path)
     {
-        $response = $this->getHttpInstance()
-            ->get($this->baseUrl.'/get?path='.$path);
-        if ($response->status() == 200)
-            return (json_decode($response->body())->data->path);
-        return null;
+        return Storage::disk($this->disk)->url($path);
     }
 
-    public function deleteFile($path)
+    public function deleteFile($path): bool
     {
-        $response = $this->getHttpInstance()
-            ->get($this->baseUrl.'/get?path='.$path);
-        if ($response->status() == 200)
-            return true;
-        return null;
-    }
-
-    protected function getHttpInstance()
-    {
-        $headers = [
-            'Auth-User-Id' => app('auth_id'),
-            'Service-Secret' => config('services.storage.secret'),
-            'Accept-Language' => 'en',
-            'Accept' => 'application/json',
-        ];
-
-        Log::info("headers is", $headers);
-
-        return Http::withHeaders($headers);
+        return Storage::disk($this->disk)->delete($path);
     }
 }
 

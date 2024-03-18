@@ -33,6 +33,7 @@ class CategoryRequest extends FormRequest
                 return [
                     'name_ar' => 'required|string|min:2|unique:categories,name_ar',
                     'name_en' => 'required|string|min:2|unique:categories,name_en',
+                    'icon' => 'required|image|mimes:jpeg,png,jpg,gif|max:20000',
                     'is_active' => 'required|in:0,1',
                 ];
             }
@@ -43,6 +44,7 @@ class CategoryRequest extends FormRequest
 
                     'name' => 'required|string|min:2',
                     'name_en' => 'required|string|min:2',
+                    'icon' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:20000',
                     'is_active' => 'required|in:0,1',
                 ];
                 return $rules;

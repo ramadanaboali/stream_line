@@ -7,15 +7,19 @@ use App\Http\Requests\General\CategoryRequest;
 use App\Http\Requests\PaginateRequest;
 use App\Models\Category;
 use App\Services\General\CategoryService;
+use App\Services\General\StorageService;
 use Illuminate\Support\Facades\Schema;
 use function response;
 
 class CategoryController extends Controller
 {
     protected CategoryService $service;
-    public function __construct(CategoryService $service)
+    protected StorageService $storageService;
+    public function __construct(CategoryService $service,StorageService $storageService)
     {
         $this->service = $service;
+        $this->storageService = $storageService;
+
     }
     public function index(PaginateRequest $request)
     {
@@ -40,13 +44,29 @@ class CategoryController extends Controller
 
     public function store(CategoryRequest $request)
     {
-        $data = $request->all();
+        // Handle image upload
+        $data = $request->except('icon');
+        $folder_path="images/category";
+        $storedPath=null;
+        if ($request->hasFile('icon')) {
+            $file = $request->file('icon');
+            $storedPath = $this->storageService->storeFile($file,$folder_path);
+        }
+        $data['icon'] =$storedPath;
         return response()->apiSuccess($this->service->store($data));
     }
 
     public function update(CategoryRequest $request, Category $category)
     {
-        $data = $request->all();
+        $data = $request->except('icon');
+        $folder_path="images/category";
+        $storedPath=$category->icon;
+        if ($request->hasFile('icon')) {
+            $file = $request->file('icon');
+            $storedPath = $this->storageService->storeFile($file,$folder_path);
+
+        }
+        $data['icon'] =$storedPath;
         return response()->apiSuccess($this->service->update($data,$category));
     }
     public function delete(Category $category)
