@@ -11,7 +11,7 @@ class Category extends Model
 {
     use HasFactory,SoftDeletes;
     protected $guarded = [];
-
+    protected $appends = ['image'];
      public function vendors()
     {
         return $this->belongsToMany(VendorCategory::class, 'vendor_categories','category_id','vendor_id');
@@ -23,5 +23,9 @@ class Category extends Model
     public function updatedBy(): ?BelongsTo
     {
         return $this->belongsTo(User::class,'updated_by');
+    }
+    public function getImageAttribute()
+    {
+        return url($this->icon);
     }
 }
