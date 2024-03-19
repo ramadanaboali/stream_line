@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\V1\Vendor\UserController;
+use App\Http\Controllers\Api\V1\Vendor\AuthController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,22 +14,28 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['prefix' => '/v1'], function() {
+Route::group(['prefix' => '/v1'], function () {
 
-    Route::post('/register', [UserController::class, 'register']);
-    Route::post('/login', [UserController::class, 'login']);
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
 
-    Route::post('/reset', [UserController::class, 'resetPassword']);
-    Route::post('/check-code', [UserController::class, 'checkCode']);
-    Route::post('/confirm-reset', [UserController::class, 'confirmReset']);
+    Route::post('/reset', [AuthController::class, 'resetPassword']);
+    Route::post('/check-code', [AuthController::class, 'checkCode']);
+    Route::post('/confirm-reset', [AuthController::class, 'confirmReset']);
 
 });
 
-Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function() {
+Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
 
 
-    Route::post('/logout',[UserController::class, 'logout']);
+    Route::post('/logout', [AuthController::class, 'logout']);
 
-    Route::post('/update-profile', [AuthController::class, 'updateProfile'])->middleware('vendorPermission:profile.updateProfile');
+
+    Route::post('/update-profile', [AuthController::class, 'updateProfile']);
+    Route::post('/send-code', [AuthController::class, 'sendCode']);
+    Route::post('/change-password', [AuthController::class, 'changePassword']);
+    Route::post('/update-email', [AuthController::class, 'updateEmail']);
+    Route::post('/update-phone', [AuthController::class, 'updatePhone']);
+    Route::get('/profile', [AuthController::class, 'profile']);
 
 });
