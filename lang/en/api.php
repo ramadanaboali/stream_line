@@ -8,6 +8,7 @@ return [
     'code_error' => 'خطأ الرمز غير صحيح',
     'update_success' => 'تم التحديث بنجاح',
     'register_success' => 'تم التسجيل بنجاح',
+    'current_password_invalid' => 'كلمة المرور الحالية خطأ',
     'xxxxxxxx' => 'xxxxxxxx',
 
 ];
