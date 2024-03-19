@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1\Admin;
+namespace App\Http\Controllers\Api\V1\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CheckCodeRequest;
@@ -8,6 +8,7 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\ConfirmResetRequest;
 use App\Http\Requests\Admin\ProfileRequest;
 use App\Http\Requests\ChangePasswordRequest;
+use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\ResetRequest;
 use App\Http\Requests\SendCodeRequest;
 use App\Http\Requests\EmailRequest;
@@ -15,6 +16,7 @@ use App\Http\Requests\PhoneRequest;
 use App\Http\Resources\UserResource;
 use App\Mail\SendCodeResetPassword;
 use App\Models\User;
+use App\Models\Vendor;
 use App\Traits\ApiResponser;
 use Exception;
 use Illuminate\Http\Request;
@@ -30,7 +32,7 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request)
     {
-        $user = User::where('email', $request->username)->where('type', 'admin')->orWhere('phone', $request->username)->where('active', 1)->first();
+        $user = User::where('email', $request->username)->where('type', 'customer')->orWhere('phone', $request->username)->where('active', 1)->first();
 
         if($user) {
             if (!Auth::attempt(["email" => $request->username, "password" => $request->password])) {
@@ -41,13 +43,47 @@ class AuthController extends Controller
         } else {
             return apiResponse(false, null, __('api.check_username_passowrd'), null, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
-
-
         $access_token = auth()->user()->createToken('authToken')->accessToken;
         $dataR['user'] = auth()->user();
         $dataR['user_permissions'] = auth()->user()->getAllPermissions();
         $dataR['access_token'] = $access_token;
         return $this->successResponse($dataR, Response::HTTP_CREATED);
+    }
+
+    public function register(RegisterRequest $request)
+    {
+        try {
+            DB::beginTransaction();
+            $vendorInput = [
+                'name' => $request->provider_name,
+                'commercial_no' => $request->commercial_no,
+                'tax_number' => $request->tax_number,
+                'description' => $request->description,
+                'website_url' => $request->website_url,
+                'twitter' => $request->twitter,
+                'instagram' => $request->instagram,
+                'snapchat' => $request->snapchat,
+            ];
+            if($vendor = Vendor::create($vendorInput)) {
+                $userInput = [
+                    'email' => $request->email,
+                    'first_name' => $request->first_name,
+                    'last_name' => $request->last_name,
+                    'phone' => $request->phone,
+                    'model_id' => $vendor->id,
+                    'type' => 'customer',
+                    'password' => Hash::make($request->password),
+                ];
+                User::create($userInput);
+                $vendor->vendorCategories()->attach($request->category_id);
+            }
+            DB::commit();
+            return apiResponse(true, $vendor, __('api.register_success'), null, Response::HTTP_CREATED);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
     }
 
     public function sendCode(SendCodeRequest $request)
@@ -72,7 +108,7 @@ class AuthController extends Controller
     {
         try {
 
-            $user = User::where('email', $request->username)->orWhere('phone', $request->username)->where('type', 'admin')->first();
+            $user = User::where('email', $request->username)->orWhere('phone', $request->username)->where('type', 'customer')->first();
             if (!$user) {
                 return apiResponse(false, null, __('api.not_found'), null, 404);
             }
@@ -89,7 +125,7 @@ class AuthController extends Controller
     public function checkCode(CheckCodeRequest $request)
     {
         try {
-            $user = User::where('email', $request->username)->orWhere('phone', $request->username)->where('type', 'admin')->first();
+            $user = User::where('email', $request->username)->orWhere('phone', $request->username)->where('type', 'customer')->first();
             if (!$user) {
                 return apiResponse(false, null, __('api.not_found'), null, 404);
             }
@@ -107,7 +143,7 @@ class AuthController extends Controller
     public function confirmReset(ConfirmResetRequest $request)
     {
         try {
-            $user = User::where('email', $request->username)->orWhere('phone', $request->username)->where('type', 'admin')->first();
+            $user = User::where('email', $request->username)->orWhere('phone', $request->username)->where('type', 'customer')->first();
             if (!$user) {
                 return apiResponse(false, null, __('api.not_found'), null, 404);
             }
@@ -117,7 +153,7 @@ class AuthController extends Controller
             return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
     }
-      public function changePassword(ChangePasswordRequest $request)
+    public function changePassword(ChangePasswordRequest $request)
     {
         try {
             $user = auth()->user();
