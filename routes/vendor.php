@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\V1\Vendor\AuthController;
 use App\Http\Controllers\Api\V1\Vendor\UserController;
 use App\Http\Controllers\Api\V1\Vendor\BranchController;
+use App\Http\Controllers\Api\V1\Vendor\SectionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -40,6 +41,13 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
     Route::get('branches/{branch}', [BranchController::class, 'show'])->middleware('vendorPermission:branches.view');
     Route::put('branches/{branch}', [BranchController::class, 'update'])->middleware('vendorPermission:branches.edit');
     Route::delete('branches/{branch}', [BranchController::class, 'delete'])->middleware('vendorPermission:branches.delete');
+
+
+    Route::get('sections', [SectionController::class, 'index'])->middleware('vendorPermission:sections.view');
+    Route::post('sections', [SectionController::class, 'store'])->middleware('vendorPermission:sections.create');
+    Route::get('sections/{branch}', [SectionController::class, 'show'])->middleware('vendorPermission:sections.view');
+    Route::put('sections/{branch}', [SectionController::class, 'update'])->middleware('vendorPermission:sections.edit');
+    Route::delete('sections/{branch}', [SectionController::class, 'delete'])->middleware('vendorPermission:sections.delete');
 
 
     Route::post('/update-profile', [AuthController::class, 'updateProfile']);

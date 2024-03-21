@@ -4,37 +4,35 @@ namespace App\Http\Controllers\Api\V1\Vendor;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PaginateRequest;
-use App\Http\Requests\Vendor\BranchRequest;
-use App\Models\Branch;
-use App\Services\Vendor\BranchService;
+use App\Http\Requests\Vendor\SectionRequest;
+use App\Models\Section;
 use App\Services\General\StorageService;
+use App\Services\Vendor\SectionService;
 use Illuminate\Support\Facades\Schema;
 use function response;
 
-class BranchController extends Controller
+class SectionController extends Controller
 {
-    protected BranchService $service;
+    protected SectionService $service;
     protected StorageService $storageService;
-    public function __construct(BranchService $service,StorageService $storageService)
+
+    public function __construct(SectionService $service,StorageService $storageService)
     {
         $this->storageService = $storageService;
         $this->service = $service;
-
     }
     public function index(PaginateRequest $request)
     {
         $input = $this->service->inputs($request->all());
-        $model = new Branch();
+        $model = new Section();
         $columns = Schema::getColumnListing($model->getTable());
 
         if (count($input["columns"]) < 1 || (count($input["columns"]) != count($input["column_values"])) || (count($input["columns"]) != count($input["operand"]))) {
             $wheres = [];
         } else {
             $wheres = $this->service->whereOptions($input, $columns);
-
         }
         $data = $this->service->Paginate($input, $wheres);
-        //$meta = $this->service->Meta($data,$input);
         return response()->apiSuccess($data);
     }
 
@@ -42,10 +40,11 @@ class BranchController extends Controller
         return response()->apiSuccess($this->service->get($id));
     }
 
-    public function store(BranchRequest $request)
+    public function store(SectionRequest $request)
     {
-        $data = $request->except(['image','images','officialHours']);
-        $folder_path = "images/branch";
+
+        $data = $request->except(['image']);
+        $folder_path = "images/section";
         $storedPath = null;
         if ($request->hasFile('image')) {
             $file = $request->file('image');
@@ -53,43 +52,27 @@ class BranchController extends Controller
         }
         $data['image'] = $storedPath;
         $data['vendor_id'] = auth()->user()->model_id;
-        $branch=$this->service->store($data);
 
-        if ($branch && $request->images) {
-            $this->service->addImages($request->images,$branch->id);
-        }
-        if ($branch && $request->officialHours) {
-            $this->service->officialHours($request->officialHours,$branch->id);
-        }
         return response()->apiSuccess($this->service->store($data));
     }
 
-    public function update(BranchRequest $request, Branch $branch)
+    public function update(SectionRequest $request, Section $section)
     {
 
-        $data = $request->except(['image','images','officialHours']);
-        $folder_path = "images/branch";
-        $storedPath = null;
+        $data = $request->except(['image']);
         if ($request->hasFile('image')) {
+            $folder_path = "images/section";
+            $storedPath = null;
             $file = $request->file('image');
             $storedPath = $this->storageService->storeFile($file, $folder_path);
-        }
-        $data['image'] = $storedPath;
-
-        if ($branch && $request->images) {
-            $branch->images()->delete();
-            $this->service->addImages($request->images, $branch->id);
-        }
-        if ($branch && $request->officialHours) {
-            $branch->officialHours()->delete();
-            $this->service->officialHours($request->officialHours, $branch->id);
+            $data['image'] = $storedPath;
         }
 
-        return response()->apiSuccess($this->service->update($data,$branch));
+        return response()->apiSuccess($this->service->update($data,$section));
     }
-    public function delete(Branch $branch)
+    public function delete(Section $section)
     {
-        return response()->apiSuccess($this->service->delete($branch));
+        return response()->apiSuccess($this->service->delete($section));
     }
 
 }
