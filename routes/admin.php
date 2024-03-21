@@ -5,6 +5,8 @@ use App\Http\Controllers\Api\V1\Admin\AuthController;
 use App\Http\Controllers\Api\V1\Admin\RoleController;
 use App\Http\Controllers\Api\V1\Admin\PackageController;
 use App\Http\Controllers\Api\V1\Admin\PaymentSettingController;
+use App\Http\Controllers\Api\V1\Admin\ServiceSettingController;
+use App\Http\Controllers\Api\V1\Admin\TaxSettingController;
 
 Route::group(['prefix' => '/v1'], function () {
 
@@ -39,6 +41,12 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
 
     Route::get('payment_settings', [PaymentSettingController::class, 'getSetting'])->middleware('adminPermission:payment_settings.view');
     Route::post('payment_settings', [PaymentSettingController::class, 'updateSetting'])->middleware('adminPermission:payment_settings.edit');
+
+    Route::get('service_settings', [ServiceSettingController::class, 'getSetting'])->middleware('adminPermission:service_settings.view');
+    Route::post('service_settings', [ServiceSettingController::class, 'updateSetting'])->middleware('adminPermission:service_settings.edit');
+
+    Route::get('tax_settings', [TaxSettingController::class, 'getSetting'])->middleware('adminPermission:tax_settings.view');
+    Route::post('tax_settings', [TaxSettingController::class, 'updateSetting'])->middleware('adminPermission:tax_settings.edit');
 
     Route::post('/logout', [AuthController::class, 'logout']);
 

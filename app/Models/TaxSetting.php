@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class PaymentSetting extends Model
+class TaxSetting extends Model
 {
     use HasFactory,SoftDeletes;
     protected $guarded = [];
