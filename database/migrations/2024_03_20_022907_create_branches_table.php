@@ -13,13 +13,14 @@ return new class extends Migration
     {
         Schema::create('branches', function (Blueprint $table) {
             $table->id();
-            $table->string('name_ar');
-            $table->string('name_en')->nullable();
+            $table->string('name');
             $table->string('address')->nullable();
             $table->string('image')->nullable();
             $table->string('lat')->nullable();
             $table->string('long')->nullable();
             $table->enum('is_active', [0,1])->default(0);
+            $table->enum('show_rates', [0,1])->default(0);
+            $table->unsignedBigInteger('manager_id')->nullable();
             $table->unsignedBigInteger('vendor_id')->nullable();
             $table->unsignedBigInteger('country_id')->nullable();
             $table->unsignedBigInteger('city_id')->nullable();
@@ -28,6 +29,7 @@ return new class extends Migration
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
+            $table->foreign('manager_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('vendor_id')->references('id')->on('vendors')->onDelete('cascade');
             $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade');
             $table->foreign('city_id')->references('id')->on('cities')->onDelete('cascade');

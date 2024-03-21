@@ -6,6 +6,7 @@ return [
     'reset_password_code_send' => 'تم ارسال رمز الى البريد الالكترونى',
     'code_success' => 'تم التحقق من الرمز بنجاح',
     'code_error' => 'خطأ الرمز غير صحيح',
+    'create_success' => 'تم الاضافة بنجاح',
     'update_success' => 'تم التحديث بنجاح',
     'register_success' => 'تم التسجيل بنجاح',
     'current_password_invalid' => 'كلمة المرور الحالية خطأ',

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->time('end_time');
             $table->string('day');
             $table->tinyInteger('type');
-            $table->enum('is_active', [0,1])->default(0);
+            $table->enum('is_active', [0,1])->default(1);
             $table->unsignedBigInteger('model_id')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
