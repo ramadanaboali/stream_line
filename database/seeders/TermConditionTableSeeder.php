@@ -2,21 +2,20 @@
 
 namespace Database\Seeders;
 
-use App\Models\ServiceSetting;
-use App\Models\TaxSetting;
+use App\Models\TermCondition;
 use Illuminate\Database\Seeder;
 
-class TaxSettingTableSeeder extends Seeder
+class TermConditionTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        TaxSetting::firstOrCreate([
+        TermCondition::firstOrCreate([
             'is_active' => '1'
         ], [
-            "tax_percentage"=> 0,
+            "content"=> "terms & conditions",
             "created_by"=> 1,
         ]);
 
