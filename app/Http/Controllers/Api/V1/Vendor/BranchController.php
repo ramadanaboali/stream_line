@@ -14,9 +14,11 @@ use function response;
 class BranchController extends Controller
 {
     protected BranchService $service;
-    public function __construct(BranchService $service)
+    protected StorageService $storageService;
+    public function __construct(BranchService $service,StorageService $storageService)
     {
         $this->service = $service;
+        $this->storageService = $storageService;
 
     }
     public function index(PaginateRequest $request)
@@ -42,13 +44,47 @@ class BranchController extends Controller
 
     public function store(BranchRequest $request)
     {
-        $data = $request->all();
+        $data = $request->except(['image','images','officialHours']);
+        $folder_path = "images/branch";
+        $storedPath = null;
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $storedPath = $this->storageService->storeFile($file, $folder_path);
+        }
+        $data['image'] = $storedPath;
+        $data['vendor_id'] = auth()->user()->model_id;
+        $branch=$this->service->store($data);
+
+        if ($branch && $request->images) {
+            $this->service->addImages($request->images,$branch->id);
+        }
+        if ($branch && $request->officialHours) {
+            $this->service->officialHours($request->officialHours,$branch->id);
+        }
         return response()->apiSuccess($this->service->store($data));
     }
 
     public function update(BranchRequest $request, Branch $branch)
     {
-        $data = $request->all();
+
+        $data = $request->except(['image','images','officialHours']);
+        $folder_path = "images/branch";
+        $storedPath = null;
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $storedPath = $this->storageService->storeFile($file, $folder_path);
+        }
+        $data['image'] = $storedPath;
+
+        if ($branch && $request->images) {
+            $branch->images()->delete();
+            $this->service->addImages($request->images, $branch->id);
+        }
+        if ($branch && $request->officialHours) {
+            $branch->officialHours()->delete();
+            $this->service->officialHours($request->officialHours, $branch->id);
+        }
+
         return response()->apiSuccess($this->service->update($data,$branch));
     }
     public function delete(Branch $branch)

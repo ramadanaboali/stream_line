@@ -25,7 +25,6 @@ class UserRequest extends FormRequest
      */
     public function rules() : array
     {
-
         switch ($this->method()) {
             case 'GET':
             case 'DELETE':
@@ -38,8 +37,8 @@ class UserRequest extends FormRequest
                     'first_name' => 'required|string|min:2',
                     'last_name' => 'required|string|min:2',
                     'birthdate' => 'required|date',
-                    'email' => 'required|unique:users,email',
-                    'phone' => 'required|unique:users,phone',
+                    'email' => 'required|email|unique:users,email',
+                    'phone' => 'required|numeric|unique:users,phone',
                     'country_id' => 'required|exists:countries,id',
                     'region_id' => 'required|exists:regions,id',
                     'city_id' => 'required|exists:cities,id',
@@ -54,7 +53,8 @@ class UserRequest extends FormRequest
             case 'PUT':
             {
                 $rules= [
-
+                    'phone'=>'unique:users,phone,'.request()->user->id,
+                    'email'=>'unique:users,email,'.request()->user->id,
                 ];
                 return $rules;
             }
