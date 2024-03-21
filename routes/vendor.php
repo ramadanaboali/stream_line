@@ -37,9 +37,9 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
 
     Route::get('branches', [BranchController::class, 'index'])->middleware('vendorPermission:branches.view');
     Route::post('branches', [BranchController::class, 'store'])->middleware('vendorPermission:branches.create');
-    Route::get('branches/{user}', [BranchController::class, 'show'])->middleware('vendorPermission:branches.view');
-    Route::put('branches/{user}', [BranchController::class, 'update'])->middleware('vendorPermission:branches.edit');
-    Route::delete('branches/{user}', [BranchController::class, 'delete'])->middleware('vendorPermission:branches.delete');
+    Route::get('branches/{branch}', [BranchController::class, 'show'])->middleware('vendorPermission:branches.view');
+    Route::put('branches/{branch}', [BranchController::class, 'update'])->middleware('vendorPermission:branches.edit');
+    Route::delete('branches/{branch}', [BranchController::class, 'delete'])->middleware('vendorPermission:branches.delete');
 
 
     Route::post('/update-profile', [AuthController::class, 'updateProfile']);

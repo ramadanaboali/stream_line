@@ -61,12 +61,30 @@ class BranchController extends Controller
         if ($branch && $request->officialHours) {
             $this->service->officialHours($request->officialHours,$branch->id);
         }
-        return response()->apiSuccess($branch);
+        return response()->apiSuccess($this->service->store($data));
     }
 
     public function update(BranchRequest $request, Branch $branch)
     {
-        $data = $request->all();
+
+        $data = $request->except(['image','images','officialHours']);
+        $folder_path = "images/branch";
+        $storedPath = null;
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $storedPath = $this->storageService->storeFile($file, $folder_path);
+        }
+        $data['image'] = $storedPath;
+
+        if ($branch && $request->images) {
+            $branch->images()->delete();
+            $this->service->addImages($request->images, $branch->id);
+        }
+        if ($branch && $request->officialHours) {
+            $branch->officialHours()->delete();
+            $this->service->officialHours($request->officialHours, $branch->id);
+        }
+
         return response()->apiSuccess($this->service->update($data,$branch));
     }
     public function delete(Branch $branch)

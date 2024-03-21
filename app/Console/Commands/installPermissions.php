@@ -41,7 +41,7 @@ class installPermissions extends Command
 
     private function installRoutesPermissions(): void
     {
-        $permissions = Permission::where('guard_name', 'web')->get()->pluck('name')->toArray();
+        $permissions = Permission::where('guard_name', 'api')->get()->pluck('name')->toArray();
         $routes = Route::getRoutes();
         $arr = [];
         $tempPermissions = [];
@@ -58,7 +58,7 @@ class installPermissions extends Command
                                 'name' => $permission[1],
                                 'model_type' => 'admin',
                                 'group' => $group[0] ?? null,
-                                'guard_name' => 'web',
+                                'guard_name' => 'api',
                                 'created_at' => now(),
                                 'updated_at' => now(),
                             ];
@@ -73,7 +73,7 @@ class installPermissions extends Command
                                 'name' => $permission[1],
                                 'model_type' => 'vendor',
                                 'group' => $group[0] ?? null,
-                                'guard_name' => 'web',
+                                'guard_name' => 'api',
                                 'created_at' => now(),
                                 'updated_at' => now(),
                             ];
@@ -98,6 +98,7 @@ class installPermissions extends Command
             $role = Role::Create([
                 'name' => 'superadmin',
                 'model_type' => 'admin',
+                'guard_name' => 'api',
                 'can_edit'=>0,
                 'display_name' => 'سوبر ادمن'
             ]);
@@ -108,7 +109,7 @@ class installPermissions extends Command
             Artisan::call('cache:clear');
             $this->info("All Permissions assigned to user {$user->email}");
         }
-        $vendorRole = Role::firstOrCreate(['name'=>'admin','model_type'=>'vendor','can_edit'=>0],['name'=>'admin','model_type'=>'vendor','can_edit'=>0]);
+        $vendorRole = Role::firstOrCreate(['name'=>'admin','model_type'=>'vendor','can_edit'=>0],['name'=>'admin','model_type'=>'vendor','can_edit'=>0,'guard_name' => 'api','display_name' => ' ادمن']);
         if ($vendorRole) {
             $vendorPermissions = Permission::where('model_type', 'vendor')->get();
             $vendorRole->syncPermissions($vendorPermissions);

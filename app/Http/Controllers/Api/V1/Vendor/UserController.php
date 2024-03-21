@@ -55,13 +55,13 @@ class UserController extends Controller
         }
         $data['image'] = $storedPath;
 
-        return response()->apiSuccess($this->service->store($data));
+        return response()->apiSuccess($this->service->createUser($data));
     }
 
     public function update(UserRequest $request, User $user)
     {
         $data = $request->all();
-        return response()->apiSuccess($this->service->update($data,$user));
+        return response()->apiSuccess($this->service->updateUser($data,$user));
     }
     public function delete(User $user)
     {

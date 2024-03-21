@@ -24,7 +24,7 @@ class Branch extends Model
         return $this->belongsTo(Vendor::class,'vendor_id','id')->where('vendor_id',auth()->user()->model_id);
     }
 
-    public function officialHour(): ?HasMany
+    public function officialHours(): ?HasMany
     {
         return $this->hasMany(OfficialHour::class,'model_id')->where('type',OfficialHour::TYPE_BRANCH);
     }
