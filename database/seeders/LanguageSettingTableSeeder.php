@@ -2,21 +2,20 @@
 
 namespace Database\Seeders;
 
-use App\Models\ServiceSetting;
-use App\Models\TaxSetting;
+use App\Models\LanguageSetting;
 use Illuminate\Database\Seeder;
 
-class TaxSettingTableSeeder extends Seeder
+class LanguageSettingTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        TaxSetting::firstOrCreate([
+        LanguageSetting::firstOrCreate([
             'is_active' => '1'
         ], [
-            "tax_percentage"=> 0,
+            "default"=> "en",
             "created_by"=> 1,
         ]);
 

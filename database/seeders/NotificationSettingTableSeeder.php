@@ -2,21 +2,22 @@
 
 namespace Database\Seeders;
 
-use App\Models\ServiceSetting;
-use App\Models\TaxSetting;
+use App\Models\NotificationSetting;
 use Illuminate\Database\Seeder;
 
-class TaxSettingTableSeeder extends Seeder
+class NotificationSettingTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        TaxSetting::firstOrCreate([
+        NotificationSetting::firstOrCreate([
             'is_active' => '1'
         ], [
-            "tax_percentage"=> 0,
+            "email"=> '1',
+            "sms"=> '1',
+            "whatsapp"=> '1',
             "created_by"=> 1,
         ]);
 
