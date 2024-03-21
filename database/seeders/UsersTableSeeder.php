@@ -2,12 +2,11 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\User;
+use App\Models\City;
 use App\Models\Country;
 use App\Models\Region;
-use App\Models\Category;
-use App\Models\City;
+use App\Models\User;
+use Illuminate\Database\Seeder;
 
 class UsersTableSeeder extends Seeder
 {
@@ -16,7 +15,7 @@ class UsersTableSeeder extends Seeder
      */
     public function run(): void
     {
-        User::updateOrCreate([
+        User::firstOrCreate([
             "email"=> config('admin.email')
         ], [
             "phone"=> config('admin.phone'),
@@ -29,28 +28,22 @@ class UsersTableSeeder extends Seeder
             'name_ar'=>'السعودية',
             'name_en'=>'Saudia Arabia',
             'code'=>'+996',
-            'is_active'=>1
+            'is_active'=>'1'
         ];
-        $country=Country::create($countries);
+        $country=Country::firstOrCreate(['is_active' => '1'],$countries);
         $regions=[
             'name_ar'=>'منطقة الرياض',
             'name_en'=>'Ryadh Region',
             'country_id'=>$country->id,
-            'is_active'=>1
+            'is_active'=>'1'
         ];
-        $region=Region::create($regions);
+        $region=Region::firstOrCreate(['is_active' => '1'],$regions);
         $cities=[
             'name_ar'=>'الرياض',
             'region_id'=>$region->id,
             'name_en'=>'Ryadh',
-            'is_active'=>1
+            'is_active'=> '1'
         ];
-        City::create($cities);
-        $categories=[
-            'name_ar'=>'قص شعر',
-            'name_en'=>'cutting hair',
-            'is_active'=>1
-        ];
-        Category::create($categories);
+        City::firstOrCreate(['is_active' => '1'],$cities);
     }
 }

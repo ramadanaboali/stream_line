@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\Admin\AuthController;
 use App\Http\Controllers\Api\V1\Admin\RoleController;
 use App\Http\Controllers\Api\V1\Admin\PackageController;
+use App\Http\Controllers\Api\V1\Admin\PaymentSettingController;
 
 Route::group(['prefix' => '/v1'], function () {
 
@@ -36,6 +37,8 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
     Route::put('packages/{package}', [PackageController::class, 'update'])->middleware('adminPermission:packages.edit');
     Route::delete('packages/{package}', [PackageController::class, 'delete'])->middleware('adminPermission:packages.delete');
 
+    Route::get('payment_settings', [PaymentSettingController::class, 'getSetting'])->middleware('adminPermission:payment_settings.view');
+    Route::post('payment_settings', [PaymentSettingController::class, 'updateSetting'])->middleware('adminPermission:payment_settings.edit');
 
     Route::post('/logout', [AuthController::class, 'logout']);
 
