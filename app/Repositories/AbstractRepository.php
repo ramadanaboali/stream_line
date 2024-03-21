@@ -55,6 +55,7 @@ class AbstractRepository
     }
 
 
+
     public function findWhereFirst($column, $value)
     {
         return $this->model::where($column, $value)->firstOrFail();

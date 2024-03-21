@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Route;
@@ -40,7 +41,7 @@ class installPermissions extends Command
 
     private function installRoutesPermissions(): void
     {
-        $permissions = Permission::where('guard_name', 'api')->get()->pluck('name')->toArray();
+        $permissions = Permission::where('guard_name', 'web')->get()->pluck('name')->toArray();
         $routes = Route::getRoutes();
         $arr = [];
         $tempPermissions = [];
@@ -55,7 +56,7 @@ class installPermissions extends Command
                             $group = explode('.', $permission[1]);
                             $arr[] = [
                                 'name' => $permission[1],
-                                'model_typ' => 'admin',
+                                'model_type' => 'admin',
                                 'group' => $group[0] ?? null,
                                 'guard_name' => 'web',
                                 'created_at' => now(),
@@ -70,7 +71,7 @@ class installPermissions extends Command
                             $group = explode('.', $permission[1]);
                             $arr[] = [
                                 'name' => $permission[1],
-                                'model_typ' => 'vendor',
+                                'model_type' => 'vendor',
                                 'group' => $group[0] ?? null,
                                 'guard_name' => 'web',
                                 'created_at' => now(),
@@ -92,20 +93,25 @@ class installPermissions extends Command
     private function assignPermissionsToAdmin(): void
     {
         $user = User::where('email', config('admin.email'))->first();
-        $role = Role::where('name', 'superadmin')->first();
+        $role = Role::where('name', 'superadmin')->where('model_type','admin')->first();
         if(!$role) {
             $role = Role::Create([
                 'name' => 'superadmin',
-                'display_name' => 'الادمن'
+                'model_type' => 'admin',
+                'can_edit'=>0,
+                'display_name' => 'سوبر ادمن'
             ]);
         }
-        // dd($role);
         if ($user && $role) {
             $user->syncRoles($role->id);
-            // $role->givePermissionTo('roles.view');
-            $role->syncPermissions(Permission::where('model_typ', 'admin')->get());
+            $role->syncPermissions(Permission::where('model_type', 'admin')->get());
             Artisan::call('cache:clear');
             $this->info("All Permissions assigned to user {$user->email}");
+        }
+        $vendorRole = Role::firstOrCreate(['name'=>'admin','model_type'=>'vendor','can_edit'=>0],['name'=>'admin','model_type'=>'vendor','can_edit'=>0]);
+        if ($vendorRole) {
+            $vendorPermissions = Permission::where('model_type', 'vendor')->get();
+            $vendorRole->syncPermissions($vendorPermissions);
         }
     }
 }

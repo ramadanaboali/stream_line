@@ -25,6 +25,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Artisan;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class AuthController extends Controller
 {
@@ -74,8 +77,17 @@ class AuthController extends Controller
                     'type' => 'vendor',
                     'password' => Hash::make($request->password),
                 ];
-                User::create($userInput);
+                $user=User::create($userInput);
+                $role = Role::firstOrCreate(['name' => 'admin','model_type' => 'vendor','can_edit' => 0], ['name' => 'admin','model_type' => 'vendor','can_edit' => 0]);
+
+                if ($user && $role) {
+                    $user->syncRoles($role->id);
+                    $role->syncPermissions(Permission::where('model_type', 'vendor')->get());
+                    Artisan::call('cache:clear');
+                }
                 $vendor->vendorCategories()->attach($request->category_id);
+                DB::commit();
+                return apiResponse(true, $user, __('api.register_success'), null, Response::HTTP_CREATED);
             }
             DB::commit();
             return apiResponse(true, $vendor, __('api.register_success'), null, Response::HTTP_CREATED);

@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\V1\Vendor\AuthController;
+use App\Http\Controllers\Api\V1\Vendor\UserController;
+use App\Http\Controllers\Api\V1\Vendor\BranchController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,8 +29,17 @@ Route::group(['prefix' => '/v1'], function () {
 
 Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
 
+    Route::get('users', [UserController::class, 'index'])->middleware('vendorPermission:users.view');
+    Route::post('users', [UserController::class, 'store'])->middleware('vendorPermission:users.create');
+    Route::get('users/{user}', [UserController::class, 'show'])->middleware('vendorPermission:users.view');
+    Route::put('users/{user}', [UserController::class, 'update'])->middleware('vendorPermission:users.edit');
+    Route::delete('users/{user}', [UserController::class, 'delete'])->middleware('vendorPermission:users.delete');
 
-    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('branches', [BranchController::class, 'index'])->middleware('vendorPermission:branches.view');
+    Route::post('branches', [BranchController::class, 'store'])->middleware('vendorPermission:branches.create');
+    Route::get('branches/{user}', [BranchController::class, 'show'])->middleware('vendorPermission:branches.view');
+    Route::put('branches/{user}', [BranchController::class, 'update'])->middleware('vendorPermission:branches.edit');
+    Route::delete('branches/{user}', [BranchController::class, 'delete'])->middleware('vendorPermission:branches.delete');
 
 
     Route::post('/update-profile', [AuthController::class, 'updateProfile']);
@@ -37,5 +48,6 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
     Route::post('/update-email', [AuthController::class, 'updateEmail']);
     Route::post('/update-phone', [AuthController::class, 'updatePhone']);
     Route::get('/profile', [AuthController::class, 'profile']);
+    Route::post('/logout', [AuthController::class, 'logout']);
 
 });

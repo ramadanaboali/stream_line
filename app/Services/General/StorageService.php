@@ -13,7 +13,7 @@ class StorageService
 
     public function __construct()
     {
-        $this->disk='s3';
+        $this->disk='public';
     }
 
     public function storeFile($file,$path): bool|string|null

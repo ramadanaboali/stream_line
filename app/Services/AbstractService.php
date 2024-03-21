@@ -21,13 +21,13 @@ class AbstractService
     }
     public function store($data){
 
-        $data['created_by']= app('auth_id');
+        $data['created_by']= auth()->user()->id;
         return $this->repo->create($data);
     }
 
     public function update($data,$item){
 
-        $data['updated_by']= app('auth_id');
+        $data['updated_by']= auth()->user()->id;
         return $this->repo->update($data,$item);
     }
     public function delete($item){
