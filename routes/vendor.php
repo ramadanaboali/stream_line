@@ -3,10 +3,7 @@
 use App\Http\Controllers\Api\V1\Vendor\AuthController;
 use App\Http\Controllers\Api\V1\Vendor\UserController;
 use App\Http\Controllers\Api\V1\Vendor\BranchController;
-<<<<<<< HEAD
-=======
 use App\Http\Controllers\Api\V1\Vendor\SectionController;
->>>>>>> 93f394e95abe225d1b178989b70c59aab813c264
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -46,16 +43,12 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
     Route::delete('branches/{branch}', [BranchController::class, 'delete'])->middleware('vendorPermission:branches.delete');
 
 
-<<<<<<< HEAD
-=======
     Route::get('sections', [SectionController::class, 'index'])->middleware('vendorPermission:sections.view');
     Route::post('sections', [SectionController::class, 'store'])->middleware('vendorPermission:sections.create');
     Route::get('sections/{branch}', [SectionController::class, 'show'])->middleware('vendorPermission:sections.view');
     Route::put('sections/{branch}', [SectionController::class, 'update'])->middleware('vendorPermission:sections.edit');
     Route::delete('sections/{branch}', [SectionController::class, 'delete'])->middleware('vendorPermission:sections.delete');
 
-
->>>>>>> 93f394e95abe225d1b178989b70c59aab813c264
     Route::post('/update-profile', [AuthController::class, 'updateProfile']);
     Route::post('/send-code', [AuthController::class, 'sendCode']);
     Route::post('/change-password', [AuthController::class, 'changePassword']);
