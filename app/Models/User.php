@@ -3,20 +3,25 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
-    use HasApiTokens,Notifiable,HasRoles;
+    use HasApiTokens,Notifiable,HasRoles,SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
+    protected $guard_name = 'api';
+
+
     protected $guarded = [];
 
     /**
@@ -37,6 +42,24 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    protected $appends = ['photo','name'];
+    public function getPhotoAttribute()
+    {
+        return array_key_exists('image', $this->attributes) ? ($this->attributes['image'] != null ? asset('storage/users/' . $this->attributes['image']) : null) : null;
+    }
+    public function getNameAttribute()
+    {
+        return $this->first_name.' '.$this->last_name;
+    }
+
+    public function vendor() :BelongsTo
+    {
+        return $this->belongsTo(Vendor::class,'model_id','id')->where('type','vendor')->where('model_id',auth()->user()->model_id);
+    }
+    public function branches() :HasMany
+    {
+        return $this->hasMany(Branch::class,'user_id');
+    }
     public function createdBy() :BelongsTo
     {
         return $this->belongsTo(User::class,'created_by','id');

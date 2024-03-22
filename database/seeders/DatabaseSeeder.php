@@ -1,6 +1,15 @@
 <?php
+
 namespace database\seeders;
-use App\Models\User;
+
+use Database\Seeders\UsersTableSeeder;
+use Database\Seeders\PaymentSettingTableSeeder;
+use Database\Seeders\ServiceSettingTableSeeder;
+use Database\Seeders\TaxSettingTableSeeder;
+use Database\Seeders\NotificationSettingTableSeeder;
+use Database\Seeders\TermConditionTableSeeder;
+use Database\Seeders\PrivacyPolicyTableSeeder;
+use Database\Seeders\LanguageSettingTableSeeder;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -12,14 +21,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        User::updateOrCreate([
-            "email"=> config('admin.email')
-        ], [
-            'phone' => config('admin.phone'),
-            "full_name"=> "سوبر أدمن",
-            "full_name_latin"=> "super Admin",
-            "password" => bcrypt(config('admin.password'))
-        ]);
-//         $this->call(UsersTableSeeder::class);
+        $this->call(UsersTableSeeder::class);
+        $this->call(PaymentSettingTableSeeder::class);
+        $this->call(ServiceSettingTableSeeder::class);
+        $this->call(TaxSettingTableSeeder::class);
+        $this->call(NotificationSettingTableSeeder::class);
+        $this->call(TermConditionTableSeeder::class);
+        $this->call(PrivacyPolicyTableSeeder::class);
+        $this->call(LanguageSettingTableSeeder::class);
     }
 }

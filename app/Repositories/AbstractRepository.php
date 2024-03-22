@@ -55,6 +55,7 @@ class AbstractRepository
     }
 
 
+
     public function findWhereFirst($column, $value)
     {
         return $this->model::where($column, $value)->firstOrFail();
@@ -67,6 +68,10 @@ class AbstractRepository
     public function update($data, $item)
     {
         return $item->update($data);
+    }
+    public function delete( $item)
+    {
+        return $item->delete();
     }
     public function Paginate(array $input, array $wheres,$soft_deleted = true, $model = null)
     {

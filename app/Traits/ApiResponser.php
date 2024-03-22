@@ -10,6 +10,17 @@ trait ApiResponser{
         return response($data, $code)->header('Content-Type', 'application/json');
     }
 
+    function apiResponse($success = false, $data = null, $message = '', $errors = null, $code = 200, $version = 1)
+    {
+        $response = [
+            'status'  => $success,
+            'code'  => $code,
+            'data'    => $data,
+            'message' => $message,
+            'errors'  => $errors,
+        ];
+        return response()->json($response, $code);
+    }
 
     public function errorResponse($message, $code){
         return response()->json(['message' => $message, 'code' => $code], $code);

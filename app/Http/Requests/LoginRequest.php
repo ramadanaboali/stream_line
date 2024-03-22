@@ -3,6 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\ValidationException;
 
 class LoginRequest extends FormRequest
 {
@@ -24,7 +27,7 @@ class LoginRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_name'             => 'required|min:5',
+            'username'             => 'required|min:5',
             'password'          => 'required|min:8',
         ];
     }
@@ -40,8 +43,12 @@ class LoginRequest extends FormRequest
             'password.required'         => 'كلمة المرور مطلوبة',
             'password.confirmed'        => 'كلمة المرور غير متطابقة',
             'password.min'              => 'كلمة المرور يجب ان تكون 8 احرف علي الاـقل',
-            'phone.required'            => 'رقم الجوال مطلوب',
-            'phone.digits'              => 'رقم الجوال يجب ان يكون 11 رقم',
+            'username.required'            => 'يجب كتابة رقم الجوال / البريد الالكترونى',
         ];
+    }
+    protected function failedValidation(Validator $validator)
+    {
+        $errors = (new ValidationException($validator))->errors();
+        throw new HttpResponseException(apiResponse(false, null, 'Validation Error', $errors, 401));
     }
 }

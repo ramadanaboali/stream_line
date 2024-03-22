@@ -56,6 +56,9 @@ class Kernel extends HttpKernel
      *
      * @var array
      */
+
+
+
     protected $routeMiddleware = [
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
@@ -67,6 +70,10 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
+        'adminPermission' => \App\Http\Middleware\AdminPermission::class,
+        'vendorPermission' => \App\Http\Middleware\AdminPermission::class,
+        'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
 //        'cors'    => \App\Http\Middleware\Cors::class, // added for enable cors
 //        'client.credentials' => Laravel\Passport\Http\Middleware\CheckClientCredentials::class,
     ];
