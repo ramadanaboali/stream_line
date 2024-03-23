@@ -25,12 +25,15 @@ class UserRepository extends AbstractRepository
             'birthdate' => $data['birthdate'],
             'email' => $data['email'],
             'phone' => $data['phone'],
+            'model_id' => auth()->user()->model_id,
             'country_id' => $data['country_id'],
             'region_id' => $data['region_id'],
             'city_id' => $data['city_id'],
             'image' => $data['image'],
             'type' => 'vendor',
             'password' => Hash::make($data['password']),
+            'created_by'=> auth()->user()->id,
+
             ];
 
             $item = User::create($inputs);
@@ -61,6 +64,8 @@ class UserRepository extends AbstractRepository
             'city_id' => $data['city_id'] ?? $item->city_id,
             'image' => $data['image'] ?? $item->image,
             'password' => Hash::make($data['password'])?? $item->password,
+            'updated_by'=> auth()->user()->id,
+
             ];
             $item->update($inputs);
             $role = Role::find($data['role_id']);

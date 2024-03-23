@@ -11,22 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('official_hours', function (Blueprint $table) {
+        Schema::create('service_branches', function (Blueprint $table) {
             $table->id();
-            $table->time('start_time');
-            $table->time('end_time');
-            $table->string('day');
-            $table->enum('type', ['work','break'])->default('work');
-            $table->tinyInteger('model_type');
-            $table->enum('is_active', [0,1])->default(1);
-            $table->unsignedBigInteger('model_id')->nullable();
+            $table->unsignedBigInteger('service_id');
+            $table->unsignedBigInteger('branch_id');
+            $table->enum('is_active', [0, 1])->default(1);
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamps();
-            $table->softDeletes();
+            $table->foreign('branch_id')->references('id')->on('branches')->onDelete('cascade');
+            $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade');
             $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('updated_by')->references('id')->on('users')->onDelete('cascade');
-
         });
     }
 
@@ -35,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('official_hours');
+        Schema::dropIfExists('service_branches');
     }
 };

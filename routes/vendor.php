@@ -4,6 +4,8 @@ use App\Http\Controllers\Api\V1\Vendor\AuthController;
 use App\Http\Controllers\Api\V1\Vendor\UserController;
 use App\Http\Controllers\Api\V1\Vendor\BranchController;
 use App\Http\Controllers\Api\V1\Vendor\SectionController;
+use App\Http\Controllers\Api\V1\Vendor\EmployeeController;
+use App\Http\Controllers\Api\V1\Vendor\ServiceController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -42,13 +44,23 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
     Route::put('branches/{branch}', [BranchController::class, 'update'])->middleware('vendorPermission:branches.edit');
     Route::delete('branches/{branch}', [BranchController::class, 'delete'])->middleware('vendorPermission:branches.delete');
 
-
     Route::get('sections', [SectionController::class, 'index'])->middleware('vendorPermission:sections.view');
     Route::post('sections', [SectionController::class, 'store'])->middleware('vendorPermission:sections.create');
-    Route::get('sections/{branch}', [SectionController::class, 'show'])->middleware('vendorPermission:sections.view');
-    Route::put('sections/{branch}', [SectionController::class, 'update'])->middleware('vendorPermission:sections.edit');
-    Route::delete('sections/{branch}', [SectionController::class, 'delete'])->middleware('vendorPermission:sections.delete');
+    Route::get('sections/{section}', [SectionController::class, 'show'])->middleware('vendorPermission:sections.view');
+    Route::put('sections/{section}', [SectionController::class, 'update'])->middleware('vendorPermission:sections.edit');
+    Route::delete('sections/{section}', [SectionController::class, 'delete'])->middleware('vendorPermission:sections.delete');
 
+    Route::get('services', [ServiceController::class, 'index'])->middleware('vendorPermission:services.view');
+    Route::post('services', [ServiceController::class, 'store'])->middleware('vendorPermission:services.create');
+    Route::get('services/{service}', [ServiceController::class, 'show'])->middleware('vendorPermission:services.view');
+    Route::put('services/{service}', [ServiceController::class, 'update'])->middleware('vendorPermission:services.edit');
+    Route::delete('services/{service}', [ServiceController::class, 'delete'])->middleware('vendorPermission:services.delete');
+
+    Route::get('employees', [EmployeeController::class, 'index'])->middleware('vendorPermission:employees.view');
+    Route::post('employees', [EmployeeController::class, 'store'])->middleware('vendorPermission:employees.create');
+    Route::get('employees/{employee}', [EmployeeController::class, 'show'])->middleware('vendorPermission:employees.view');
+    Route::put('employees/{employee}', [EmployeeController::class, 'update'])->middleware('vendorPermission:employees.edit');
+    Route::delete('employees/{employee}', [EmployeeController::class, 'delete'])->middleware('vendorPermission:employees.delete');
 
     Route::post('/update-profile', [AuthController::class, 'updateProfile']);
     Route::post('/send-code', [AuthController::class, 'sendCode']);

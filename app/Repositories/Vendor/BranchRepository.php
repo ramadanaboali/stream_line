@@ -33,7 +33,8 @@ class BranchRepository extends AbstractRepository
             $data['start_time']=$officialHour['start_time'];
             $data['end_time']=$officialHour['end_time'];
             $data['day']=$officialHour['day'];
-            $data['type']=OfficialHour::TYPE_BRANCH;
+            $data['type']='work';
+            $data['model_type']=OfficialHour::TYPE_BRANCH;
             $data['model_id']=$id;
             $data['created_by'] = auth()->user()->id;
             OfficialHour::create($data);

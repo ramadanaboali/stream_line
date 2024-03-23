@@ -20,7 +20,6 @@ class UserService extends AbstractService
         try{
             return $this->repo->createUser($data);
         } catch (\Exception $e) {
-            DB::rollBack();
             return $e->getMessage();
         }
     }

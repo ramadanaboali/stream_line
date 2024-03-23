@@ -4,18 +4,19 @@ namespace App\Http\Controllers\Api\V1\Vendor;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PaginateRequest;
-use App\Http\Requests\Vendor\BranchRequest;
-use App\Models\Branch;
-use App\Services\Vendor\BranchService;
+use App\Http\Requests\Vendor\EmployeeRequest;
+use App\Models\Employee;
 use App\Services\General\StorageService;
+use App\Services\Vendor\EmployeeService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use function response;
 
-class BranchController extends Controller
+class EmployeeController extends Controller
 {
-    protected BranchService $service;
+    protected EmployeeService $service;
     protected StorageService $storageService;
-    public function __construct(BranchService $service,StorageService $storageService)
+    public function __construct(EmployeeService $service,StorageService $storageService)
     {
         $this->storageService = $storageService;
         $this->service = $service;
@@ -24,7 +25,7 @@ class BranchController extends Controller
     public function index(PaginateRequest $request)
     {
         $input = $this->service->inputs($request->all());
-        $model = new Branch();
+        $model = new Employee();
         $columns = Schema::getColumnListing($model->getTable());
 
         if (count($input["columns"]) < 1 || (count($input["columns"]) != count($input["column_values"])) || (count($input["columns"]) != count($input["operand"]))) {
@@ -42,10 +43,10 @@ class BranchController extends Controller
         return response()->apiSuccess($this->service->get($id));
     }
 
-    public function store(BranchRequest $request)
+    public function store(EmployeeRequest $request)
     {
         $data = $request->except(['image','images','officialHours']);
-        $folder_path = "images/branch";
+        $folder_path = "images/employee";
         $storedPath = null;
         if ($request->hasFile('image')) {
             $file = $request->file('image');
@@ -53,22 +54,23 @@ class BranchController extends Controller
         }
         $data['image'] = $storedPath;
         $data['vendor_id'] = auth()->user()->model_id;
-        $branch=$this->service->store($data);
-
-        if ($branch && $request->images) {
-            $this->service->addImages($request->images,$branch->id);
+        DB::beginTransaction();
+        $employee=$this->service->createItem($data);
+        if ($employee && $request->officialHours) {
+            $this->service->officialHours($request->officialHours,$employee->id);
         }
-        if ($branch && $request->officialHours) {
-            $this->service->officialHours($request->officialHours,$branch->id);
+        if ($employee && $request->breakHours) {
+            $this->service->breakHours($request->breakHours,$employee->id);
         }
-        return response()->apiSuccess($branch);
+        DB::commit();
+        return response()->apiSuccess($employee);
     }
 
-    public function update(BranchRequest $request, Branch $branch)
+    public function update(EmployeeRequest $request, Employee $employee)
     {
 
         $data = $request->except(['image','images','officialHours']);
-        $folder_path = "images/branch";
+        $folder_path = "images/Employee";
         $storedPath = null;
         if ($request->hasFile('image')) {
             $file = $request->file('image');
@@ -76,20 +78,25 @@ class BranchController extends Controller
         }
         $data['image'] = $storedPath;
 
-        if ($branch && $request->images) {
-            $branch->images()->delete();
-            $this->service->addImages($request->images, $branch->id);
+        if ($employee && $request->officialHours) {
+            if($employee->officialHours()){
+
+                // $employee->officialHours()->delete();
+            }
+            $this->service->officialHours($request->officialHours, $employee->id);
         }
-        if ($branch && $request->officialHours) {
-            $branch->officialHours()->delete();
-            $this->service->officialHours($request->officialHours, $branch->id);
+        if ($employee && $request->breakHours) {
+            if($employee->breakHours()){
+                // $employee->breakHours()->delete();
+            }
+            $this->service->breakHours($request->breakHours, $employee->id);
         }
 
-        return response()->apiSuccess($this->service->update($data,$branch));
+        return response()->apiSuccess($this->service->updateItem($data,$employee));
     }
-    public function delete(Branch $branch)
+    public function delete(Employee $employee)
     {
-        return response()->apiSuccess($this->service->delete($branch));
+        return response()->apiSuccess($this->service->delete($employee));
     }
 
 }
