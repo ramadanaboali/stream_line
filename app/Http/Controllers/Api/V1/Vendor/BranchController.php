@@ -17,8 +17,8 @@ class BranchController extends Controller
     protected StorageService $storageService;
     public function __construct(BranchService $service,StorageService $storageService)
     {
-        $this->storageService = $storageService;
         $this->service = $service;
+        $this->storageService = $storageService;
 
     }
     public function index(PaginateRequest $request)
