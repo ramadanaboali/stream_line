@@ -21,6 +21,13 @@ class EmployeeService extends AbstractService
             return $e->getMessage();
         }
     }
+     public function employeeService($data){
+        try{
+            return $this->repo->employeeService($data);
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
     public function updateItem($data,$item){
         try{
             return $this->repo->updateItem($data, $item);
