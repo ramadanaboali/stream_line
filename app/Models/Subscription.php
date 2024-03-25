@@ -10,7 +10,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Subscription extends Model
 {
     use HasFactory,SoftDeletes;
-
+    public function user(): ?BelongsTo
+    {
+        return $this->belongsTo(User::class,'user_id');
+    }
+    public function package(): ?BelongsTo
+    {
+        return $this->belongsTo(Package::class,'package_id');
+    }
     public function createdBy(): ?BelongsTo
     {
         return $this->belongsTo(User::class,'created_by');
