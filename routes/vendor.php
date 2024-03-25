@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\V1\Vendor\AuthController;
 use App\Http\Controllers\Api\V1\Vendor\UserController;
 use App\Http\Controllers\Api\V1\Vendor\BranchController;
 use App\Http\Controllers\Api\V1\Vendor\SectionController;
+use App\Http\Controllers\Api\V1\Vendor\SubscriptionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -56,5 +57,13 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
     Route::post('/update-phone', [AuthController::class, 'updatePhone']);
     Route::get('/profile', [AuthController::class, 'profile']);
     Route::post('/logout', [AuthController::class, 'logout']);
+
+
+    Route::get('subscriptions', [SubscriptionController::class, 'index'])->middleware('vendorPermission:subscriptions.view');
+    Route::post('subscriptions', [SubscriptionController::class, 'store'])->middleware('vendorPermission:subscriptions.create');
+    Route::get('subscriptions/{subscription}', [SubscriptionController::class, 'show'])->middleware('vendorPermission:subscriptions.view');
+    Route::put('subscriptions/{subscription}', [SubscriptionController::class, 'update'])->middleware('vendorPermission:subscriptions.edit');
+    Route::delete('subscriptions/{subscription}', [SubscriptionController::class, 'delete'])->middleware('vendorPermission:subscriptions.delete');
+
 
 });
