@@ -47,7 +47,6 @@ class ServiceController extends Controller
 
         $data = $request->all();
         $data['vendor_id'] = auth()->user()->model_id;
-        // dd($data);
         return response()->apiSuccess($this->service->createItem($data));
     }
 

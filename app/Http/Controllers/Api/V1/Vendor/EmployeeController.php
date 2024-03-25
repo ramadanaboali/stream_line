@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1\Vendor;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PaginateRequest;
 use App\Http\Requests\Vendor\EmployeeRequest;
+use App\Http\Requests\Vendor\EmployeeServiceRequest;
 use App\Models\Employee;
 use App\Services\General\StorageService;
 use App\Services\Vendor\EmployeeService;
@@ -64,6 +65,11 @@ class EmployeeController extends Controller
         }
         DB::commit();
         return response()->apiSuccess($employee);
+    }
+    public function employeeService(EmployeeServiceRequest $request)
+    {
+        $data = $request->all();
+        return response()->apiSuccess($this->service->employeeService($data));
     }
 
     public function update(EmployeeRequest $request, Employee $employee)
