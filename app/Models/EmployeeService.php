@@ -7,14 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class OfficialHour extends Model
+class EmployeeService extends Model
 {
     use HasFactory,SoftDeletes;
     protected $guarded = [];
 
-    const TYPE_BRANCH = 1;
-    const TYPE_EMPLOYEE = 2;
+    public function service(): ?BelongsTo
+    {
+        return $this->belongsTo(Service::class,'service_id');
+    }
 
+    public function employee(): ?BelongsTo
+    {
+        return $this->belongsTo(Employee::class,'employee_id');
+    }
     public function createdBy(): ?BelongsTo
     {
         return $this->belongsTo(User::class,'created_by');
@@ -23,4 +29,5 @@ class OfficialHour extends Model
     {
         return $this->belongsTo(User::class,'updated_by');
     }
+
 }

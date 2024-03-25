@@ -26,7 +26,7 @@ class Branch extends Model
 
     public function officialHours(): ?HasMany
     {
-        return $this->hasMany(OfficialHour::class,'model_id')->where('type',OfficialHour::TYPE_BRANCH);
+        return $this->hasMany(OfficialHour::class,'model_id')->where('model_type',OfficialHour::TYPE_BRANCH);
     }
     public function images(): ?HasMany
     {
@@ -44,8 +44,5 @@ class Branch extends Model
     {
         return $this->belongsTo(User::class,'updated_by');
     }
-    public function getImageAttribute()
-    {
-        return url($this->imsge);
-    }
+   
 }

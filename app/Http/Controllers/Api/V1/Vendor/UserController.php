@@ -47,7 +47,7 @@ class UserController extends Controller
     public function store(UserRequest $request)
     {
         $data = $request->all();
-        $folder_path = "images/category";
+        $folder_path = "images/user";
         $storedPath = null;
         if ($request->hasFile('image')) {
             $file = $request->file('image');
