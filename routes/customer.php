@@ -27,7 +27,7 @@ Route::group(['prefix' => '/v1'], function () {
 Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
 
 
-
+    
     Route::post('/update-profile', [AuthController::class, 'updateProfile']);
     Route::post('/send-code', [AuthController::class, 'sendCode']);
     Route::post('/change-password', [AuthController::class, 'changePassword']);

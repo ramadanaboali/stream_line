@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\V1\Vendor\BranchController;
 use App\Http\Controllers\Api\V1\Vendor\SectionController;
 use App\Http\Controllers\Api\V1\Vendor\SubscriptionController;
 use App\Http\Controllers\Api\V1\Vendor\EmployeeController;
+use App\Http\Controllers\Api\V1\Vendor\BookingController;
 use App\Http\Controllers\Api\V1\Vendor\OfferController;
 use App\Http\Controllers\Api\V1\Vendor\ServiceController;
 use Illuminate\Support\Facades\Route;
@@ -51,6 +52,12 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
     Route::get('sections/{section}', [SectionController::class, 'show'])->middleware('vendorPermission:sections.view');
     Route::put('sections/{section}', [SectionController::class, 'update'])->middleware('vendorPermission:sections.edit');
     Route::delete('sections/{section}', [SectionController::class, 'delete'])->middleware('vendorPermission:sections.delete');
+
+    Route::get('bookings', [BookingController::class, 'index'])->middleware('vendorPermission:bookings.view');
+    Route::post('bookings', [BookingController::class, 'store'])->middleware('vendorPermission:bookings.create');
+    Route::get('bookings/{booking}', [BookingController::class, 'show'])->middleware('vendorPermission:bookings.view');
+    Route::put('bookings/{booking}', [BookingController::class, 'update'])->middleware('vendorPermission:bookings.edit');
+    Route::delete('bookings/{booking}', [BookingController::class, 'delete'])->middleware('vendorPermission:bookings.delete');
 
     Route::get('offers', [OfferController::class, 'index'])->middleware('vendorPermission:offers.view');
     Route::post('offers', [OfferController::class, 'store'])->middleware('vendorPermission:offers.create');
