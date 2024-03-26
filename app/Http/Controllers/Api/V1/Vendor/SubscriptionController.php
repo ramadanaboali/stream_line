@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1\Vendor;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PaginateRequest;
+use App\Http\Requests\Vendor\PayRequest;
 use App\Http\Requests\Vendor\SubscriptionRequest;
 use App\Models\Subscription;
 use App\Services\General\StorageService;
@@ -14,11 +15,9 @@ use function response;
 class SubscriptionController extends Controller
 {
     protected SubscriptionService $service;
-    protected StorageService $storageService;
 
-    public function __construct(SubscriptionService $service,StorageService $storageService)
+    public function __construct(SubscriptionService $service)
     {
-        $this->storageService = $storageService;
         $this->service = $service;
     }
     public function index(PaginateRequest $request)
@@ -43,18 +42,17 @@ class SubscriptionController extends Controller
     public function store(SubscriptionRequest $request)
     {
         $data = $request->all();
-        return response()->apiSuccess($this->service->store($data));
+        return response()->apiSuccess($this->service->subscribe($data));
     }
-
-    public function update(SubscriptionRequest $request, Subscription $subscription)
+    public function update(SubscriptionRequest $request,Subscription $subscription)
     {
-
         $data = $request->all();
         return response()->apiSuccess($this->service->update($data,$subscription));
     }
-    public function delete(Subscription $subscription)
+    public function pay(PayRequest $request)
     {
-        return response()->apiSuccess($this->service->delete($subscription));
+        $data = $request->all();
+        return response()->apiSuccess($this->service->pay($data));
     }
 
 }

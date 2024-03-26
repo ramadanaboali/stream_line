@@ -7,7 +7,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\ValidationException;
 
-class SubscriptionRequest extends FormRequest
+class PayRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -34,17 +34,13 @@ class SubscriptionRequest extends FormRequest
             case 'POST':
                 {
                     return [
-                        'package_id' => 'required|exists:packages,id',
-                        'user_id' => 'required|exists:packages,id',
-                        'auto_renew' => 'required|in:0,1'
+                        'subscription_id' => 'required|exists:subscriptions,id'
                     ];
                 }
             case 'PATCH':
             case 'PUT':
             default:
-                return [
-                    'auto_renew' => 'required|in:0,1'
-                ];
+                return [];
         }
 
     }

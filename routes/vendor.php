@@ -91,7 +91,7 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
     Route::post('subscriptions', [SubscriptionController::class, 'store'])->middleware('vendorPermission:subscriptions.create');
     Route::get('subscriptions/{subscription}', [SubscriptionController::class, 'show'])->middleware('vendorPermission:subscriptions.view');
     Route::put('subscriptions/{subscription}', [SubscriptionController::class, 'update'])->middleware('vendorPermission:subscriptions.edit');
-    Route::delete('subscriptions/{subscription}', [SubscriptionController::class, 'delete'])->middleware('vendorPermission:subscriptions.delete');
+    Route::post('subscriptions/pay', [SubscriptionController::class, 'pay'])->middleware('vendorPermission:subscriptions.pay');
 
 
 });
