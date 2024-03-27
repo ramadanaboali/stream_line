@@ -43,17 +43,13 @@ class BookingController extends Controller
     public function store(BookingRequest $request)
     {
 
-        $data = $request->except(['image']);
-        $folder_path = "images/Booking";
-        $storedPath = null;
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $storedPath = $this->storageService->storeFile($file, $folder_path);
-        }
-        $data['image'] = $storedPath;
-        $data['vendor_id'] = auth()->user()->model_id;
+        $data = $request->all();
 
-        return response()->apiSuccess($this->service->store($data));
+        return response()->apiSuccess($this->service->createItem($data));
+    }
+    public function pay($id)
+    {
+        return response()->apiSuccess($this->service->pay($id));
     }
 
     public function update(BookingRequest $request, Booking $bokking)

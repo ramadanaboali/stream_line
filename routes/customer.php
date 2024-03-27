@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\Customer\AuthController;
+use App\Http\Controllers\Api\V1\Customer\BookingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,7 +17,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => '/v1'], function () {
 
-
     Route::post('/reset', [AuthController::class, 'resetPassword']);
     Route::post('/check-code', [AuthController::class, 'checkCode']);
     Route::post('/confirm-reset', [AuthController::class, 'confirmReset']);
@@ -26,8 +26,14 @@ Route::group(['prefix' => '/v1'], function () {
 
 Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
 
+    Route::get('bookings/pay/{id}', [BookingController::class, 'pay']);
 
-    
+    Route::get('bookings', [BookingController::class, 'index']);
+    Route::post('bookings', [BookingController::class, 'store']);
+    Route::get('bookings/{booking}', [BookingController::class, 'show']);
+    Route::put('bookings/{booking}', [BookingController::class, 'update']);
+    Route::delete('bookings/{booking}', [BookingController::class, 'delete']);
+
     Route::post('/update-profile', [AuthController::class, 'updateProfile']);
     Route::post('/send-code', [AuthController::class, 'sendCode']);
     Route::post('/change-password', [AuthController::class, 'changePassword']);
@@ -36,6 +42,5 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
     Route::get('/profile', [AuthController::class, 'profile']);
 
     Route::post('/logout', [AuthController::class, 'logout']);
-
 
 });
