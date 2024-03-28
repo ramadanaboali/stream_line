@@ -13,7 +13,8 @@ class TermConditionTableSeeder extends Seeder
     public function run(): void
     {
         TermCondition::firstOrCreate([
-            'is_active' => '1'
+            'is_active' => '1',
+            'is_system' => '1'
         ], [
             "content"=> "terms & conditions",
             "created_by"=> 1,

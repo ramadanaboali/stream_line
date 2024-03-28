@@ -10,7 +10,7 @@ use App\Http\Controllers\Api\V1\Vendor\BookingController;
 use App\Http\Controllers\Api\V1\Vendor\OfferController;
 use App\Http\Controllers\Api\V1\Vendor\ServiceController;
 use App\Http\Controllers\Api\V1\Vendor\TaxInvoiceController;
-
+use App\Http\Controllers\Api\V1\Vendor\VendorSettingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -101,5 +101,7 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
     Route::put('tax_invoices/{tax_invoice}', [TaxInvoiceController::class, 'update'])->middleware('vendorPermission:tax_invoices.edit');
     Route::delete('tax_invoices/{tax_invoice}', [TaxInvoiceController::class, 'delete'])->middleware('vendorPermission:tax_invoices.delete');
 
+    Route::get('vendor_settings', [VendorSettingController::class, 'getSetting'])->middleware('vendorPermission:vendor_settings.view');
+    Route::post('vendor_settings', [VendorSettingController::class, 'updateSetting'])->middleware('vendorPermission:vendor_settings.edit');
 
 });

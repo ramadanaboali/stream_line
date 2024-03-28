@@ -11,7 +11,10 @@ class TermCondition extends Model
 {
     use HasFactory,SoftDeletes;
     protected $guarded = [];
-
+    public function vendor(): ?BelongsTo
+    {
+        return $this->belongsTo(Vendor::class,'vendor_id');
+    }
     public function createdBy(): ?BelongsTo
     {
         return $this->belongsTo(User::class,'created_by');

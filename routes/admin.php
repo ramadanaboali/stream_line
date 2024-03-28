@@ -10,8 +10,6 @@ use App\Http\Controllers\Api\V1\Admin\TaxSettingController;
 use App\Http\Controllers\Api\V1\Admin\NotificationSettingController;
 use App\Http\Controllers\Api\V1\Admin\SystemNotificationController;
 use App\Http\Controllers\Api\V1\Admin\HelpCenterController;
-use App\Http\Controllers\Api\V1\Admin\TermConditionController;
-use App\Http\Controllers\Api\V1\Admin\PrivacyPolicyController;
 use App\Http\Controllers\Api\V1\Admin\FAQController;
 use App\Http\Controllers\Api\V1\Admin\ContactMessageController;
 
@@ -72,12 +70,6 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
     Route::get('help_centers/{help_center}', [HelpCenterController::class, 'show'])->middleware('adminPermission:help_centers.view');
     Route::put('help_centers/{help_center}', [HelpCenterController::class, 'update'])->middleware('adminPermission:help_centers.edit');
     Route::delete('help_centers/{help_center}', [HelpCenterController::class, 'delete'])->middleware('adminPermission:help_centers.delete');
-
-    Route::get('term_conditions', [TermConditionController::class, 'getSetting'])->middleware('adminPermission:term_conditions.view');
-    Route::post('term_conditions', [TermConditionController::class, 'updateSetting'])->middleware('adminPermission:term_conditions.edit');
-
-    Route::get('privacy_policies', [PrivacyPolicyController::class, 'getSetting'])->middleware('adminPermission:privacy_policies.view');
-    Route::post('privacy_policies', [PrivacyPolicyController::class, 'updateSetting'])->middleware('adminPermission:privacy_policies.edit');
 
     Route::post('f_a_q_s', [FAQController::class, 'store'])->middleware('adminPermission:f_a_q_s.create');
     Route::get('f_a_q_s/{f_a_q}', [FAQController::class, 'show'])->middleware('adminPermission:f_a_q_s.view');
