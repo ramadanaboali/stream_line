@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\V1\Admin\SystemNotificationController;
 use App\Http\Controllers\Api\V1\Admin\HelpCenterController;
 use App\Http\Controllers\Api\V1\Admin\FAQController;
 use App\Http\Controllers\Api\V1\Admin\ContactMessageController;
+use App\Http\Controllers\Api\V1\Admin\BannerController;
 
 Route::group(['prefix' => '/v1'], function () {
 
@@ -23,6 +24,7 @@ Route::group(['prefix' => '/v1'], function () {
     Route::get('packages', [PackageController::class, 'index']);
     Route::get('help_centers', [HelpCenterController::class, 'index']);
     Route::get('f_a_q_s', [FAQController::class, 'index']);
+    Route::get('banners', [BannerController::class, 'index']);
 
     Route::post('contact_messages', [ContactMessageController::class, 'store']);
 
@@ -81,6 +83,12 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
     Route::get('contact_messages/{contact_message}', [ContactMessageController::class, 'show'])->middleware('adminPermission:contact_messages.view');
     Route::put('contact_messages/{contact_message}', [ContactMessageController::class, 'update'])->middleware('adminPermission:contact_messages.edit');
     Route::delete('contact_messages/{contact_message}', [ContactMessageController::class, 'delete'])->middleware('adminPermission:contact_messages.delete');
+
+    Route::post('banners', [BannerController::class, 'store'])->middleware('adminPermission:banners.create');
+    Route::get('banners/{banner}', [BannerController::class, 'show'])->middleware('adminPermission:banners.view');
+    Route::put('banners/{banner}', [BannerController::class, 'update'])->middleware('adminPermission:banners.edit');
+    Route::delete('banners/{banner}', [BannerController::class, 'delete'])->middleware('adminPermission:banners.delete');
+
 
     Route::post('/logout', [AuthController::class, 'logout']);
 

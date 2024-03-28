@@ -16,7 +16,7 @@ use App\Http\Controllers\Api\V1\General\ReviewReportController;
 use App\Http\Controllers\Api\V1\Admin\LanguageSettingController;
 use App\Http\Controllers\Api\V1\Admin\PrivacyPolicyController;
 use App\Http\Controllers\Api\V1\Admin\TermConditionController;
-
+use App\Http\Controllers\Api\V1\General\UserNotificationSettingController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -116,4 +116,6 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function() {
     Route::get('term_conditions', [TermConditionController::class, 'getSetting'])->middleware('adminPermission:term_conditions.view');
     Route::post('term_conditions', [TermConditionController::class, 'updateSetting'])->middleware('adminPermission:term_conditions.edit');
 
+    Route::get('user_notification_settings', [UserNotificationSettingController::class, 'getSetting']);
+    Route::post('user_notification_settings', [UserNotificationSettingController::class, 'updateSetting']);
 });
