@@ -14,7 +14,6 @@ use App\Http\Controllers\Api\V1\Admin\TermConditionController;
 use App\Http\Controllers\Api\V1\Admin\PrivacyPolicyController;
 use App\Http\Controllers\Api\V1\Admin\FAQController;
 use App\Http\Controllers\Api\V1\Admin\ContactMessageController;
-use App\Http\Controllers\Api\V1\Admin\LanguageSettingController;
 
 Route::group(['prefix' => '/v1'], function () {
 
@@ -90,11 +89,6 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
     Route::get('contact_messages/{contact_message}', [ContactMessageController::class, 'show'])->middleware('adminPermission:contact_messages.view');
     Route::put('contact_messages/{contact_message}', [ContactMessageController::class, 'update'])->middleware('adminPermission:contact_messages.edit');
     Route::delete('contact_messages/{contact_message}', [ContactMessageController::class, 'delete'])->middleware('adminPermission:contact_messages.delete');
-
-
-    Route::get('language_settings', [LanguageSettingController::class, 'getSetting'])->middleware('adminPermission:language_settings.view');
-    Route::post('language_settings', [LanguageSettingController::class, 'updateSetting'])->middleware('adminPermission:language_settings.edit');
-
 
     Route::post('/logout', [AuthController::class, 'logout']);
 

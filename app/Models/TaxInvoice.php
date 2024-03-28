@@ -7,13 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class LanguageSetting extends Model
+class TaxInvoice extends Model
 {
     use HasFactory,SoftDeletes;
     protected $guarded = [];
-    public function user(): ?BelongsTo
+    public function booking(): ?BelongsTo
     {
-        return $this->belongsTo(User::class,'user_id');
+        return $this->belongsTo(Booking::class,'booking_id');
     }
     public function createdBy(): ?BelongsTo
     {

@@ -11,6 +11,9 @@ use App\Http\Controllers\Api\V1\General\CancellationReasonController;
 use App\Http\Controllers\Api\V1\General\WalletController;
 use App\Http\Controllers\Api\V1\General\WalletTransactionController;
 use App\Http\Controllers\Api\V1\General\PromoCodeController;
+use App\Http\Controllers\Api\V1\General\ReviewController;
+use App\Http\Controllers\Api\V1\General\ReviewReportController;
+use App\Http\Controllers\Api\V1\Admin\LanguageSettingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +33,7 @@ Route::group(['prefix' => '/v1'], function() {
     Route::get('service_categories', [ServiceCategoryController::class, 'index']);
     Route::get('client_cancellation_reasons', [ClientCancellationReasonController::class, 'index']);
     Route::get('cancellation_reasons', [CancellationReasonController::class, 'index']);
+    Route::get('reviews', [ReviewController::class, 'index']);
 
 });
 
@@ -88,5 +92,20 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function() {
         Route::get('promo_codes/{promo_code}', [PromoCodeController::class, 'show'])->middleware('adminPermission:promo_codes.view');
         Route::put('promo_codes/{promo_code}', [PromoCodeController::class, 'update'])->middleware('adminPermission:promo_codes.edit');
         Route::delete('promo_codes/{promo_code}', [PromoCodeController::class, 'delete'])->middleware('adminPermission:promo_codes.delete');
+
+        Route::post('reviews', [ReviewController::class, 'store'])->middleware('adminPermission:reviews.create');
+        Route::get('reviews/{review}', [ReviewController::class, 'show'])->middleware('adminPermission:reviews.view');
+        Route::put('reviews/{review}', [ReviewController::class, 'update'])->middleware('adminPermission:reviews.edit');
+        Route::delete('reviews/{review}', [ReviewController::class, 'delete'])->middleware('adminPermission:reviews.delete');
+
+        Route::get('review_reports', [ReviewReportController::class, 'index'])->middleware('adminPermission:review_reports.view');
+        Route::post('review_reports', [ReviewReportController::class, 'store'])->middleware('adminPermission:review_reports.create');
+        Route::get('review_reports/{review_report}', [ReviewReportController::class, 'show'])->middleware('adminPermission:review_reports.view');
+        Route::put('review_reports/{review_report}', [ReviewReportController::class, 'update'])->middleware('adminPermission:review_reports.edit');
+        Route::delete('review_reports/{review_report}', [ReviewReportController::class, 'delete'])->middleware('adminPermission:review_reports.delete');
+
+
+    Route::get('language_settings', [LanguageSettingController::class, 'getSetting'])->middleware('adminPermission:language_settings.view');
+    Route::post('language_settings', [LanguageSettingController::class, 'updateSetting'])->middleware('adminPermission:language_settings.edit');
 
 });
