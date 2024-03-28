@@ -18,4 +18,7 @@ class BookingService extends AbstractService
     public function pay($id){
         return $this->repo->pay($id);
     }
+    public function cancel($id){
+        return $this->repo->cancel($id);
+    }
   }

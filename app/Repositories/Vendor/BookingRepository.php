@@ -48,13 +48,23 @@ class BookingRepository extends AbstractRepository
         try{
             $booking=Booking::findOrFail($id);
             $booking->payment_status=1;
+            $booking->status='confirmed';
             $booking->is_active=1;
             return $booking->save();
         } catch (\Exception $e) {
             DB::rollback();
             return ['error'=>$e->getMessage()];
         }
-
+    }
+     public function cancel($id){
+        try{
+            $booking=Booking::findOrFail($id);
+            $booking->status='canceled';
+            return $booking->save();
+        } catch (\Exception $e) {
+            DB::rollback();
+            return ['error'=>$e->getMessage()];
+        }
     }
 
     protected function getAvailableEmployee($service_id,$day,$time)

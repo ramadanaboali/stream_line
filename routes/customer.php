@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\Customer\AuthController;
 use App\Http\Controllers\Api\V1\Customer\BookingController;
+use App\Http\Controllers\Api\V1\Customer\HomeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,11 +23,14 @@ Route::group(['prefix' => '/v1'], function () {
     Route::post('/confirm-reset', [AuthController::class, 'confirmReset']);
     Route::post('/login', [AuthController::class, 'login']);
 
+    Route::get('search', [HomeController::class, 'search']);
+
 });
 
 Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
 
     Route::get('bookings/pay/{id}', [BookingController::class, 'pay']);
+    Route::get('bookings/cancel/{id}', [BookingController::class, 'cancel']);
 
     Route::get('bookings', [BookingController::class, 'index']);
     Route::post('bookings', [BookingController::class, 'store']);

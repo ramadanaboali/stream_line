@@ -19,6 +19,7 @@ return new class extends Migration
             $table->decimal('sub_total',8,2)->default(0);
             $table->decimal('discount',8,2)->default(0);
             $table->decimal('total',8,2)->default(0);
+            $table->enum('status', ['confirmed', 'notconfirmed','compleated','not_available','canceled'])->default('notconfirmed');
             $table->enum('payment_way', ['online', 'cash'])->default('cash');
             $table->string('discount_code')->nullable();
             $table->longText('notes')->nullable();

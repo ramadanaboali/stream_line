@@ -9,6 +9,7 @@ use App\Models\Booking;
 use App\Services\General\StorageService;
 use App\Services\Customer\BookingService;
 use Illuminate\Support\Facades\Schema;
+
 use function response;
 
 class BookingController extends Controller
@@ -16,7 +17,7 @@ class BookingController extends Controller
     protected BookingService $service;
     protected StorageService $storageService;
 
-    public function __construct(BookingService $service,StorageService $storageService)
+    public function __construct(BookingService $service, StorageService $storageService)
     {
         $this->storageService = $storageService;
         $this->service = $service;
@@ -36,7 +37,8 @@ class BookingController extends Controller
         return response()->apiSuccess($data);
     }
 
-    public function show($id){
+    public function show($id)
+    {
         return response()->apiSuccess($this->service->get($id));
     }
 
@@ -51,6 +53,10 @@ class BookingController extends Controller
     {
         return response()->apiSuccess($this->service->pay($id));
     }
+    public function cancel($id)
+    {
+        return response()->apiSuccess($this->service->cancel($id));
+    }
 
     public function update(BookingRequest $request, Booking $bokking)
     {
@@ -63,7 +69,7 @@ class BookingController extends Controller
             $storedPath = $this->storageService->storeFile($file, $folder_path);
             $data['image'] = $storedPath;
         }
-        return response()->apiSuccess($this->service->update($data,$bokking));
+        return response()->apiSuccess($this->service->update($data, $bokking));
     }
     public function delete(Booking $bokking)
     {
