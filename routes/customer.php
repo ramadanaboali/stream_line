@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\V1\Customer\AuthController;
 use App\Http\Controllers\Api\V1\Customer\BookingController;
 use App\Http\Controllers\Api\V1\Customer\HomeController;
+use App\Http\Controllers\Api\V1\Customer\WishListController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -37,6 +38,12 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
     Route::get('bookings/{booking}', [BookingController::class, 'show']);
     Route::put('bookings/{booking}', [BookingController::class, 'update']);
     Route::delete('bookings/{booking}', [BookingController::class, 'delete']);
+
+    Route::get('wish_lists', [WishListController::class, 'index']);
+    Route::post('wish_lists', [WishListController::class, 'store']);
+    Route::get('wish_lists/{wish_list}', [WishListController::class, 'show']);
+    Route::put('wish_lists/{wish_list}', [WishListController::class, 'update']);
+    Route::delete('wish_lists/{wish_list}', [WishListController::class, 'delete']);
 
     Route::post('/update-profile', [AuthController::class, 'updateProfile']);
     Route::post('/send-code', [AuthController::class, 'sendCode']);

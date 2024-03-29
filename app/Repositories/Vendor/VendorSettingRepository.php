@@ -1,16 +1,15 @@
 <?php
 
-namespace App\Repositories\Admin;
-use App\Models\PrivacyPolicy;
-use App\Repositories\AbstractRepository;
+namespace App\Repositories\Vendor;
 
-class PrivacyPolicyRepository extends AbstractRepository
+use App\Models\VendorSetting;
+use App\Repositories\AbstractRepository;
+class VendorSettingRepository extends AbstractRepository
 {
     public function __construct()
     {
-        parent::__construct(PrivacyPolicy::class);
+        parent::__construct(VendorSetting::class);
     }
-
     public function getSetting($user_id,$vendor)
     {
         if($vendor){
@@ -24,8 +23,12 @@ class PrivacyPolicyRepository extends AbstractRepository
                 "is_system"=> '1',
             ];
         }
-        $item=  PrivacyPolicy::firstOrCreate($query, [
-            "content"=> "Privacy & Policy",
+        $item=  VendorSetting::firstOrCreate($query, [
+            "stock_alert"=> 1,
+            "calender_differance"=> 10,
+            "booking_differance"=> 1,
+            "cancel_booking"=> 1,
+            "reschedule_booking"=> 1,
             "created_by"=> $user_id,
         ]);
         return $item;
@@ -43,12 +46,15 @@ class PrivacyPolicyRepository extends AbstractRepository
                 "is_system"=> '1',
             ];
         }
-        $item= PrivacyPolicy::firstOrCreate($query, [
-            "content"=> "Privacy & Policy",
+        $item= VendorSetting::firstOrCreate($query, [
+            "stock_alert"=> 1,
+            "calender_differance"=> 10,
+            "booking_differance"=> 1,
+            "cancel_booking"=> 1,
+            "reschedule_booking"=> 1,
             "created_by"=> $user_id,
         ]);
         return $item->update($data);
     }
-
 
 }

@@ -7,14 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class PrivacyPolicy extends Model
+class Banner extends Model
 {
     use HasFactory,SoftDeletes;
     protected $guarded = [];
-    public function vendor(): ?BelongsTo
-    {
-        return $this->belongsTo(Vendor::class,'vendor_id');
-    }
+    protected $appends = ['photo'];
     public function createdBy(): ?BelongsTo
     {
         return $this->belongsTo(User::class,'created_by');
@@ -22,5 +19,9 @@ class PrivacyPolicy extends Model
     public function updatedBy(): ?BelongsTo
     {
         return $this->belongsTo(User::class,'updated_by');
+    }
+    public function getPhotoAttribute()
+    {
+        return url($this->image);
     }
 }

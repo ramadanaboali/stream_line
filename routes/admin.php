@@ -10,10 +10,9 @@ use App\Http\Controllers\Api\V1\Admin\TaxSettingController;
 use App\Http\Controllers\Api\V1\Admin\NotificationSettingController;
 use App\Http\Controllers\Api\V1\Admin\SystemNotificationController;
 use App\Http\Controllers\Api\V1\Admin\HelpCenterController;
-use App\Http\Controllers\Api\V1\Admin\TermConditionController;
-use App\Http\Controllers\Api\V1\Admin\PrivacyPolicyController;
 use App\Http\Controllers\Api\V1\Admin\FAQController;
 use App\Http\Controllers\Api\V1\Admin\ContactMessageController;
+use App\Http\Controllers\Api\V1\Admin\BannerController;
 
 Route::group(['prefix' => '/v1'], function () {
 
@@ -25,6 +24,7 @@ Route::group(['prefix' => '/v1'], function () {
     Route::get('packages', [PackageController::class, 'index']);
     Route::get('help_centers', [HelpCenterController::class, 'index']);
     Route::get('f_a_q_s', [FAQController::class, 'index']);
+    Route::get('banners', [BannerController::class, 'index']);
 
     Route::post('contact_messages', [ContactMessageController::class, 'store']);
 
@@ -73,12 +73,6 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
     Route::put('help_centers/{help_center}', [HelpCenterController::class, 'update'])->middleware('adminPermission:help_centers.edit');
     Route::delete('help_centers/{help_center}', [HelpCenterController::class, 'delete'])->middleware('adminPermission:help_centers.delete');
 
-    Route::get('term_conditions', [TermConditionController::class, 'getSetting'])->middleware('adminPermission:term_conditions.view');
-    Route::post('term_conditions', [TermConditionController::class, 'updateSetting'])->middleware('adminPermission:term_conditions.edit');
-
-    Route::get('privacy_policies', [PrivacyPolicyController::class, 'getSetting'])->middleware('adminPermission:privacy_policies.view');
-    Route::post('privacy_policies', [PrivacyPolicyController::class, 'updateSetting'])->middleware('adminPermission:privacy_policies.edit');
-
     Route::post('f_a_q_s', [FAQController::class, 'store'])->middleware('adminPermission:f_a_q_s.create');
     Route::get('f_a_q_s/{f_a_q}', [FAQController::class, 'show'])->middleware('adminPermission:f_a_q_s.view');
     Route::put('f_a_q_s/{f_a_q}', [FAQController::class, 'update'])->middleware('adminPermission:f_a_q_s.edit');
@@ -89,6 +83,12 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
     Route::get('contact_messages/{contact_message}', [ContactMessageController::class, 'show'])->middleware('adminPermission:contact_messages.view');
     Route::put('contact_messages/{contact_message}', [ContactMessageController::class, 'update'])->middleware('adminPermission:contact_messages.edit');
     Route::delete('contact_messages/{contact_message}', [ContactMessageController::class, 'delete'])->middleware('adminPermission:contact_messages.delete');
+
+    Route::post('banners', [BannerController::class, 'store'])->middleware('adminPermission:banners.create');
+    Route::get('banners/{banner}', [BannerController::class, 'show'])->middleware('adminPermission:banners.view');
+    Route::put('banners/{banner}', [BannerController::class, 'update'])->middleware('adminPermission:banners.edit');
+    Route::delete('banners/{banner}', [BannerController::class, 'delete'])->middleware('adminPermission:banners.delete');
+
 
     Route::post('/logout', [AuthController::class, 'logout']);
 
