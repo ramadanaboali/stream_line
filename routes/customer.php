@@ -23,14 +23,16 @@ Route::group(['prefix' => '/v1'], function () {
     Route::post('/check-code', [AuthController::class, 'checkCode']);
     Route::post('/confirm-reset', [AuthController::class, 'confirmReset']);
     Route::post('/login', [AuthController::class, 'login']);
-
     Route::get('search', [HomeController::class, 'search']);
+    Route::get('errorURL', [HomeController::class, 'errorURL'])->name('errorURL');
+    Route::get('successURL', [HomeController::class, 'responseURL'])->name('successURL');
 
 });
 
 Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
+    Route::get('check/promocode/{code}', [BookingController::class, 'checkPromocode']);
 
-    Route::get('bookings/pay/{id}', [BookingController::class, 'pay']);
+    Route::post('bookings/pay', [BookingController::class, 'pay']);
     Route::get('bookings/cancel/{id}', [BookingController::class, 'cancel']);
 
     Route::get('bookings', [BookingController::class, 'index']);

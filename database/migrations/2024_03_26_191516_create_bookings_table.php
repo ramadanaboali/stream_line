@@ -21,7 +21,8 @@ return new class extends Migration
             $table->decimal('total',8,2)->default(0);
             $table->enum('status', ['confirmed', 'notconfirmed','compleated','not_available','canceled'])->default('notconfirmed');
             $table->enum('payment_way', ['online', 'cash'])->default('cash');
-            $table->string('discount_code')->nullable();
+            $table->decimal('promocode_value')->nullable();
+            $table->unsignedBigInteger('promocode_id')->nullable();
             $table->longText('notes')->nullable();
             $table->unsignedBigInteger('vendor_id');
             $table->unsignedBigInteger('user_id');
@@ -34,6 +35,7 @@ return new class extends Migration
             $table->enum('is_active', [0,1])->default(1);
             $table->timestamps();
             $table->softDeletes();
+            $table->foreign('promocode_id')->references('id')->on('promo_codes')->onDelete('cascade');
             $table->foreign('vendor_id')->references('id')->on('vendors')->onDelete('cascade');
             $table->foreign('offer_id')->references('id')->on('offers')->onDelete('cascade');
             $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade');

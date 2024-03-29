@@ -5,9 +5,10 @@ namespace App\Repositories\Vendor;
 use App\Models\Booking;
 use App\Models\Employee;
 use App\Models\OfficialHour;
+use App\Models\PromoCode;
 use App\Models\Service;
 use App\Repositories\AbstractRepository;
-use Carbon\Carbon;
+use App\Services\ArbPg;
 use Illuminate\Support\Facades\DB;
 
 class BookingRepository extends AbstractRepository
@@ -24,9 +25,23 @@ class BookingRepository extends AbstractRepository
         } else {
             $employee_id = $this->getAvailableEmployee($data['service_id'], $data['booking_day'], $data['booking_time'],$service->vendor_id);
             if(empty($employee_id)){
-                return ['data'=>[],'message'=>__('api.no_employee_available_in_this_time'),'success'=>false];
+                return ['data'=>null,'message'=>__('api.no_employee_available_in_this_time'),'success'=>false];
             }
         }
+        $promocode_value = 0;
+        $services_cost = $service->price;
+        if (array_key_exists('promocode_id', $data)) {
+            $check_code = $this->promocode($data['promocode_id'],true);
+            if($check_code['status']==0){
+                return ['data'=>null,'message'=>$check_code['message'],'success'=>false];
+            }
+            if($check_code['data']['discount_type']=='percentage'){
+                $promocode_value = ($check_code['data']['amount']*$services_cost)/100;
+            }else{
+                $promocode_value = $check_code['data']['amount'];
+            }
+        }
+        $total=$services_cost-$promocode_value;
         $inputs = [
             'user_id' => auth()->id(),
             'employee_id' => $employee_id,
@@ -34,11 +49,11 @@ class BookingRepository extends AbstractRepository
             'vendor_id' => $service->vendor_id,
             'booking_time' => $data['booking_time'],
             'attendance' => $data['attendance'],
-            'sub_total' => $data['sub_total'],
-            'discount' => $data['discount'],
-            'total' => $data['total'],
+            'sub_total' => $services_cost,
+            'total' => $total,
             'payment_way' => $data['payment_way'],
-            'discount_code' => $data['discount_code'] ?? null,
+            'promocode_id' => $data['promocode_id'] ?? null,
+            'promocode_value' => $promocode_value,
             'notes' => $data['notes'] ?? null,
             'service_id' => $data['service_id'],
             'offer_id' => $data['offer_id'] ?? null,
@@ -49,17 +64,15 @@ class BookingRepository extends AbstractRepository
 
     }
 
-    public function pay($id)
+    public function pay($data)
     {
         try {
-            $booking = Booking::findOrFail($id);
-            $booking->payment_status = 1;
-            $booking->status = 'confirmed';
-            $booking->is_active = 1;
-            return $booking->save();
+            $booking = Booking::findOrFail($data['booking_id']);
+            $arbPg = new ArbPg();
+            return $arbPg->getmerchanthostedPaymentid($data['card_number'], $data['expiry_month'], $data['expiry_year'], $data['cvv'], $data['holder_name'],$booking->total,$data['booking_id']);
+
         } catch (\Exception $e) {
-            DB::rollback();
-            return ['error' => $e->getMessage()];
+            return  $e->getMessage();
         }
     }
     public function cancel($id)
@@ -71,6 +84,33 @@ class BookingRepository extends AbstractRepository
         } catch (\Exception $e) {
             DB::rollback();
             return ['error' => $e->getMessage()];
+        }
+    }
+    public function promocode($code,$is_id=false)
+    {
+        try {
+            if($is_id){
+                $promocode = PromoCode::find($code);
+            }else{
+                $promocode = PromoCode::where('code',$code)->first();
+            }
+            if (!$promocode) {
+                return ['message'=> __('api.promocode_not_found'),'status'=>0,'data'=>[]];
+            }
+            if ($promocode->start_date > date('Y-m-d')) {
+                return ['message'=> __('api.promocode_not_started'),'status'=>0,'data'=>[]];
+            }
+            if ($promocode->end_date < date('Y-m-d')) {
+                return ['message'=> __('api.promocode_expired'),'status'=>0,'data'=>[]];
+            }
+            if ($promocode->category_type == 'private') {
+                if ($promocode->user_id != auth()->user()->id) {
+                    return ['message'=> __('api.promocode_dosnt_belong_to_you'),'status'=>0,'data'=>[]];
+                }
+            }
+            return ['message'=> __('api.promocode_success'),'status'=> 1,'data'=>['amount'=>$promocode->value,'discount_type'=>$promocode->discount_type]];
+        } catch (\Exception $e) {
+            return ['message'=> $e->getMessage(),'status'=> 0,'data'=>[]];
         }
     }
 

@@ -42,7 +42,7 @@ class BookingRequest extends FormRequest
                         'discount'=>'required|numeric',
                         'total'=>'required|numeric',
                         'payment_way' => 'required|in:online,cash',
-                        'discount_code' => 'required',
+                        'promocode_id' => 'sometimes|exists:promo_codes,id',
                         'notes' => 'sometimes|string|min:3',
                         'service_id' => 'required|exists:services,id',
                         'offer_id' => 'sometimes|exists:offers,id',

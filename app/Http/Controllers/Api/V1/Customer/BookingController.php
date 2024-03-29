@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api\V1\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PaginateRequest;
+use App\Http\Requests\Customer\PayRequest;
 use App\Http\Requests\Customer\BookingRequest;
 use App\Models\Booking;
+use App\Models\PromoCode;
 use App\Services\General\StorageService;
 use App\Services\Customer\BookingService;
 use Illuminate\Support\Facades\Schema;
@@ -52,9 +54,14 @@ class BookingController extends Controller
         }
         return response()->apiFail($result['message']);
     }
-    public function pay($id)
+    public function checkPromocode($code)
     {
-        return response()->apiSuccess($this->service->pay($id));
+        return response()->apiSuccess($this->service->promocode($code));
+    }
+    public function pay(PayRequest $request)
+    {
+        $data= $request->all();
+        return response()->apiSuccess($this->service->pay($data));
     }
     public function cancel($id)
     {
