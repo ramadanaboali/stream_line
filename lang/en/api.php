@@ -10,6 +10,7 @@ return [
     'update_success' => 'تم التحديث بنجاح',
     'register_success' => 'تم التسجيل بنجاح',
     'current_password_invalid' => 'كلمة المرور الحالية خطأ',
+    'no_employee_available_in_this_time' => 'لا يوجد اى موظف متاح فى هذا الوقت يرجى اختيار وقت اخر',
     'xxxxxxxx' => 'xxxxxxxx',
 
 ];

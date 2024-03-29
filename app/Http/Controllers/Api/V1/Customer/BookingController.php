@@ -46,8 +46,11 @@ class BookingController extends Controller
     {
 
         $data = $request->all();
-
-        return response()->apiSuccess($this->service->createItem($data));
+        $result = $this->service->createItem($data);
+        if($result['success']){
+            return response()->apiSuccess($result['data'],$result['message']);
+        }
+        return response()->apiFail($result['message']);
     }
     public function pay($id)
     {

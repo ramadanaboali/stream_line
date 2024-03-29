@@ -19,6 +19,11 @@ class Employee extends Model
         return $this->belongsTo(Vendor::class,'vendor_id','id')->where('vendor_id',auth()->user()->model_id);
     }
 
+    public function bookings(): ?HasMany
+    {
+        return $this->hasMany(Booking::class, 'employee_id');
+
+    }
     public function branches(): ?BelongsToMany
     {
         return $this->belongsToMany(EmployeeBranch::class, 'employee_branches', 'employee_id', 'branch_id');
