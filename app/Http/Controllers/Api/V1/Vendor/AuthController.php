@@ -82,7 +82,7 @@ class AuthController extends Controller
 
                 if ($user && $role) {
                     $user->syncRoles($role->id);
-                    $role->syncPermissions(Permission::where('model_type', 'vendor')->get());
+                    $role->syncPermissions(Permission::whereIn('model_type', ['vendor','general'])->get());
                     Artisan::call('cache:clear');
                 }
                 $vendor->vendorCategories()->attach($request->category_id);

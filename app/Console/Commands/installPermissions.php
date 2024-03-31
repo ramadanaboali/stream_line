@@ -79,6 +79,21 @@ class installPermissions extends Command
                             ];
                         }
                     }
+                    if (strpos($middleware, 'generalPermission:') > -1) {
+                        $permission = explode(':', $middleware);
+                        if (!in_array($permission[1], $tempPermissions) && !in_array($permission[1], $permissions)) {
+                            array_push($tempPermissions, $permission[1]);
+                            $group = explode('.', $permission[1]);
+                            $arr[] = [
+                                'name' => $permission[1],
+                                'model_type' => 'general',
+                                'group' => $group[0] ?? null,
+                                'guard_name' => 'api',
+                                'created_at' => now(),
+                                'updated_at' => now(),
+                            ];
+                        }
+                    }
                 }
             }
         }
@@ -93,25 +108,25 @@ class installPermissions extends Command
     private function assignPermissionsToAdmin(): void
     {
         $user = User::where('email', config('admin.email'))->first();
-        $role = Role::where('name', 'superadmin')->where('model_type','admin')->first();
+        $role = Role::where('name', 'superadmin')->where('model_type', 'admin')->first();
         if(!$role) {
             $role = Role::Create([
                 'name' => 'superadmin',
                 'model_type' => 'admin',
                 'guard_name' => 'api',
-                'can_edit'=>0,
+                'can_edit' => 0,
                 'display_name' => 'سوبر ادمن'
             ]);
         }
         if ($user && $role) {
             $user->syncRoles($role->id);
-            $role->syncPermissions(Permission::where('model_type', 'admin')->get());
+            $role->syncPermissions(Permission::whereIn('model_type', ['admin','general'])->get());
             Artisan::call('cache:clear');
             $this->info("All Permissions assigned to user {$user->email}");
         }
-        $vendorRole = Role::firstOrCreate(['name'=>'admin','model_type'=>'vendor','can_edit'=>0],['name'=>'admin','model_type'=>'vendor','can_edit'=>0,'guard_name' => 'api','display_name' => ' ادمن']);
+        $vendorRole = Role::firstOrCreate(['name' => 'admin','model_type' => 'vendor','can_edit' => 0], ['name' => 'admin','model_type' => 'vendor','can_edit' => 0,'guard_name' => 'api','display_name' => ' ادمن']);
         if ($vendorRole) {
-            $vendorPermissions = Permission::where('model_type', 'vendor')->get();
+            $vendorPermissions = Permission::whereIn('model_type', ['vendor','general'])->get();
             $vendorRole->syncPermissions($vendorPermissions);
         }
     }
