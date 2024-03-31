@@ -16,6 +16,7 @@ return [
     'promocode_not_started' => 'لا يمكن تطبيق كود الخصم هذا فى الوقت الحالى',
     'promocode_success' => 'تم تطبيق كود الخصم بنجاح',
     'promocode_not_found' => 'كود الخصم غير موجود',
+    'promocode_expired_count' => 'تم الوصول للحد الاقصى من هذا الكود',
     'xxxxxxxx' => 'xxxxxxxx',
 
 ];
