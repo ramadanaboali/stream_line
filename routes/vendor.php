@@ -44,7 +44,7 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
     Route::delete('users/{user}', [UserController::class, 'delete'])->middleware('vendorPermission:users.delete');
 
     Route::get('branches', [BranchController::class, 'index'])->middleware('vendorPermission:branches.view');
-    Route::post('branches', [BranchController::class, 'store'])->middleware('vendorPermission:branches.create');
+    Route::post('branches', [BranchController::class, 'store'])->middleware(['vendorPermission:branches.create','checkSubscription:branches']);
     Route::get('branches/{branch}', [BranchController::class, 'show'])->middleware('vendorPermission:branches.view');
     Route::put('branches/{branch}', [BranchController::class, 'update'])->middleware('vendorPermission:branches.edit');
     Route::delete('branches/{branch}', [BranchController::class, 'delete'])->middleware('vendorPermission:branches.delete');
@@ -74,7 +74,7 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
     Route::delete('services/{service}', [ServiceController::class, 'delete'])->middleware('vendorPermission:services.delete');
 
     Route::get('employees', [EmployeeController::class, 'index'])->middleware('vendorPermission:employees.view');
-    Route::post('employees', [EmployeeController::class, 'store'])->middleware('vendorPermission:employees.create');
+    Route::post('employees', [EmployeeController::class, 'store'])->middleware(['vendorPermission:employees.create','checkSubscription:employees']);
     Route::post('employees/employee-service', [EmployeeController::class, 'employeeService'])->middleware('vendorPermission:employees.create');
     Route::get('employees/{employee}', [EmployeeController::class, 'show'])->middleware('vendorPermission:employees.view');
     Route::put('employees/{employee}', [EmployeeController::class, 'update'])->middleware('vendorPermission:employees.edit');

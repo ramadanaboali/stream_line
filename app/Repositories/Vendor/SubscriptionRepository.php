@@ -47,7 +47,7 @@ class SubscriptionRepository extends AbstractRepository
         $subscription=Subscription::create([
             'auto_renew'=>$data['auto_renew'],
             'package_id'=>$data['package_id'],
-            'user_id'=>$data['user_id'],
+            'vendor_id'=>$data['vendor_id'],
             'created_by'=>$data['created_by'],
             'period'=>$package->period,
             'subscription_type'=>$package->subscription_type,
@@ -68,7 +68,7 @@ class SubscriptionRepository extends AbstractRepository
     public function pay($data){
         $subscription=Subscription::findOrFail($data['subscription_id']);
         $today =Carbon::now();
-        $activeSubscription=Subscription::where('user_id',$subscription->user_id)->where('status','active')->first();
+        $activeSubscription=Subscription::where('vendor_id',$subscription->user_id)->where('status','active')->first();
         DB::beginTransaction();
         try {
             if(!$activeSubscription){
