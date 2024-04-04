@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\V1\Admin\HelpCenterController;
 use App\Http\Controllers\Api\V1\Admin\FAQController;
 use App\Http\Controllers\Api\V1\Admin\ContactMessageController;
 use App\Http\Controllers\Api\V1\Admin\BannerController;
+use App\Http\Controllers\Api\V1\Admin\UserController;
 
 Route::group(['prefix' => '/v1'], function () {
 
@@ -44,6 +45,13 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
     Route::post('/update-email', [AuthController::class, 'updateEmail']);
     Route::post('/update-phone', [AuthController::class, 'updatePhone']);
     Route::get('/profile', [AuthController::class, 'profile']);
+
+
+    Route::get('users', [UserController::class, 'index'])->middleware('adminPermission:users.view');
+    Route::post('users', [UserController::class, 'store'])->middleware('adminPermission:users.create');
+    Route::get('users/{user}', [UserController::class, 'show'])->middleware('adminPermission:users.view');
+    Route::put('users/{user}', [UserController::class, 'update'])->middleware('adminPermission:users.edit');
+    Route::delete('users/{user}', [UserController::class, 'delete'])->middleware('adminPermission:users.delete');
 
     Route::post('packages', [PackageController::class, 'store'])->middleware('adminPermission:packages.create');
     Route::get('packages/{package}', [PackageController::class, 'show'])->middleware('adminPermission:packages.view');

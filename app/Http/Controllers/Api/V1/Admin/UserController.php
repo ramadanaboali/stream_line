@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1\Vendor;
+namespace App\Http\Controllers\Api\V1\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PaginateRequest;
@@ -9,14 +9,15 @@ use App\Models\User;
 use App\Services\Vendor\UserService;
 use App\Services\General\StorageService;
 use Illuminate\Support\Facades\Schema;
+
 use function response;
 
 class UserController extends Controller
 {
     protected UserService $service;
-        protected StorageService $storageService;
+    protected StorageService $storageService;
 
-    public function __construct(UserService $service,StorageService $storageService)
+    public function __construct(UserService $service, StorageService $storageService)
     {
         $this->service = $service;
 
@@ -40,7 +41,8 @@ class UserController extends Controller
         return response()->apiSuccess($data);
     }
 
-    public function show($id){
+    public function show($id)
+    {
         return response()->apiSuccess($this->service->get($id));
     }
 
@@ -55,14 +57,14 @@ class UserController extends Controller
         }
         $data['image'] = $storedPath;
         $data['type'] = 'admin';
-        $data['model_id'] = auth()->user()->model_id;
+        $data['model_id'] = null;
         return response()->apiSuccess($this->service->createUser($data));
     }
 
     public function update(UserRequest $request, User $user)
     {
         $data = $request->all();
-        return response()->apiSuccess($this->service->updateUser($data,$user));
+        return response()->apiSuccess($this->service->updateUser($data, $user));
     }
     public function delete(User $user)
     {

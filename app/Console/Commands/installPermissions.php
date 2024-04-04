@@ -41,7 +41,9 @@ class installPermissions extends Command
 
     private function installRoutesPermissions(): void
     {
-        $permissions = Permission::where('guard_name', 'api')->get()->pluck('name')->toArray();
+        $adminpermissions = Permission::where('guard_name', 'api')->where('model_type','admin')->get()->pluck('name')->toArray();
+        $generalpermissions = Permission::where('guard_name', 'api')->where('model_type','general')->get()->pluck('name')->toArray();
+        $vendorpermissions = Permission::where('guard_name', 'api')->where('model_type','vendor')->get()->pluck('name')->toArray();
         $routes = Route::getRoutes();
         $arr = [];
         $tempPermissions = [];
@@ -51,7 +53,7 @@ class installPermissions extends Command
                 foreach ($middleware as $middleware) {
                     if (strpos($middleware, 'adminPermission:') > -1) {
                         $permission = explode(':', $middleware);
-                        if (!in_array($permission[1], $tempPermissions) && !in_array($permission[1], $permissions)) {
+                        if (!in_array($permission[1], $tempPermissions) && !in_array($permission[1], $adminpermissions)) {
                             array_push($tempPermissions, $permission[1]);
                             $group = explode('.', $permission[1]);
                             $arr[] = [
@@ -66,7 +68,7 @@ class installPermissions extends Command
                     }
                     if (strpos($middleware, 'vendorPermission:') > -1) {
                         $permission = explode(':', $middleware);
-                        if (!in_array($permission[1], $tempPermissions) && !in_array($permission[1], $permissions)) {
+                        if (!in_array($permission[1], $tempPermissions) && !in_array($permission[1], $vendorpermissions)) {
                             array_push($tempPermissions, $permission[1]);
                             $group = explode('.', $permission[1]);
                             $arr[] = [
@@ -81,7 +83,7 @@ class installPermissions extends Command
                     }
                     if (strpos($middleware, 'generalPermission:') > -1) {
                         $permission = explode(':', $middleware);
-                        if (!in_array($permission[1], $tempPermissions) && !in_array($permission[1], $permissions)) {
+                        if (!in_array($permission[1], $tempPermissions) && !in_array($permission[1], $generalpermissions)) {
                             array_push($tempPermissions, $permission[1]);
                             $group = explode('.', $permission[1]);
                             $arr[] = [
