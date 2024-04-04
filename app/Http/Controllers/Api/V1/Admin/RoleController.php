@@ -45,13 +45,18 @@ class RoleController extends Controller
     public function store(RoleRequest $request)
     {
         $data = $request->all();
-
+        $data['model_type'] = 'admin';
+        $data['guard_name'] = 'api';
         return response()->apiSuccess($this->service->store($data));
     }
 
     public function update(RoleRequest $request, Role $role)
     {
         $data = $request->all();
+
+            $data['model_type'] = 'admin';
+            $data['guard_name'] = 'api';
+
         return response()->apiSuccess($this->service->update($data, $role));
     }
     public function delete(Role $role)
