@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name_ar');
             $table->unsignedBigInteger('package_id');
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('vendor_id');
             $table->enum('period',['unknown','days','month','quarter','half_year','year'])->default('unknown');
             $table->enum('subscription_type',["subscribe","commission","subscribe_and_commission"])->default("subscribe");
             $table->integer('days')->nullable();
@@ -34,7 +34,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('package_id')->references('id')->on('packages')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('vendor_id')->references('id')->on('vendors')->onDelete('cascade');
             $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('updated_by')->references('id')->on('users')->onDelete('cascade');
 
