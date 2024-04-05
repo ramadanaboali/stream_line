@@ -19,10 +19,23 @@ class RoleController extends Controller
     {
         $this->service = $service;
     }
-    public function index()
+    public function index(PaginateRequest $request)
     {
-        $data = Role::where('model_type', 'admin')->get();
-        return response()->apiSuccess($data);
+
+            $input = $this->service->inputs($request->all());
+            $model = new Role();
+            $columns = Schema::getColumnListing($model->getTable());
+
+            if (count($input["columns"]) < 1 || (count($input["columns"]) != count($input["column_values"])) || (count($input["columns"]) != count($input["operand"]))) {
+                $wheres = [];
+            } else {
+                $wheres = $this->service->whereOptions($input, $columns);
+
+            }
+            $data = $this->service->Paginate($input, $wheres,false);
+            //        $meta = $this->service->Meta($data,$input);
+            return response()->apiSuccess($data);
+
     }
 
     public function permissions()
@@ -32,7 +45,7 @@ class RoleController extends Controller
     }
     public function show($id)
     {
-        return response()->apiSuccess($this->service->get($id));
+            return response()->apiSuccess($this->service->getWithRelations($id, ['permissions']));
     }
 
     public function store(RoleRequest $request)

@@ -46,6 +46,7 @@ class installPermissions extends Command
         $vendorpermissions = Permission::where('guard_name', 'api')->where('model_type','vendor')->get()->pluck('name')->toArray();
         $routes = Route::getRoutes();
         $arr = [];
+        app()->setLocale('ar');
         $tempPermissions = [];
         foreach ($routes as $route) {
             $middleware = $route->middleware();
@@ -53,12 +54,14 @@ class installPermissions extends Command
                 foreach ($middleware as $middleware) {
                     if (strpos($middleware, 'adminPermission:') > -1) {
                         $permission = explode(':', $middleware);
-                        if (!in_array($permission[1], $tempPermissions) && !in_array($permission[1], $adminpermissions)) {
+                        if (!in_array($permission[1], $tempPermissions)) {
                             array_push($tempPermissions, $permission[1]);
                             $group = explode('.', $permission[1]);
                             $arr[] = [
                                 'name' => $permission[1],
                                 'model_type' => 'admin',
+                                'group_display_name' => __('permissions.'.($group[0]??null)),
+                                'display_name' => __('permissions.'.($group[1]??null)),
                                 'group' => $group[0] ?? null,
                                 'guard_name' => 'api',
                                 'created_at' => now(),
@@ -68,12 +71,14 @@ class installPermissions extends Command
                     }
                     if (strpos($middleware, 'vendorPermission:') > -1) {
                         $permission = explode(':', $middleware);
-                        if (!in_array($permission[1], $tempPermissions) && !in_array($permission[1], $vendorpermissions)) {
+                        if (!in_array($permission[1], $tempPermissions) ) {
                             array_push($tempPermissions, $permission[1]);
                             $group = explode('.', $permission[1]);
                             $arr[] = [
                                 'name' => $permission[1],
                                 'model_type' => 'vendor',
+                                'group_display_name' => __('permissions.'.($group[0]??null)),
+                                'display_name' => __('permissions.'.($group[1]??null)),
                                 'group' => $group[0] ?? null,
                                 'guard_name' => 'api',
                                 'created_at' => now(),
@@ -83,12 +88,14 @@ class installPermissions extends Command
                     }
                     if (strpos($middleware, 'generalPermission:') > -1) {
                         $permission = explode(':', $middleware);
-                        if (!in_array($permission[1], $tempPermissions) && !in_array($permission[1], $generalpermissions)) {
+                        if (!in_array($permission[1], $tempPermissions) ) {
                             array_push($tempPermissions, $permission[1]);
                             $group = explode('.', $permission[1]);
                             $arr[] = [
                                 'name' => $permission[1],
                                 'model_type' => 'general',
+                                'group_display_name' => __('permissions.'.($group[0]??null)),
+                                'display_name' => __('permissions.'.($group[1]??null)),
                                 'group' => $group[0] ?? null,
                                 'guard_name' => 'api',
                                 'created_at' => now(),
@@ -100,7 +107,14 @@ class installPermissions extends Command
             }
         }
         if (count($arr) > 0) {
-            Permission::insert($arr);
+            foreach ($arr as $row) {
+                Permission::updateOrCreate(
+                    ['name' => $row['name'],
+                    'model_type' => $row['model_type'],
+                    'guard_name' => $row['guard_name']],
+                    $row
+                );
+            }
             $this->info('Routes Permissions installed');
         }
     }
