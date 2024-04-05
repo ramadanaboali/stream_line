@@ -33,6 +33,7 @@ Route::group(['prefix' => '/v1'], function () {
 
 Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
 
+    Route::get('permissions', [RoleController::class, 'permissions']);
     Route::get('roles', [RoleController::class, 'index'])->middleware('adminPermission:roles.view');
     Route::post('roles', [RoleController::class, 'store'])->middleware('adminPermission:roles.create');
     Route::get('roles/{role}', [RoleController::class, 'show'])->middleware('adminPermission:roles.view');

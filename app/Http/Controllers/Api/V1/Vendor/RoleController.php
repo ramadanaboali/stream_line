@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1\Admin;
+namespace App\Http\Controllers\Api\V1\Vendor;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\General\RoleRequest;
@@ -21,13 +21,14 @@ class RoleController extends Controller
     }
     public function index()
     {
-        $data = Role::where('model_type', 'admin')->get();
+
+        $data = Role::where('model_type', 'vendor')->get();
         return response()->apiSuccess($data);
     }
 
     public function permissions()
     {
-        $permissions = Permission::where('guard_name', 'api')->whereIn('model_type', ['admin','general'])->get();
+        $permissions = Permission::where('guard_name', 'api')->whereIn('model_type', ['vendor','general'])->get();
         return response()->apiSuccess($permissions);
     }
     public function show($id)
