@@ -42,6 +42,7 @@ return new class () extends Migration {
             }
             $table->string('name');
             $table->tinyInteger('can_edit')->default(1);
+            $table->enum('is_active', [0,1])->default(1);
             $table->string('display_name')->nullable();
             $table->enum('model_type', ['admin','vendor'])->default('admin');
             $table->unsignedBigInteger('model_id')->nullable();
