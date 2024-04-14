@@ -56,11 +56,12 @@ class AuthController extends Controller
             $user = User::findOrFail(auth()->user()->id);
             $MsgID = rand(100000, 999999);
             $user->update(['reset_code' => $MsgID]);
-            if($request->filled('username'))
-            if(filter_var($request->username, FILTER_VALIDATE_EMAIL)){
-                Mail::to($request->username)->send(new SendCodeResetPassword($request->username, $MsgID));
-            }else{
-                Mail::to($user->email)->send(new SendCodeResetPassword($user->email, $MsgID));
+            if($request->filled('username')) {
+                if(filter_var($request->username, FILTER_VALIDATE_EMAIL)) {
+                    Mail::to($request->username)->send(new SendCodeResetPassword($request->username, $MsgID));
+                } else {
+                    Mail::to($user->email)->send(new SendCodeResetPassword($user->email, $MsgID));
+                }
             }
             return apiResponse(true, [$MsgID], __('api.reset_password_code_send'), null, 200);
         } catch (Exception $e) {
@@ -117,12 +118,12 @@ class AuthController extends Controller
             return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
     }
-      public function changePassword(ChangePasswordRequest $request)
+    public function changePassword(ChangePasswordRequest $request)
     {
         try {
             $user = auth()->user();
-            if(!Hash::check($request->current_password, $user->password)){
-                return apiResponse(false, null, __('api.current_password_invalid'), null,Response::HTTP_UNPROCESSABLE_ENTITY);
+            if(!Hash::check($request->current_password, $user->password)) {
+                return apiResponse(false, null, __('api.current_password_invalid'), null, Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             $user->update(['password' => Hash::make($request->password)]);
             return apiResponse(true, null, __('api.update_success'), null, 200);
@@ -142,13 +143,13 @@ class AuthController extends Controller
 
     public function updateProfile(ProfileRequest $request)
     {
-        try{
+        try {
             $currentUser = User::findOrFail(auth()->user()->id);
             $inputs = [
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
             ];
-            $image= $request->file('image');
+            $image = $request->file('image');
             if($image) {
                 $fileName = time() . rand(0, 999999999) . '.' . $image->getClientOriginalExtension();
                 $request->image->move(public_path('storage/users'), $fileName);
@@ -156,18 +157,18 @@ class AuthController extends Controller
             }
             $data = $currentUser->update($inputs);
             if ($data) {
-                return apiResponse(true, null, __('api.update_success'), null, 200);
+                return apiResponse(true, $currentUser, __('api.update_success'), null, 200);
             } else {
                 return apiResponse(false, null, __('api.cant_update'), null, 401);
             }
-         } catch (Exception $e) {
+        } catch (Exception $e) {
             return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
     }
 
     public function updateEmail(EmailRequest $request)
     {
-        try{
+        try {
             if(auth()->user()->reset_code != $request->code) {
                 return apiResponse(true, null, __('api.code_success'), null, 200);
             }
@@ -178,17 +179,18 @@ class AuthController extends Controller
             ];
             $data = $currentUser->update($inputs);
             if ($data) {
-                return apiResponse(true, null, __('api.update_success'), null, 200);
+                $currentUser = User::findOrFail(auth()->user()->id);
+                return apiResponse(true, $currentUser, __('api.update_success'), null, 200);
             } else {
                 return apiResponse(false, null, __('api.cant_update'), null, 401);
             }
-         } catch (Exception $e) {
+        } catch (Exception $e) {
             return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
     }
     public function updatePhone(PhoneRequest $request)
     {
-        try{
+        try {
             if(auth()->user()->reset_code != $request->code) {
                 return apiResponse(true, null, __('api.code_success'), null, 200);
             }
@@ -199,11 +201,13 @@ class AuthController extends Controller
             ];
             $data = $currentUser->update($inputs);
             if ($data) {
-                return apiResponse(true, null, __('api.update_success'), null, 200);
+
+                $currentUser = User::findOrFail(auth()->user()->id);
+                return apiResponse(true, $currentUser, __('api.update_success'), null, 200);
             } else {
                 return apiResponse(false, null, __('api.cant_update'), null, 401);
             }
-         } catch (Exception $e) {
+        } catch (Exception $e) {
             return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
     }
