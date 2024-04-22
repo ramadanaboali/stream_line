@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\V1\Admin\FAQController;
 use App\Http\Controllers\Api\V1\Admin\ContactMessageController;
 use App\Http\Controllers\Api\V1\Admin\BannerController;
 use App\Http\Controllers\Api\V1\Admin\UserController;
+use App\Http\Controllers\Api\V1\Admin\VendorController;
 
 Route::group(['prefix' => '/v1'], function () {
 
@@ -28,6 +29,7 @@ Route::group(['prefix' => '/v1'], function () {
     Route::get('banners', [BannerController::class, 'index']);
 
     Route::post('contact_messages', [ContactMessageController::class, 'store']);
+    Route::get('vendors', [VendorController::class, 'index'])->middleware('adminPermission:vendors.view');
 
 });
 
@@ -53,6 +55,13 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
     Route::get('users/{user}', [UserController::class, 'show'])->middleware('adminPermission:users.view');
     Route::put('users/{user}', [UserController::class, 'update'])->middleware('adminPermission:users.edit');
     Route::delete('users/{user}', [UserController::class, 'delete'])->middleware('adminPermission:users.delete');
+
+    Route::post('vendors', [VendorController::class, 'store'])->middleware('adminPermission:vendors.create');
+    Route::get('vendors/{vendor}', [VendorController::class, 'show'])->middleware('adminPermission:vendors.view');
+    Route::put('vendors/{vendor}', [VendorController::class, 'update'])->middleware('adminPermission:vendors.edit');
+    Route::delete('vendors/{vendor}', [VendorController::class, 'delete'])->middleware('adminPermission:vendors.delete');
+
+
 
     Route::post('packages', [PackageController::class, 'store'])->middleware('adminPermission:packages.create');
     Route::get('packages/{package}', [PackageController::class, 'show'])->middleware('adminPermission:packages.view');

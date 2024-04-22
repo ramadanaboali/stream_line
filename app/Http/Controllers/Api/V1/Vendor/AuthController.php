@@ -67,7 +67,8 @@ class AuthController extends Controller
                 'instagram' => $request->instagram,
                 'snapchat' => $request->snapchat,
             ];
-            if($vendor = Vendor::create($vendorInput)) {
+            $vendor = Vendor::create($vendorInput);
+            if($vendor) {
                 $userInput = [
                     'email' => $request->email,
                     'first_name' => $request->first_name,
