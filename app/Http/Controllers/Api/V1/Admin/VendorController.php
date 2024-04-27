@@ -37,7 +37,6 @@ class VendorController extends Controller
             $wheres = $this->service->whereOptions($input, $columns);
 
         }
-        return [];
         $data = $this->service->Paginate($input, $wheres);
         return response()->apiSuccess($data);
     }
