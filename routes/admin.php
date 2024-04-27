@@ -29,7 +29,7 @@ Route::group(['prefix' => '/v1'], function () {
     Route::get('banners', [BannerController::class, 'index']);
 
     Route::post('contact_messages', [ContactMessageController::class, 'store']);
-    Route::get('vendors', [VendorController::class, 'index'])->middleware('adminPermission:vendors.view');
+    Route::get('vendors', [VendorController::class, 'index']);
 
 });
 
