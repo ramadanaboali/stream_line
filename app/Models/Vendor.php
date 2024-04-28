@@ -34,9 +34,9 @@ class Vendor extends Model
     {
         return $this->belongsTo(User::class,'created_by');
     }
-    public function userVendor(): ?BelongsTo
+    public function userVendor(): ?HasOne
     {
-        return $this->belongsTo(User::class,'id','model_id')->where('type','=','vendor');
+        return $this->hasOne(User::class,'model_id')->where('type','=',"vendor");
     }
 //    public function user()
 //    {
