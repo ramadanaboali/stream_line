@@ -40,7 +40,7 @@ class Vendor extends Model
 //    }
     public function user()
     {
-        return $this->id;
+        return User::where('model_id','=',$this->id)->where('type','=','vendor')->get();
     }
     public function updatedBy(): ?BelongsTo
     {
