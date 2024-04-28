@@ -110,5 +110,14 @@ class VendorRepository extends AbstractRepository
         }
     }
 
+    public function vendor_report_list(array $input)
+    {
+        $itemPerPage = array_key_exists('per_page',$input) && is_numeric($input['per_page']) ? $input['per_page'] : 20;
+        $list = Vendor::when(!empty($input['search']), function ($query) use ($input) {
+            $query->where('name', 'like', '%'.$input['search'].'%');
+        });
+        return$list->paginate($itemPerPage);
+    }
+
 
 }

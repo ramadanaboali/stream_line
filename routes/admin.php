@@ -108,6 +108,10 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
     Route::delete('banners/{banner}', [BannerController::class, 'delete'])->middleware('adminPermission:banners.delete');
 
 
+    Route::get('vendor_report_list', [VendorController::class, 'vendor_report_list'])->middleware('adminPermission:vendors.view');
+    Route::get('vendor_report_show/{vendor}', [VendorController::class, 'vendor_report_show'])->middleware('adminPermission:vendors.view');
+
+
     Route::post('/logout', [AuthController::class, 'logout']);
 
 });

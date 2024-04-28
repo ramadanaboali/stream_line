@@ -8,6 +8,7 @@ use App\Http\Requests\Admin\VendorRequest;
 use App\Models\Vendor;
 use App\Services\Admin\VendorService;
 use App\Services\General\StorageService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
 
@@ -62,6 +63,18 @@ class VendorController extends Controller
     public function delete(Vendor $vendor)
     {
         return response()->apiSuccess($this->service->delete($vendor));
+    }
+
+    public function vendor_report_list(Request $request)
+    {
+        $input = $request->all();
+        $data = $this->service->vendor_report_list($input);
+        return response()->apiSuccess($data);
+    }
+
+    public function vendor_report_show($id)
+    {
+        return response()->apiSuccess($this->service->get($id));
     }
 
 }

@@ -19,4 +19,8 @@ class VendorService extends AbstractService
     public function updateVendor(array $data,$vendor){
         return $this->repo->updateVendor($data,$vendor);
     }
+    public function vendor_report_list(array $input)
+    {
+        return $this->repo->vendor_report_list($input);
+    }
 }
