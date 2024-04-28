@@ -74,7 +74,7 @@ class VendorController extends Controller
 
     public function vendor_report_show($id)
     {
-        return response()->apiSuccess($this->service->get($id));
+        return response()->apiSuccess($this->service->vendor_report_show($id));
     }
 
 }

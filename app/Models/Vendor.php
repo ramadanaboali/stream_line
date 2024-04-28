@@ -34,9 +34,9 @@ class Vendor extends Model
     {
         return $this->belongsTo(User::class,'created_by');
     }
-    public function user() :HasOne
+    public function user() :BelongsTo
     {
-        return $this->hasOne(User::class,'model_id','id');
+        return $this->belongsTo(User::class,'model_id','id');
     }
     public function updatedBy(): ?BelongsTo
     {
