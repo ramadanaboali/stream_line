@@ -23,8 +23,8 @@ class VendorService extends AbstractService
     {
         return $this->repo->vendor_report_list($input);
     }
-    public function vendor_report_show(array $input)
+    public function vendor_report_show($id)
     {
-        return $this->repo->vendor_report_show($input);
+        return $this->repo->vendor_report_show($id);
     }
 }
