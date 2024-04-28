@@ -34,14 +34,14 @@ class Vendor extends Model
     {
         return $this->belongsTo(User::class,'created_by');
     }
-//    public function user() :HasOne
-//    {
-//        return $this->hasOne(User::class,'model_id')->where('type','=','vendor');
-//    }
-    public function user()
+    public function user() :HasOne
     {
-        return User::where('model_id','=',$this->id)->where('type','=','vendor')->get();
+        return $this->hasOne(User::class,'model_id')->where('type','=','vendor');
     }
+//    public function user()
+//    {
+//        return User::where('model_id','=',$this->id)->where('type','=','vendor')->get();
+//    }
     public function updatedBy(): ?BelongsTo
     {
         return $this->belongsTo(User::class,'updated_by');
