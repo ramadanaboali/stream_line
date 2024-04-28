@@ -22,6 +22,14 @@ class Vendor extends Model
     {
         return $this->hasMany(Booking::class, 'vendor_id','id');
     }
+    public function services():?HasMany
+    {
+        return $this->hasMany(Service::class, 'vendor_id','id');
+    }
+    public function branches():?HasMany
+    {
+        return $this->hasMany(Branch::class, 'vendor_id','id');
+    }
     public function createdBy(): ?BelongsTo
     {
         return $this->belongsTo(User::class,'created_by');
