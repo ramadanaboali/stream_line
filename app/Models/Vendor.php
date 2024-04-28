@@ -36,7 +36,7 @@ class Vendor extends Model
     }
     public function userVendor(): ?HasOne
     {
-        return $this->hasOne(User::class,'model_id')->where('type','=',"vendor");
+        return $this->hasOne(User::class,'model_id');
     }
 //    public function user()
 //    {
