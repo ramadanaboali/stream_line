@@ -118,12 +118,12 @@ class VendorRepository extends AbstractRepository
             ->leftJoin('wallets', 'users.id', '=', 'wallets.user_id')
             ->when(!empty($input['search']), function ($query) use ($input) {
                 $query->where('vendors.name', 'like', '%'.$input['search'].'%');
-            })->where('users.type','like','vendor');
+            })->where('users.type','=','vendor');
         return$list->paginate($itemPerPage);
     }
     public function vendor_report_show($id)
     {
-        return Vendor::with(['bookings','services','branches','user'])
+        return Vendor::select('vendors.*')->with(['bookings','services','branches','user'])
             ->leftJoin('users', 'users.model_id', '=', 'vendors.id')
             ->leftJoin('wallets', 'users.id', '=', 'wallets.user_id')->find($id);
 
