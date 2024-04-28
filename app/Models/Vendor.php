@@ -34,7 +34,7 @@ class Vendor extends Model
     {
         return $this->belongsTo(User::class,'created_by');
     }
-    public function user() :HasOne
+    public function userVendor() :HasOne
     {
         return $this->hasOne(User::class,'model_id')->where('type','=','vendor');
     }
