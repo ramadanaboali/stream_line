@@ -123,7 +123,7 @@ class VendorRepository extends AbstractRepository
     }
     public function vendor_report_show($id)
     {
-        return Vendor::select('vendors.*')->with(['bookings','services','branches','user'])
+        return Vendor::select('vendors.*')->with(['bookings','services','branches','user','user.wallet','user.wallet.transactions'])
             ->leftJoin('users', 'users.model_id', '=', 'vendors.id')
             ->leftJoin('wallets', 'users.id', '=', 'wallets.user_id')->find($id);
 

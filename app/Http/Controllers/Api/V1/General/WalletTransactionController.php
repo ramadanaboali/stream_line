@@ -41,7 +41,7 @@ class WalletTransactionController extends Controller
     public function store(WalletTransactionRequest $request)
     {
         $data = $request->all();
-        return response()->apiSuccess($this->service->store($data));
+        return response()->apiSuccess($this->service->storeTransaction($data));
     }
 
     public function update(WalletTransactionRequest $request, WalletTransaction $wallet_transaction)

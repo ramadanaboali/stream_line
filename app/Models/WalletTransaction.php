@@ -13,7 +13,7 @@ class WalletTransaction extends Model
     protected $guarded = [];
     public function wallet(): ?BelongsTo
     {
-        return $this->belongsTo(Wallet::class,'user_id');
+        return $this->belongsTo(Wallet::class,'wallet_id');
     }
     public function createdBy(): ?BelongsTo
     {
