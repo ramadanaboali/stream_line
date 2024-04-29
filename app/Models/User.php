@@ -53,11 +53,11 @@ class User extends Authenticatable
         return $this->first_name.' '.$this->last_name;
     }
 
-    public function vendor() :BelongsTo
+    public function vendor() :?BelongsTo
     {
         return $this->belongsTo(Vendor::class,'model_id','id')->where('type','vendor')->where('model_id',auth()->user()->model_id);
     }
-    public function branches() :HasMany
+    public function branches() :?HasMany
     {
         return $this->hasMany(Branch::class,'user_id');
     }
