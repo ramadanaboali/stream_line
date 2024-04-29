@@ -26,7 +26,7 @@ class CheckSubscription
 
     public function handle($request, Closure $next, $feature)
     {
-        $user=auth()->user;
+        $user=Auth::user();
         switch ($feature) {
             case 'branches':
                 return $this->checkBranches($request,$next,$user);
