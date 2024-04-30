@@ -16,7 +16,7 @@ class SubscriptionService extends AbstractService
     public function subscribe($data){
 
         $data['created_by']= auth()->user()->id;
-        $data['vendor_id']= auth()->user()->vendor()->id;
+        $data['vendor_id']= auth()->user()->vendor->id;
         return $this->repo->subscribe($data);
     }
     public function pay($data){
