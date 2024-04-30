@@ -22,7 +22,6 @@ class AbstractService
     public function store($data){
 
         $data['created_by']= auth()->user()->id;
-        return $data;
         return $this->repo->create($data);
     }
 
