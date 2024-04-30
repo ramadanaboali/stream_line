@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Package extends Model
 {
     use HasFactory,SoftDeletes;
+    protected $guarded =[];
     public function createdBy(): ?BelongsTo
     {
         return $this->belongsTo(User::class,'created_by');
