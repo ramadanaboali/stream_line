@@ -7,6 +7,7 @@ use App\Http\Requests\General\ServiceCategoryRequest;
 use App\Http\Requests\PaginateRequest;
 use App\Models\ServiceCategory;
 use App\Services\General\ServiceCategoryService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 use function response;
 
@@ -38,7 +39,7 @@ class ServiceCategoryController extends Controller
         return response()->apiSuccess($this->service->get($id));
     }
 
-    public function store(ServiceCategoryRequest $request)
+    public function store(Request $request)
     {
         $data = $request->all();
         dd($data);
