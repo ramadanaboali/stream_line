@@ -55,7 +55,7 @@ class User extends Authenticatable
 
     public function vendor() :?BelongsTo
     {
-        return $this->belongsTo(Vendor::class,'model_id','id')->where('type','vendor')->where('model_id',auth()->user()->model_id);
+        return $this->belongsTo(Vendor::class,'model_id','id');
     }
     public function branches() :?HasMany
     {
