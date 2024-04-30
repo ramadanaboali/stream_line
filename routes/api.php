@@ -62,7 +62,7 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function() {
         Route::put('categories/{category}', [CategoryController::class, 'update'])->middleware('generalPermission:categories.edit');
         Route::delete('categories/{category}', [CategoryController::class, 'delete'])->middleware('generalPermission:categories.delete');
 
-        Route::post('service_categories', [ServiceCategoryController::class, 'store']);
+        Route::post('service_categories', [ServiceCategoryController::class, 'store'])->middleware('generalPermission:service_categories.create');
         Route::get('service_categories/{service_category}', [ServiceCategoryController::class, 'show'])->middleware('generalPermission:service_categories.view');
         Route::put('service_categories/{service_category}', [ServiceCategoryController::class, 'update'])->middleware('generalPermission:service_categories.edit');
         Route::delete('service_categories/{service_category}', [ServiceCategoryController::class, 'delete'])->middleware('generalPermission:service_categories.delete');
