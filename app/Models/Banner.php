@@ -22,6 +22,7 @@ class Banner extends Model
     }
     public function getPhotoAttribute()
     {
-        return url($this->image);
+        return array_key_exists('image', $this->attributes) ? ($this->attributes['image'] != null ? asset('storage/' . $this->attributes['image']) : null) : null;
+
     }
 }
