@@ -53,6 +53,7 @@ class SubscriptionRepository extends AbstractRepository
             'subscription_type'=>$package->subscription_type,
             'days'=>$days,
             'price'=>$price,
+            'name_ar'=>$package->name_ar,
             'commission'=>$package->commission,
             'sms_messages'=>$package->sms_messages,
             'whatsapp_messages'=>$package->whatsapp_messages,
