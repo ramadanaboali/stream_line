@@ -43,7 +43,6 @@ class CheckSubscription
     }
     public function checkBranches($request, Closure $next,User $user){
         $vendor=$user->vendor;
-        dd($vendor);
         if($vendor){
             $activeSubscription=Subscription::where('vendor_id',$vendor->id)->where('status','active')->where('end_date' ,'>=',Carbon::now()->toDateString())->first();
             if(!$activeSubscription){
@@ -58,7 +57,7 @@ class CheckSubscription
             return $next($request);
     }
     public function checkEmployees($request, Closure $next,User $user){
-        $vendor=$user->vendor();
+        $vendor=$user->vendor;
         if($vendor){
             $activeSubscription=Subscription::where('vendor_id',$vendor->id)->where('status','active')->where('end_date' ,'>=',Carbon::now()->toDateString())->first();
             if(!$activeSubscription){
