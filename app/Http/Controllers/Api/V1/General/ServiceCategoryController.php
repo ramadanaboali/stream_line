@@ -41,7 +41,6 @@ class ServiceCategoryController extends Controller
     public function store(ServiceCategoryRequest $request)
     {
         $data = $request->all();
-        dd($data);
         return response()->apiSuccess($this->service->store($data));
     }
 

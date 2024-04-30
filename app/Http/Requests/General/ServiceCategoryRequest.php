@@ -37,7 +37,7 @@ class ServiceCategoryRequest extends FormRequest
                     'name_ar' => 'required|string|min:2|unique:service_categories,name_ar',
                     'name_en' => 'required|string|min:2|unique:service_categories,name_en',
                     'category_id' => 'required|exists:categories,id',
-                    'main_service_category_id' => 'sometimes|exists:service_categories,id',
+                    'main_service_category_id' => 'required_if:type,sub|exists:service_categories,id',
                     'type' => 'required|in:main,sub',
                     'is_active' => 'required|in:0,1',
                 ];
@@ -50,7 +50,7 @@ class ServiceCategoryRequest extends FormRequest
                     'name_ar' => 'required|string|min:2',
                     'name_en' => 'required|string|min:2',
                     'category_id' => 'required|exists:categories,id',
-                    'main_service_category_id' => 'sometimes|exists:service_categories,id',
+                    'main_service_category_id' => 'required_if:type,sub|exists:service_categories,id',
                     'type' => 'required|in:main,sub',
                     'is_active' => 'required|in:0,1',
                 ];
