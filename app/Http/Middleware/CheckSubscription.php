@@ -27,7 +27,6 @@ class CheckSubscription
     public function handle($request, Closure $next, $feature)
     {
         $user=Auth::user();
-        dd($user);
         switch ($feature) {
             case 'branches':
                 return $this->checkBranches($request,$next,$user);
@@ -44,6 +43,7 @@ class CheckSubscription
     }
     public function checkBranches($request, Closure $next,User $user){
         $vendor=$user->vendor();
+        dd($vendor);
         if($vendor){
             $activeSubscription=Subscription::where('vendor_id',$vendor->id)->where('status','active')->where('end_date' ,'>=',Carbon::now()->toDateString())->first();
             if(!$activeSubscription){
