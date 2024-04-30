@@ -57,7 +57,7 @@ class SubscriptionRepository extends AbstractRepository
             'sms_messages'=>$package->sms_messages,
             'whatsapp_messages'=>$package->whatsapp_messages,
             'branches'=>$package->branches,
-            'employees'=>$package->employees,
+            'employee'=>$package->employees,
             'customers'=>$package->customers,
             'payments'=>$package->payments,
             'remove_copy_right'=>$package->remove_copy_right,
