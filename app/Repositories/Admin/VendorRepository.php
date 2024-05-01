@@ -156,7 +156,7 @@ class VendorRepository extends AbstractRepository
             ->when(!empty($input['search']), function ($query) use ($input) {
                 $query->where('subscriptions.name_ar', 'like', '%'.$input['search'].'%');
                 $query->orWhere('subscriptions.name_ar', 'like', '%'.$input['search'].'%');
-            })->where('users.type','=','customer');
+            });
         return $list->paginate($itemPerPage);
     }
     public function subscription_report_show($id)
