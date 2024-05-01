@@ -142,7 +142,7 @@ class VendorRepository extends AbstractRepository
     }
     public function customer_report_show($id)
     {
-        return User::select('users.*')->with(['bookings','services','branches','user','user.wallet','user.wallet.transactions'])
+        return User::select('users.*')->with(['bookings','reviews'])
            ->find($id);
 
     }
