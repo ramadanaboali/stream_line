@@ -195,7 +195,7 @@ class VendorRepository extends AbstractRepository
     }
     public function booking_report_show($id)
     {
-        return Booking::select('services.*')->with(['createdBy','vendor','vendor.user','reviews','service','user','offer','offer.service','promoCode','employee'])
+        return Booking::select('bookings.*')->with(['createdBy','vendor','vendor.user','reviews','service','user','offer','offer.service','promoCode','employee'])
             ->find($id);
     }
 
