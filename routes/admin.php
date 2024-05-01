@@ -108,17 +108,17 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
     Route::delete('banners/{banner}', [BannerController::class, 'delete'])->middleware('adminPermission:banners.delete');
 
 
-    Route::get('vendor_report_list', [VendorController::class, 'vendor_report_list'])->middleware('adminPermission:vendors.view');
-    Route::get('vendor_report_show/{vendor}', [VendorController::class, 'vendor_report_show'])->middleware('adminPermission:vendors.view');
+    Route::get('vendor_report_list', [VendorController::class, 'vendor_report_list'])->middleware('adminPermission:vendor_report.view');
+    Route::get('vendor_report_show/{vendor}', [VendorController::class, 'vendor_report_show'])->middleware('adminPermission:vendor_report.view');
 
-    Route::get('customer_report_list', [VendorController::class, 'customer_report_list'])->middleware('adminPermission:customers.view');
-    Route::get('customer_report_show/{customer}', [VendorController::class, 'customer_report_show'])->middleware('adminPermission:customers.view');
+    Route::get('customer_report_list', [VendorController::class, 'customer_report_list'])->middleware('adminPermission:customer_report.view');
+    Route::get('customer_report_show/{customer}', [VendorController::class, 'customer_report_show'])->middleware('adminPermission:customer_report.view');
 
-    Route::get('subscription_report_list', [VendorController::class, 'subscription_report_list'])->middleware('adminPermission:subscriptions.view');
-    Route::get('subscription_report_show/{subscription}', [VendorController::class, 'subscription_report_show'])->middleware('adminPermission:subscriptions.view');
+    Route::get('subscription_report_list', [VendorController::class, 'subscription_report_list'])->middleware('adminPermission:subscription_report.view');
+    Route::get('subscription_report_show/{subscription}', [VendorController::class, 'subscription_report_show'])->middleware('adminPermission:subscription_report.view');
 
-    Route::get('service_report_list', [VendorController::class, 'service_report_list'])->middleware('adminPermission:services.view');
-    Route::get('service_report_show/{service}', [VendorController::class, 'service_report_show'])->middleware('adminPermission:services.view');
+    Route::get('service_report_list', [VendorController::class, 'service_report_list'])->middleware('adminPermission:service_report.view');
+    Route::get('service_report_show/{service}', [VendorController::class, 'service_report_show'])->middleware('adminPermission:service_report.view');
 
 
     Route::post('/logout', [AuthController::class, 'logout']);
