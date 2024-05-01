@@ -140,7 +140,7 @@ class VendorRepository extends AbstractRepository
                 $query->where('users.first_name', 'like', '%'.$input['search'].'%');
                 $query->orWhere('users.last_name', 'like', '%'.$input['search'].'%');
             })->where('users.type','=','customer');
-        return$list->paginate($itemPerPage);
+        return $list->paginate($itemPerPage);
     }
     public function customer_report_show($id)
     {
@@ -157,7 +157,7 @@ class VendorRepository extends AbstractRepository
                 $query->where('subscriptions.name_ar', 'like', '%'.$input['search'].'%');
                 $query->orWhere('subscriptions.name_ar', 'like', '%'.$input['search'].'%');
             })->where('users.type','=','customer');
-        return$list->paginate($itemPerPage);
+        return $list->paginate($itemPerPage);
     }
     public function subscription_report_show($id)
     {
@@ -173,8 +173,8 @@ class VendorRepository extends AbstractRepository
             ->when(!empty($input['search']), function ($query) use ($input) {
                 $query->where('services.name_ar', 'like', '%'.$input['search'].'%');
                 $query->orWhere('services.name_ar', 'like', '%'.$input['search'].'%');
-            })->where('users.type','=','customer');
-        return$list->paginate($itemPerPage);
+            });
+        return $list->paginate($itemPerPage);
     }
     public function service_report_show($id)
     {
