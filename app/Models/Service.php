@@ -15,15 +15,23 @@ class Service extends Model
 
     public function vendor() :BelongsTo
     {
-        return $this->belongsTo(Vendor::class,'vendor_id','id')->where('vendor_id',auth()->user()->model_id);
+        return $this->belongsTo(Vendor::class,'vendor_id','id');
+    }
+    public function category() :BelongsTo
+    {
+        return $this->belongsTo(Category::class,'category_id','id');
+    }
+    public function section() :BelongsTo
+    {
+        return $this->belongsTo(Section::class,'section_id','id');
     }
     public function employees(): ?BelongsToMany
     {
-        return $this->belongsToMany(EmployeeService::class, 'employee_services','service_id',  'employee_id');
+        return $this->belongsToMany(Employee::class, 'employee_services','service_id',  'employee_id');
     }
     public function branches(): ?BelongsToMany
     {
-        return $this->belongsToMany(ServiceBranch::class, 'service_branches', 'service_id','branch_id');
+        return $this->belongsToMany(Branch::class, 'service_branches', 'service_id','branch_id');
     }
     public function createdBy(): ?BelongsTo
     {
