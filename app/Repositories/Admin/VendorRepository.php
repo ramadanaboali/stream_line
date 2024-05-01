@@ -125,7 +125,7 @@ class VendorRepository extends AbstractRepository
     {
         return Vendor::select('vendors.*')->with(['bookings','services','offers','branches','user','user.wallet','user.wallet.transactions'])
             ->leftJoin('users', 'users.model_id', '=', 'vendors.id')
-            ->leftJoin('wallets', 'users.id', '=', 'wallets.user_id')->find($id);
+            ->leftJoin('wallets', 'users.id', '=', 'wallets.user_id')->get();
 
     }
 
