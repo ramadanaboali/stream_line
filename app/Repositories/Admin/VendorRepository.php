@@ -169,7 +169,7 @@ class VendorRepository extends AbstractRepository
     public function service_report_list(array $input)
     {
         $itemPerPage = array_key_exists('per_page',$input) && is_numeric($input['per_page']) ? $input['per_page'] : 20;
-        $list = Service::select('services.*')->with(['employees','employees.employee','branches','vendor','vendor.user'])
+        $list = Service::select('services.*')->with(['employees','branches','vendor','vendor.user'])
             ->when(!empty($input['search']), function ($query) use ($input) {
                 $query->where('services.name_ar', 'like', '%'.$input['search'].'%');
                 $query->orWhere('services.name_ar', 'like', '%'.$input['search'].'%');
@@ -178,7 +178,7 @@ class VendorRepository extends AbstractRepository
     }
     public function service_report_show($id)
     {
-        return Service::select('services.*')->with(['employees','employees.employee','branches','vendor','vendor.user'])
+        return Service::select('services.*')->with(['employees','branches','vendor','vendor.user'])
             ->find($id);
     }
 
