@@ -27,6 +27,7 @@ return [
     'subscription_report'=>'تقارير الاشتراكات',
     'service_report'=>'تقارير الخدمات',
     'vendor_report' => 'تقارير مزودي الخدمات',
+    'booking_report' => 'تقارير الحجوزات',
     'employees'=>'الموظفين',
     'subscriptions'=>'الاشتراكات',
     'tax_invoices'=>'الفواتير الضريبية',

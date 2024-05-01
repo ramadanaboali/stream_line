@@ -14,9 +14,29 @@ class Booking extends Model
     use SoftDeletes;
     protected $guarded = [];
 
+    public function user(): ?BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+    public function service(): ?BelongsTo
+    {
+        return $this->belongsTo(Service::class, 'service_id');
+    }
+    public function offer(): ?BelongsTo
+    {
+        return $this->belongsTo(Offer::class, 'offer_id');
+    }
+    public function promoCode(): ?BelongsTo
+    {
+        return $this->belongsTo(PromoCode::class, 'promocode_id');
+    }
     public function createdBy(): ?BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+    public function employee(): ?BelongsTo
+    {
+        return $this->belongsTo(Employee::class, 'employee_id');
     }
     public function updatedBy(): ?BelongsTo
     {

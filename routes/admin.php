@@ -120,6 +120,9 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
     Route::get('service_report_list', [VendorController::class, 'service_report_list'])->middleware('adminPermission:service_report.view');
     Route::get('service_report_show/{service}', [VendorController::class, 'service_report_show'])->middleware('adminPermission:service_report.view');
 
+    Route::get('booking_report_list', [VendorController::class, 'booking_report_list'])->middleware('adminPermission:booking_report.view');
+    Route::get('booking_report_show/{booking}', [VendorController::class, 'booking_report_show'])->middleware('adminPermission:booking_report.view');
+
 
     Route::post('/logout', [AuthController::class, 'logout']);
 

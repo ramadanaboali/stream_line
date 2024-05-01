@@ -52,4 +52,13 @@ class VendorService extends AbstractService
     {
         return $this->repo->service_report_show($id);
     }
+
+    public function booking_report_list(array $input)
+    {
+        return $this->repo->booking_report_list($input);
+    }
+    public function booking_report_show($id)
+    {
+        return $this->repo->booking_report_show($id);
+    }
 }

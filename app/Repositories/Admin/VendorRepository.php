@@ -3,6 +3,7 @@
 namespace App\Repositories\Admin;
 
 use App\Models\Banner;
+use App\Models\Booking;
 use App\Models\Service;
 use App\Models\Subscription;
 use App\Models\User;
@@ -179,6 +180,22 @@ class VendorRepository extends AbstractRepository
     public function service_report_show($id)
     {
         return Service::select('services.*')->with(['category','section','employees','branches','vendor','vendor.user'])
+            ->find($id);
+    }
+
+    public function booking_report_list(array $input)
+    {
+        $itemPerPage = array_key_exists('per_page',$input) && is_numeric($input['per_page']) ? $input['per_page'] : 20;
+        $list = Booking::select('bookings.*')->with(['createdBy','vendor','vendor.user','reviews','service','user','offer','offer.service','promoCode','employee'])
+            ->when(!empty($input['search']), function ($query) use ($input) {
+                $query->where('services.payment_status', 'like', '%'.$input['search'].'%');
+                $query->orWhere('services.payment_status', 'like', '%'.$input['search'].'%');
+            });
+        return $list->paginate($itemPerPage);
+    }
+    public function booking_report_show($id)
+    {
+        return Booking::select('services.*')->with(['createdBy','vendor','vendor.user','reviews','service','user','offer','offer.service','promoCode','employee'])
             ->find($id);
     }
 
