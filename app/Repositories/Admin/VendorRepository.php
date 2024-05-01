@@ -116,10 +116,8 @@ class VendorRepository extends AbstractRepository
         $list = Vendor::with(['bookings','services','offers','branches','user'])->select(['vendors.name','wallets.balance','users.email'])
             ->leftJoin('users', 'users.model_id', '=', 'vendors.id')
             ->leftJoin('wallets', 'users.id', '=', 'wallets.user_id')
-            ->when(!empty($input['search']), function ($query) use ($input) {
-                $query->where('vendors.name', 'like', '%'.$input['search'].'%');
-            });
-        return$list->get();
+            ;
+        return $list->get();
     }
     public function vendor_report_show($id)
     {
