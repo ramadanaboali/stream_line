@@ -26,6 +26,10 @@ class Vendor extends Model
     {
         return $this->hasMany(Service::class, 'vendor_id','id');
     }
+    public function offers():?HasMany
+    {
+        return $this->hasMany(Offer::class, 'vendor_id','id');
+    }
     public function branches():?HasMany
     {
         return $this->hasMany(Branch::class, 'vendor_id','id');
