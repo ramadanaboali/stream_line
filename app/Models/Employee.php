@@ -26,12 +26,12 @@ class Employee extends Model
     }
     public function branches(): ?BelongsToMany
     {
-        return $this->belongsToMany(EmployeeBranch::class, 'employee_branches', 'employee_id', 'branch_id');
+        return $this->belongsToMany(Branch::class, 'employee_branches', 'employee_id', 'branch_id');
 
     }
      public function services(): ?BelongsToMany
     {
-        return $this->belongsToMany(EmployeeService::class, 'employee_services',  'employee_id','service_id');
+        return $this->belongsToMany(Service::class, 'employee_services',  'employee_id','service_id');
     }
 
     public function breakHours(): ?HasMany
