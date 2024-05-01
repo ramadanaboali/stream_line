@@ -3,6 +3,8 @@
 namespace App\Repositories\Admin;
 
 use App\Models\Banner;
+use App\Models\Service;
+use App\Models\Subscription;
 use App\Models\User;
 use App\Models\Vendor;
 use App\Repositories\AbstractRepository;
@@ -133,7 +135,7 @@ class VendorRepository extends AbstractRepository
     public function customer_report_list(array $input)
     {
         $itemPerPage = array_key_exists('per_page',$input) && is_numeric($input['per_page']) ? $input['per_page'] : 20;
-        $list = User::with(['bookings','reviews'])->select(['users.*'])
+        $list = User::select('users.*')->with(['bookings','reviews'])
             ->when(!empty($input['search']), function ($query) use ($input) {
                 $query->where('users.first_name', 'like', '%'.$input['search'].'%');
                 $query->orWhere('users.last_name', 'like', '%'.$input['search'].'%');
@@ -145,6 +147,39 @@ class VendorRepository extends AbstractRepository
         return User::select('users.*')->with(['bookings','reviews'])
            ->find($id);
 
+    }
+
+    public function subscription_report_list(array $input)
+    {
+        $itemPerPage = array_key_exists('per_page',$input) && is_numeric($input['per_page']) ? $input['per_page'] : 20;
+        $list = Subscription::select('subscriptions.*')->with(['package','vendor','vendor.user'])
+            ->when(!empty($input['search']), function ($query) use ($input) {
+                $query->where('subscriptions.name_ar', 'like', '%'.$input['search'].'%');
+                $query->orWhere('subscriptions.name_ar', 'like', '%'.$input['search'].'%');
+            })->where('users.type','=','customer');
+        return$list->paginate($itemPerPage);
+    }
+    public function subscription_report_show($id)
+    {
+        return Subscription::select('subscriptions.*')->with(['package','vendor','vendor.user'])
+            ->find($id);
+
+    }
+
+    public function service_report_list(array $input)
+    {
+        $itemPerPage = array_key_exists('per_page',$input) && is_numeric($input['per_page']) ? $input['per_page'] : 20;
+        $list = Service::select('services.*')->with(['employees','employees.employee','branches','vendor','vendor.user'])
+            ->when(!empty($input['search']), function ($query) use ($input) {
+                $query->where('services.name_ar', 'like', '%'.$input['search'].'%');
+                $query->orWhere('services.name_ar', 'like', '%'.$input['search'].'%');
+            })->where('users.type','=','customer');
+        return$list->paginate($itemPerPage);
+    }
+    public function service_report_show($id)
+    {
+        return Service::select('services.*')->with(['employees','employees.employee','branches','vendor','vendor.user'])
+            ->find($id);
     }
 
 }
