@@ -7,6 +7,7 @@ return [
     'delete'=>'حذف',
     'roles'=>'الأدوار',
     'users'=>'المستخدمين',
+    'customers'=>'العملاء',
     'packages'=>'الحزم',
     'payment_settings'=>'إعدادات الدفع',
     'service_settings'=>'إعدادات الخدمات',

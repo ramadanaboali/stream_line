@@ -74,4 +74,12 @@ class User extends Authenticatable
     {
         return $this->belongsTo(User::class,'updated_by','id');
     }
+    public function bookings() :?HasMany
+    {
+        return $this->hasMany(Booking::class,'user_id');
+    }
+    public function reviews(): ?HasMany
+    {
+        return $this->hasMany(Review::class, 'created_by');
+    }
 }

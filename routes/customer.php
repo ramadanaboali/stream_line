@@ -23,6 +23,7 @@ Route::group(['prefix' => '/v1'], function () {
     Route::post('/check-code', [AuthController::class, 'checkCode']);
     Route::post('/confirm-reset', [AuthController::class, 'confirmReset']);
     Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/register', [AuthController::class, 'register']);
     Route::get('search', [HomeController::class, 'search']);
     Route::get('errorURL', [HomeController::class, 'errorURL'])->name('errorURL');
     Route::get('successURL', [HomeController::class, 'responseURL'])->name('successURL');

@@ -130,4 +130,21 @@ class VendorRepository extends AbstractRepository
     }
 
 
+    public function customer_report_list(array $input)
+    {
+        $itemPerPage = array_key_exists('per_page',$input) && is_numeric($input['per_page']) ? $input['per_page'] : 20;
+        $list = User::with(['bookings','reviews'])->select(['users.*'])
+            ->when(!empty($input['search']), function ($query) use ($input) {
+                $query->where('users.first_name', 'like', '%'.$input['search'].'%');
+                $query->orWhere('users.last_name', 'like', '%'.$input['search'].'%');
+            })->where('users.type','=','customer');
+        return$list->paginate($itemPerPage);
+    }
+    public function customer_report_show($id)
+    {
+        return User::select('users.*')->with(['bookings','services','branches','user','user.wallet','user.wallet.transactions'])
+           ->find($id);
+
+    }
+
 }
