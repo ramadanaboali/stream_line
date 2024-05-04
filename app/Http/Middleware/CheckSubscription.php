@@ -64,7 +64,7 @@ class CheckSubscription
 
             }
             $employees=Employee::where('vendor_id',$vendor->id)->count();
-            if($employees >= $activeSubscription->employees){
+            if($employees >= $activeSubscription->employee){
                 return apiResponse(false, null, 'Your Subscription has reached the limits of number of employees at this package', null, 403);
             }
         }
