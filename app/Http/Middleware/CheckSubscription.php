@@ -63,7 +63,6 @@ class CheckSubscription
                 return apiResponse(false, null, 'You Do not have active subscription ', null, 403);
 
             }
-            dd(Employee::where('vendor_id',$vendor->id)->count());
             $employees=Employee::where('vendor_id',$vendor->id)->count();
             if($employees >= $activeSubscription->employees){
                 return apiResponse(false, null, 'Your Subscription has reached the limits of number of employees at this package', null, 403);
