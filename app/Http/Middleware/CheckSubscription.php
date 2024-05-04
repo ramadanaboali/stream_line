@@ -9,7 +9,6 @@ use App\Models\User;
 use Carbon\Carbon;
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Contracts\Routing\Middleware;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Support\Facades\Auth;
 
@@ -64,6 +63,7 @@ class CheckSubscription
                 return apiResponse(false, null, 'You Do not have active subscription ', null, 403);
 
             }
+            dd(Employee::where('vendor_id',$vendor->id)->count());
             $employees=Employee::where('vendor_id',$vendor->id)->count();
             if($employees >= $activeSubscription->employees){
                 return apiResponse(false, null, 'Your Subscription has reached the limits of number of employees at this package', null, 403);

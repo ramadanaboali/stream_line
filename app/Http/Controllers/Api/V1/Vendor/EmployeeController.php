@@ -9,6 +9,7 @@ use App\Http\Requests\Vendor\EmployeeServiceRequest;
 use App\Models\Employee;
 use App\Services\General\StorageService;
 use App\Services\Vendor\EmployeeService;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use function response;
@@ -55,6 +56,7 @@ class EmployeeController extends Controller
         }
         $data['image'] = $storedPath;
         $data['vendor_id'] = auth()->user()->model_id;
+        $data['created_by'] =Auth::id();
         DB::beginTransaction();
         $employee=$this->service->createItem($data);
         if ($employee && $request->officialHours) {

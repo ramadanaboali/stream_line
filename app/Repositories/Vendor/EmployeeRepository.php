@@ -56,19 +56,19 @@ class EmployeeRepository extends AbstractRepository
                 'email' => $data['email'],
                 'phone' => $data['phone'],
                 'image' => $data['image'],
-                'model_id' => auth()->user()->model_id,
+                'model_id' => $data['vendor_id'],
                 'type' => 'vendor',
-                'created_by'=> auth()->user()->id,
+                'created_by'=> $data['created_by'],
                 'password' => Hash::make($data['password']),
             ];
             $user = User::create($inputUser);
             $inputEmployee = [
                 'user_id'=> $user->id,
-                'vendor_id'=> auth()->user()->model_id,
+                'vendor_id'=> $data['vendor_id'],
                 'salary'=> $data['salary'] ?? null,
                 'start_date'=> $data['start_date'],
                 'end_date'=> $data['end_date'] ?? null,
-                'created_by'=> auth()->user()->id,
+                'created_by'=> $data['created_by'],
             ];
             $employee=Employee::create($inputEmployee);
 
