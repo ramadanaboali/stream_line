@@ -36,6 +36,34 @@ class HomeRepository extends AbstractRepository
         $currentMonth = $currentDateTime->month;
         $currentWeek = $currentDateTime->weekOfYear;
         return match ($filter) {
+            'week' => Booking::select(DB::raw('WEEK(booking_day) as key'), DB::raw('COUNT(id) as count'))
+                ->whereYear('booking_date', $currentYear)
+                ->whereMonth('booking_date', $currentMonth)
+                ->groupBy('key')
+                ->get(),
+            'month' => Booking::select(DB::raw('MONTH(booking_day) as key'), DB::raw('COUNT(id) as count'))
+                ->whereYear('booking_date', $currentYear)
+                ->groupBy('key')
+                ->get(),
+            'year' => Booking::select(DB::raw('YEAR(booking_day) as key'), DB::raw('COUNT(id) as count'))
+                ->groupBy('key')
+                ->get(),
+            default => Booking::select(DB::raw('DATE(booking_day) as key'), DB::raw('COUNT(id) as count'))
+                ->whereYear('booking_date', $currentYear)
+                ->whereMonth('booking_date', $currentMonth)
+                ->whereWeek('booking_date', $currentMonth)
+                ->groupBy('key')
+                ->get(),
+        };
+    }
+    public function booking_total_chart(array $data)
+    {
+        $filter = array_key_exists('filter',$data) ? $data['filter'] : 'day';
+        $currentDateTime = Carbon::now();
+        $currentYear = $currentDateTime->year;
+        $currentMonth = $currentDateTime->month;
+        $currentWeek = $currentDateTime->weekOfYear;
+        return match ($filter) {
             'week' => Booking::select(DB::raw('WEEK(booking_day) as key'), DB::raw('SUM(total) as total'))
                 ->whereYear('booking_date', $currentYear)
                 ->whereMonth('booking_date', $currentMonth)
@@ -55,10 +83,6 @@ class HomeRepository extends AbstractRepository
                 ->groupBy('key')
                 ->get(),
         };
-    }
-    public function booking_total_chart(array $data)
-    {
-        return $data;
     }
 
 }
