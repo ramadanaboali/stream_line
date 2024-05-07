@@ -4,6 +4,7 @@ namespace App\Repositories\Admin;
 
 use App\Models\Banner;
 use App\Models\Booking;
+use App\Models\Offer;
 use App\Models\Service;
 use App\Models\Subscription;
 use App\Models\User;
@@ -182,7 +183,21 @@ class VendorRepository extends AbstractRepository
         return Service::select('services.*')->with(['category','section','employees','branches','vendor','vendor.user'])
             ->find($id);
     }
-
+    public function offer_report_list(array $input)
+    {
+        $itemPerPage = array_key_exists('per_page',$input) && is_numeric($input['per_page']) ? $input['per_page'] : 20;
+        $list = Offer::select('offers.*')->with(['services','section','category','sub_category','vendor','vendor.user'])
+            ->when(!empty($input['search']), function ($query) use ($input) {
+                $query->where('services.name_ar', 'like', '%'.$input['search'].'%');
+                $query->orWhere('services.name_ar', 'like', '%'.$input['search'].'%');
+            });
+        return $list->paginate($itemPerPage);
+    }
+    public function offer_report_show($id)
+    {
+        return Offer::select('offers.*')->with(['services','section','category','sub_category','vendor','vendor.user'])
+            ->find($id);
+    }
     public function booking_report_list(array $input)
     {
         $itemPerPage = array_key_exists('per_page',$input) && is_numeric($input['per_page']) ? $input['per_page'] : 20;

@@ -114,6 +114,18 @@ class VendorController extends Controller
         return response()->apiSuccess($this->service->service_report_show($id));
     }
 
+    public function offer_report_list(Request $request)
+    {
+        $input = $request->all();
+        $data = $this->service->offer_report_list($input);
+        return response()->apiSuccess($data);
+    }
+
+    public function offer_report_show($id)
+    {
+        return response()->apiSuccess($this->service->offer_report_show($id));
+    }
+
     public function booking_report_list(Request $request)
     {
         $input = $request->all();
