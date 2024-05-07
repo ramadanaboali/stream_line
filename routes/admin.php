@@ -15,7 +15,7 @@ use App\Http\Controllers\Api\V1\Admin\ContactMessageController;
 use App\Http\Controllers\Api\V1\Admin\BannerController;
 use App\Http\Controllers\Api\V1\Admin\UserController;
 use App\Http\Controllers\Api\V1\Admin\VendorController;
-
+use App\Http\Controllers\Api\V1\Admin\HomeController;
 Route::group(['prefix' => '/v1'], function () {
 
     Route::post('/login', [AuthController::class, 'login']);
@@ -123,6 +123,9 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
     Route::get('booking_report_list', [VendorController::class, 'booking_report_list'])->middleware('adminPermission:booking_report.view');
     Route::get('booking_report_show/{booking}', [VendorController::class, 'booking_report_show'])->middleware('adminPermission:booking_report.view');
 
+    Route::get('home_totals', [HomeController::class, 'home_totals'])->middleware('adminPermission:home.view');
+    Route::get('booking_count_chart', [HomeController::class, 'booking_count_chart'])->middleware('adminPermission:home.view');
+    Route::get('booking_total_chart', [HomeController::class, 'booking_total_chart'])->middleware('adminPermission:home.view');
 
     Route::post('/logout', [AuthController::class, 'logout']);
 
