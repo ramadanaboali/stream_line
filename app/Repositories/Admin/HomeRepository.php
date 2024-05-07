@@ -7,6 +7,8 @@ use App\Models\Subscription;
 use App\Models\User;
 use App\Models\Vendor;
 use App\Repositories\AbstractRepository;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class HomeRepository extends AbstractRepository
 {
@@ -28,7 +30,31 @@ class HomeRepository extends AbstractRepository
     }
     public function booking_count_chart(array $data)
     {
-        return $data;
+        $filter = array_key_exists('filter',$data) ? $data['filter'] : 'day';
+        $currentDateTime = Carbon::now();
+        $currentYear = $currentDateTime->year;
+        $currentMonth = $currentDateTime->month;
+        $currentWeek = $currentDateTime->weekOfYear;
+        return match ($filter) {
+            'week' => Booking::select(DB::raw('WEEK(booking_day) as key'), DB::raw('SUM(total) as total'))
+                ->whereYear('booking_date', $currentYear)
+                ->whereMonth('booking_date', $currentMonth)
+                ->groupBy('key')
+                ->get(),
+            'month' => Booking::select(DB::raw('MONTH(booking_day) as key'), DB::raw('SUM(total) as total'))
+                ->whereYear('booking_date', $currentYear)
+                ->groupBy('key')
+                ->get(),
+            'year' => Booking::select(DB::raw('YEAR(booking_day) as key'), DB::raw('SUM(total) as total'))
+                ->groupBy('key')
+                ->get(),
+            default => Booking::select(DB::raw('DATE(booking_day) as key'), DB::raw('SUM(total) as total'))
+                ->whereYear('booking_date', $currentYear)
+                ->whereMonth('booking_date', $currentMonth)
+                ->whereWeek('booking_date', $currentMonth)
+                ->groupBy('key')
+                ->get(),
+        };
     }
     public function booking_total_chart(array $data)
     {
