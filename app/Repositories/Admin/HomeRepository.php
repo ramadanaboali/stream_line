@@ -36,23 +36,23 @@ class HomeRepository extends AbstractRepository
         $currentMonth = $currentDateTime->month;
         $currentWeek = $currentDateTime->weekOfYear;
         return match ($filter) {
-            'week' => Booking::select(DB::raw('WEEK(booking_day) as key'), DB::raw('COUNT(id) as count'))
+            'week' => Booking::select(DB::raw('WEEK(booking_day) as x_key'), DB::raw('COUNT(id) as count'))
                 ->whereYear('booking_day', $currentYear)
                 ->whereMonth('booking_day', $currentMonth)
-                ->groupBy('key')
+                ->groupBy('x_key')
                 ->get(),
-            'month' => Booking::select(DB::raw('MONTH(booking_day) as key'), DB::raw('COUNT(id) as count'))
+            'month' => Booking::select(DB::raw('MONTH(booking_day) as x_key'), DB::raw('COUNT(id) as count'))
                 ->whereYear('booking_day', $currentYear)
-                ->groupBy('key')
+                ->groupBy('x_key')
                 ->get(),
-            'year' => Booking::select(DB::raw('YEAR(booking_day) as key'), DB::raw('COUNT(id) as count'))
-                ->groupBy('key')
+            'year' => Booking::select(DB::raw('YEAR(booking_day) as x_key'), DB::raw('COUNT(id) as count'))
+                ->groupBy('x_key')
                 ->get(),
-            default => Booking::select(DB::raw('DATE(booking_day) as key'), DB::raw('COUNT(id) as count'))
+            default => Booking::select(DB::raw('DATE(booking_day) as x_key'), DB::raw('COUNT(id) as count'))
                 ->whereYear('booking_day', $currentYear)
                 ->whereMonth('booking_day', $currentMonth)
                 ->whereWeek('booking_day', $currentMonth)
-                ->groupBy('key')
+                ->groupBy('x_key')
                 ->get(),
         };
     }
@@ -64,23 +64,23 @@ class HomeRepository extends AbstractRepository
         $currentMonth = $currentDateTime->month;
         $currentWeek = $currentDateTime->weekOfYear;
         return match ($filter) {
-            'week' => Booking::select(DB::raw('WEEK(booking_day) as key'), DB::raw('SUM(total) as total'))
+            'week' => Booking::select(DB::raw('WEEK(booking_day) as x_key'), DB::raw('SUM(total) as total'))
                 ->whereYear('booking_day', $currentYear)
                 ->whereMonth('booking_day', $currentMonth)
-                ->groupBy('key')
+                ->groupBy('x_key')
                 ->get(),
-            'month' => Booking::select(DB::raw('MONTH(booking_day) as key'), DB::raw('SUM(total) as total'))
+            'month' => Booking::select(DB::raw('MONTH(booking_day) as x_key'), DB::raw('SUM(total) as total'))
                 ->whereYear('booking_day', $currentYear)
-                ->groupBy('key')
+                ->groupBy('x_key')
                 ->get(),
-            'year' => Booking::select(DB::raw('YEAR(booking_day) as key'), DB::raw('SUM(total) as total'))
-                ->groupBy('key')
+            'year' => Booking::select(DB::raw('YEAR(booking_day) as x_key'), DB::raw('SUM(total) as total'))
+                ->groupBy('x_key')
                 ->get(),
-            default => Booking::select(DB::raw('DATE(booking_day) as key'), DB::raw('SUM(total) as total'))
+            default => Booking::select(DB::raw('DATE(booking_day) as x_key'), DB::raw('SUM(total) as total'))
                 ->whereYear('booking_day', $currentYear)
                 ->whereMonth('booking_day', $currentMonth)
                 ->whereWeek('booking_day', $currentMonth)
-                ->groupBy('key')
+                ->groupBy('x_key')
                 ->get(),
         };
     }
