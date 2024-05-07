@@ -63,6 +63,7 @@ class HomeRepository extends AbstractRepository
         $currentYear = $currentDateTime->year;
         $currentMonth = $currentDateTime->month;
         $currentWeek = $currentDateTime->weekOfYear;
+        dd($currentWeek);
         return match ($filter) {
             'week' => Booking::select(DB::raw('WEEK(booking_day) as x_key'), DB::raw('SUM(total) as total'))
                 ->whereYear('booking_day', $currentYear)
@@ -81,7 +82,7 @@ class HomeRepository extends AbstractRepository
                 ->whereMonth('booking_day', $currentMonth)
                 ->where(DB::raw('WEEK(booking_day)'), [$currentWeek])
                 ->groupBy('x_key')
-                ->toSql(),
+                ->get(),
         };
     }
 
