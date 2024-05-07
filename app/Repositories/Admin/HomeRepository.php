@@ -21,7 +21,7 @@ class HomeRepository extends AbstractRepository
         $data['subscription_count'] = Subscription::where('status','!=','pending')->count();
         $data['subscription_total'] = Subscription::where('status','!=','pending')->sum('price');
         $data['booking_count'] = Booking::where('status','!=','canceled')->count();
-        $data['booking_total'] = Subscription::where('status','!=','canceled')->sum('total');
+        $data['booking_total'] = Booking::where('status','!=','canceled')->sum('total');
         $data['customer_count'] = User::where('users.type','=','customer')->count();
         $data['vendor_count'] = Vendor::where('is_active','=','1')->count();
         return $data;
