@@ -81,7 +81,7 @@ class HomeRepository extends AbstractRepository
                 ->whereMonth('booking_day', $currentMonth)
                 ->where(DB::raw('WEEK(booking_day)'), [$currentWeek])
                 ->groupBy('x_key')
-                ->get(),
+                ->toSql(),
         };
     }
 
