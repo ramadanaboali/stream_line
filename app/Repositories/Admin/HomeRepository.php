@@ -36,22 +36,22 @@ class HomeRepository extends AbstractRepository
         $currentMonth = $currentDateTime->month;
         $currentWeek = $currentDateTime->weekOfYear;
         return match ($filter) {
-            'week' => Booking::select(DB::raw('WEEK(booking_day) as x_key'), DB::raw('COUNT(id) as count'))
-                ->whereYear('booking_day', $currentYear)
-                ->whereMonth('booking_day', $currentMonth)
+            'week' => Booking::select(DB::raw('WEEK(created_at) as x_key'), DB::raw('COUNT(id) as count'))
+                ->whereYear('created_at', $currentYear)
+                ->whereMonth('created_at', $currentMonth)
                 ->groupBy('x_key')
                 ->get(),
-            'month' => Booking::select(DB::raw('MONTH(booking_day) as x_key'), DB::raw('COUNT(id) as count'))
-                ->whereYear('booking_day', $currentYear)
+            'month' => Booking::select(DB::raw('MONTH(created_at) as x_key'), DB::raw('COUNT(id) as count'))
+                ->whereYear('created_at', $currentYear)
                 ->groupBy('x_key')
                 ->get(),
-            'year' => Booking::select(DB::raw('YEAR(booking_day) as x_key'), DB::raw('COUNT(id) as count'))
+            'year' => Booking::select(DB::raw('YEAR(created_at) as x_key'), DB::raw('COUNT(id) as count'))
                 ->groupBy('x_key')
                 ->get(),
-            default => Booking::select(DB::raw('DATE(booking_day) as x_key'), DB::raw('COUNT(id) as count'))
-                ->whereYear('booking_day', $currentYear)
-                ->whereMonth('booking_day', $currentMonth)
-                ->where(DB::raw('WEEK(booking_day)'), [$currentWeek])
+            default => Booking::select(DB::raw('DATE(created_at) as x_key'), DB::raw('COUNT(id) as count'))
+                ->whereYear('created_at', $currentYear)
+                ->whereMonth('created_at', $currentMonth)
+                ->where(DB::raw('WEEK(created_at)'), [$currentWeek])
                 ->groupBy('x_key')
                 ->get(),
         };
@@ -64,22 +64,22 @@ class HomeRepository extends AbstractRepository
         $currentMonth = $currentDateTime->month;
         $currentWeek = $currentDateTime->weekOfYear;
         return match ($filter) {
-            'week' => Booking::select(DB::raw('WEEK(booking_day) as x_key'), DB::raw('SUM(total) as total'))
-                ->whereYear('booking_day', $currentYear)
-                ->whereMonth('booking_day', $currentMonth)
+            'week' => Booking::select(DB::raw('WEEK(created_at) as x_key'), DB::raw('SUM(total) as total'))
+                ->whereYear('created_at', $currentYear)
+                ->whereMonth('created_at', $currentMonth)
                 ->groupBy('x_key')
                 ->get(),
-            'month' => Booking::select(DB::raw('MONTH(booking_day) as x_key'), DB::raw('SUM(total) as total'))
-                ->whereYear('booking_day', $currentYear)
+            'month' => Booking::select(DB::raw('MONTH(created_at) as x_key'), DB::raw('SUM(total) as total'))
+                ->whereYear('created_at', $currentYear)
                 ->groupBy('x_key')
                 ->get(),
-            'year' => Booking::select(DB::raw('YEAR(booking_day) as x_key'), DB::raw('SUM(total) as total'))
+            'year' => Booking::select(DB::raw('YEAR(created_at) as x_key'), DB::raw('SUM(total) as total'))
                 ->groupBy('x_key')
                 ->get(),
-            default => Booking::select(DB::raw('DAY(booking_day) as x_key'), DB::raw('SUM(total) as total'))
-                ->whereYear('booking_day', $currentYear)
-                ->whereMonth('booking_day', $currentMonth)
-                ->where(DB::raw('WEEK(booking_day)'), [21])
+            default => Booking::select(DB::raw('DAY(created_at) as x_key'), DB::raw('SUM(total) as total'))
+                ->whereYear('created_at', $currentYear)
+                ->whereMonth('created_at', $currentMonth)
+                ->where(DB::raw('WEEK(created_at)'), [$currentWeek])
                 ->groupBy('x_key')
                 ->get(),
         };
