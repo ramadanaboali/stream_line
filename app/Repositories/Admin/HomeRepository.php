@@ -79,7 +79,7 @@ class HomeRepository extends AbstractRepository
             default => Booking::select(DB::raw('DATE(booking_day) as x_key'), DB::raw('SUM(total) as total'))
                 ->whereYear('booking_day', $currentYear)
                 ->whereMonth('booking_day', $currentMonth)
-                ->where(DB::raw('WEEK(booking_day) as week_day'), [$currentWeek])
+                ->where(DB::raw('WEEK(booking_day)'), [$currentWeek])
                 ->groupBy('x_key')
                 ->get(),
         };
