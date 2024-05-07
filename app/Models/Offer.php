@@ -20,7 +20,7 @@ class Offer extends Model
 
     public function services(): ?BelongsToMany
     {
-        return $this->belongsToMany(OfferService::class, 'offer_services',  'offer_id','service_id');
+        return $this->belongsToMany(Service::class, 'offer_services',  'offer_id','service_id');
     }
     public function section(): ?BelongsTo
     {
