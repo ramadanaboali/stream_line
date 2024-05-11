@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="loaded " lang="en" data-textdirection="rtl">
+<html class="loaded " lang="ar" data-textdirection="rtl">
 <!-- BEGIN: Head-->
 
 <head>
@@ -7,8 +7,14 @@
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0,minimal-ui">
+  <style>
+        @font-face {
+        font-family: 'Arial Unicode MS';
+        font-style: normal;
+        font-weight: 400;
+        src: url('/public/assets/arial-unicode-ms.ttf');
+        }
 
-    <style>
         table,tr{
             padding:50px;
             width:95%
