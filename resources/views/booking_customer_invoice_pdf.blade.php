@@ -18,18 +18,15 @@
 </head>
 <body style="font-family: Amiri;direction:rtl">
 <table class="dt-multilingual table table-bordered" border=1>
-    <thead>
-    <tr>
-        <th>#</th>
-        <th>اسم العميل</th>
-        <th>يوم الحجز</th>
-        <th>وقت الحجز</th>
-    </tr>
-    </thead>
+
     <tbody>
     <tr style="margin-bottom:30px">
         <td>اسم العميل</td>
-        <td>{!! $data !!} </td>
+        <td>{{ $data->user->first_name.' '.$data->user->last_name }} </td>
+    </tr>
+    <tr style="margin-bottom:30px">
+        <td>اسم التاجر</td>
+        <td>{{ $data->vendor->name }} </td>
     </tr>
         <tr style="margin-bottom:30px">
             <td>يوم الحجز</td>
@@ -61,10 +58,7 @@
     </tr>
     </tbody>
     <tfoot>
-    <tr>
-        <td colspan="2">الاسم</td>
-        <td colspan="2">{!! $data !!}</td>
-    </tr>
+
     </tfoot>
 </table>
 

@@ -17,27 +17,48 @@
     </style>
 </head>
 <body style="font-family: Amiri;direction:rtl">
-@php
-    $total=0;
-@endphp
 <table class="dt-multilingual table table-bordered" border=1>
-    <thead>
-    <tr>
-        <th>#</th>
-        <th>اسم العميل</th>
-    </tr>
-    </thead>
+
     <tbody>
-        <tr style="margin-bottom:30px">
-            <td>{!! $data !!} </td>
-            <td>{!! $data !!} </td>
-        </tr>
+    <tr style="margin-bottom:30px">
+        <td>اسم العميل</td>
+        <td>{{ $data->user->first_name.' '.$data->user->last_name }} </td>
+    </tr>
+    <tr style="margin-bottom:30px">
+        <td>اسم التاجر</td>
+        <td>{{ $data->vendor->name }} </td>
+    </tr>
+    <tr style="margin-bottom:30px">
+        <td>يوم الحجز</td>
+        <td>{{ $data->booking_day }} </td>
+    </tr>
+    <tr style="margin-bottom:30px">
+        <td>وقت الحجز</td>
+        <td>{{ $data->booking_time }} </td>
+    </tr>
+    <tr style="margin-bottom:30px">
+        <td>المبلغ قبل الخصم</td>
+        <td>{{ $data->sub_total }} </td>
+    </tr>
+    <tr style="margin-bottom:30px">
+        <td>الخصم</td>
+        <td>{{ $data->discount }} </td>
+    </tr>
+    <tr style="margin-bottom:30px">
+        <td>المبلغ بعد الخصم</td>
+        <td>{{ $data->total }} </td>
+    </tr>
+    <tr style="margin-bottom:30px">
+        <td>الحالة</td>
+        <td>{{ $data->status }} </td>
+    </tr>
+    <tr style="margin-bottom:30px">
+        <td>وسيلة الدفع</td>
+        <td>{{ $data->payment_way }} </td>
+    </tr>
     </tbody>
     <tfoot>
-    <tr>
-        <td colspan="2">الاسم</td>
-        <td colspan="2">{!! $data !!}</td>
-    </tr>
+
     </tfoot>
 </table>
 
