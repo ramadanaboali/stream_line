@@ -30,6 +30,7 @@
     <tbody>
         <tr style="margin-bottom:30px">
             <td>{!! $data !!} </td>
+            <td>{!! $data !!} </td>
         </tr>
     </tbody>
     <tfoot>
