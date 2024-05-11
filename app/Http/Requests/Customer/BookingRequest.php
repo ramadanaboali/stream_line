@@ -34,6 +34,7 @@ class BookingRequest extends FormRequest
             case 'POST':
                 {
                     return [
+                        'branch_id' => 'sometimes|exists:branches,id',
                         'employee_id' => 'sometimes|exists:employees,id',
                         'booking_day' => 'required|date',
                         'booking_time' => 'required|date_format:H:i',

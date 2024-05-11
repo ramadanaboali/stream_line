@@ -18,6 +18,10 @@ class Booking extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+    public function branch(): ?BelongsTo
+    {
+        return $this->belongsTo(Branch::class, 'branch_id');
+    }
     public function service(): ?BelongsTo
     {
         return $this->belongsTo(Service::class, 'service_id');

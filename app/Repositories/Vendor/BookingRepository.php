@@ -44,7 +44,9 @@ class BookingRepository extends AbstractRepository
         $total = $services_cost - $promocode_value;
         $inputs = [
             'user_id' => auth()->id(),
+            'created_by' => auth()->id(),
             'employee_id' => $employee_id,
+            'branch_id' => $data['branch_id'],
             'booking_day' => $data['booking_day'],
             'vendor_id' => $service->vendor_id,
             'booking_time' => $data['booking_time'],
