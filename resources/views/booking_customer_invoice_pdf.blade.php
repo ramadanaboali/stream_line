@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-<html class="loaded " lang="ar" data-textdirection="rtl">
-<!-- BEGIN: Head-->
-
+<html  lang="ar" data-textdirection="rtl">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
@@ -9,10 +7,10 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0,minimal-ui">
   <style>
         @font-face {
-        font-family: 'Arial Unicode MS';
+        font-family: 'DejaVu Sans';
         font-style: normal;
         font-weight: 400;
-        src: url('/public/assets/arial-unicode-ms.ttf');
+        src: url('/public/assets/DejaVuSans.ttf');
         }
 
         table,tr{
@@ -20,6 +18,7 @@
             width:95%
         }
 
+        body { font-family: 'DejaVu Sans', serif; }
     </style>
 </head>
 <body style="font-family: Amiri;direction:rtl">
@@ -34,14 +33,26 @@
         <td>اسم التاجر</td>
         <td>{{ $data->vendor->name }} </td>
     </tr>
-        <tr style="margin-bottom:30px">
-            <td>يوم الحجز</td>
-            <td>{{ $data->booking_day }} </td>
-        </tr>
-        <tr style="margin-bottom:30px">
-            <td>وقت الحجز</td>
-            <td>{{ $data->booking_time }} </td>
-        </tr>
+    <tr style="margin-bottom:30px">
+        <td>اسم الخدمة</td>
+        <td>{{ $data->service?->name_ar }} </td>
+    </tr>
+    <tr style="margin-bottom:30px">
+        <td>اسم الموظف</td>
+        <td>{{ $data->employee?->user?->first_name.' '.$data->employee?->user?->last_name}} </td>
+    </tr>
+    <tr style="margin-bottom:30px">
+        <td>كود الخصم</td>
+        <td>{{ $data->promo_code?->code ? $data->promo_code?->code.' ('.$data->promo_code?->value.')' : ''}} </td>
+    </tr>
+    <tr style="margin-bottom:30px">
+        <td>يوم الحجز</td>
+        <td>{{ $data->booking_day }} </td>
+    </tr>
+    <tr style="margin-bottom:30px">
+        <td>وقت الحجز</td>
+        <td>{{ $data->booking_time }} </td>
+    </tr>
     <tr style="margin-bottom:30px">
         <td>المبلغ قبل الخصم</td>
         <td>{{ $data->sub_total }} </td>
