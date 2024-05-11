@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests\Admin;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\ValidationException;
 
 class TermConditionRequest extends FormRequest
 {
@@ -31,7 +34,7 @@ class TermConditionRequest extends FormRequest
             case 'POST':
             {
                 return [
-                    'tax_percentage' => 'required|integer|min:0|max:100'
+                    'content' => 'required|string|min:2'
                 ];
             }
             case 'PATCH':
@@ -39,7 +42,7 @@ class TermConditionRequest extends FormRequest
             {
                 $rules= [
 
-                    'tax_percentage' => 'required|integer|min:1'
+                    'content' => 'required|string|min:2'
                 ];
                 return $rules;
             }
@@ -54,5 +57,11 @@ class TermConditionRequest extends FormRequest
         return [
 
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        $errors = (new ValidationException($validator))->errors();
+        throw new HttpResponseException(apiResponse(false, null, 'Validation Error', $errors, 401));
     }
 }
