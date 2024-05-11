@@ -13,7 +13,7 @@ class Booking extends Model
     use HasFactory;
     use SoftDeletes;
     protected $guarded = [];
-
+//    protected $appends = ['customerInvoiceUrl','vendorInvoiceUrl'];
     public function user(): ?BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
@@ -54,5 +54,15 @@ class Booking extends Model
     {
         return $this->hasMany(Review::class, 'booking_id');
     }
+//    public function getCustomerInvoiceUrlAttribute()
+//    {
+//        return array_key_exists('customer_invoice', $this->attributes) ? ($this->attributes['customer_invoice'] != null ? asset('storage/' . $this->attributes['customer_invoice']) : null) : null;
+//
+//    }
+//    public function getVendorInvoiceUrlAttribute()
+//    {
+//        return array_key_exists('vendor_invoice', $this->attributes) ? ($this->attributes['vendor_invoice'] != null ? asset('storage/' . $this->attributes['vendor_invoice']) : null) : null;
+//
+//    }
 
 }

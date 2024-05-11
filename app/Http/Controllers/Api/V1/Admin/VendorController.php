@@ -3,15 +3,19 @@
 namespace App\Http\Controllers\Api\V1\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\BannerRequest;
+use App\Http\Requests\Admin\BookingCustomerInvoiceRequest;
 use App\Http\Requests\PaginateRequest;
 use App\Http\Requests\Admin\VendorRequest;
+use App\Models\Booking;
 use App\Models\Vendor;
 use App\Services\Admin\VendorService;
 use App\Services\General\StorageService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
-
+use Barryvdh\DomPDF\Facade\Pdf;
 use function response;
 
 class VendorController extends Controller
@@ -136,6 +140,20 @@ class VendorController extends Controller
     public function booking_report_show($id)
     {
         return response()->apiSuccess($this->service->booking_report_show($id));
+    }
+    public function booking_customer_invoice(BookingCustomerInvoiceRequest $request)
+    {
+        $booking_id=$request->booking_id;
+        $booking = Booking::select('bookings.*')->with(['createdBy','branch','vendor','vendor.user','reviews','service','user','offer','offer.services','promoCode','employee','employee.user'])
+            ->find($booking_id);
+        $pdf = Pdf::loadView('invoice_pdf', ['data' =>$booking]);
+        return $pdf->download('booking_customer_invoice_'.Carbon::now().'.pdf');
+    }
+    public function booking_vendor_invoice(BookingCustomerInvoiceRequest $request)
+    {
+        $booking_id=$request->booking_id;
+        $pdf = Pdf::loadView('invoice_pdf', ['data' =>$data]);
+        return $pdf->download('booking_vendor_invoice_'.Carbon::now().'.pdf');
     }
 
 }

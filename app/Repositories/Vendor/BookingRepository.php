@@ -9,6 +9,7 @@ use App\Models\PromoCode;
 use App\Models\Service;
 use App\Repositories\AbstractRepository;
 use App\Services\ArbPg;
+use App\Services\General\StorageService;
 use Illuminate\Support\Facades\DB;
 
 class BookingRepository extends AbstractRepository
@@ -65,6 +66,21 @@ class BookingRepository extends AbstractRepository
         return ['data' => $booking,'message' => __('api.create_success'),'success' => true];
 
     }
+
+//    public function getMpdf(array $inputs) {
+//        $html = view('invoice_pdf')->with(compact('inputs'))->render();
+//        $mpdf = new \Mpdf\Mpdf(['tempDir' => storage_path('uploads/temp'),
+//            'mode' => 'utf-8',
+//            'autoScriptToLang' => true,
+//            'autoLangToFont' => true,
+//            'autoVietnamese' => true,
+//            'autoArabic' => true
+//        ]);
+//        $mpdf->WriteHTML($html);
+//        $file = 'pdf/booking/'.$inputs['user_id'].$inputs['employee_id'].$inputs['booking_day'].$inputs['booking_time'].'invoice.pdf';
+//        $mpdf->Output($file, 'F');
+//        return $file;
+//    }
 
     public function pay($data)
     {
@@ -161,4 +177,5 @@ class BookingRepository extends AbstractRepository
         }
         return null;
     }
+
 }
