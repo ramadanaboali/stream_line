@@ -152,7 +152,9 @@ class VendorController extends Controller
     public function booking_vendor_invoice(BookingCustomerInvoiceRequest $request)
     {
         $booking_id=$request->booking_id;
-        $pdf = Pdf::loadView('invoice_pdf', ['data' =>$data]);
+        $booking = Booking::select('bookings.*')->with(['createdBy','branch','vendor','vendor.user','reviews','service','user','offer','offer.services','promoCode','employee','employee.user'])
+            ->find($booking_id);
+        $pdf = Pdf::loadView('invoice_pdf', ['data' =>$booking]);
         return $pdf->download('booking_vendor_invoice_'.Carbon::now().'.pdf');
     }
 
