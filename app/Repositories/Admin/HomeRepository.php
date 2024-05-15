@@ -116,7 +116,7 @@ class HomeRepository extends AbstractRepository
     {
         $year = array_key_exists('year',$data) ? $data['year'] : '2024';
 
-        return Booking::select(DB::raw('MONTH(created_at) as x_key'), DB::raw('COUNT(id) as count'))
+        return Vendor::select(DB::raw('MONTH(created_at) as x_key'), DB::raw('COUNT(id) as count'))
             ->whereYear('created_at', $year)
             ->groupBy('x_key')
             ->get();
