@@ -3,6 +3,7 @@
 namespace App\Repositories\Admin;
 
 use App\Models\Booking;
+use App\Models\Offer;
 use App\Models\Subscription;
 use App\Models\User;
 use App\Models\Vendor;
@@ -23,6 +24,7 @@ class HomeRepository extends AbstractRepository
         $data['subscription_count'] = Subscription::where('status','!=','pending')->count();
         $data['subscription_total'] = Subscription::where('status','!=','pending')->sum('price');
         $data['booking_count'] = Booking::where('status','!=','canceled')->count();
+        $data['offer_count'] = Offer::where('is_active','!=','1')->count();
         $data['booking_total'] = Booking::where('status','!=','canceled')->sum('total');
         $data['customer_count'] = User::where('users.type','=','customer')->count();
         $data['vendor_count'] = Vendor::where('is_active','=','1')->count();
@@ -128,6 +130,25 @@ class HomeRepository extends AbstractRepository
         $currentYear = $currentDateTime->year;
         $currentMonth = $currentDateTime->month;
         $currentWeek = $currentDateTime->weekOfYear;
+        return Booking::select(DB::raw('DAYOFWEEK(created_at) as x_key'), DB::raw('COUNT(id) as count'))
+            ->whereYear('created_at', $currentYear)
+            ->whereMonth('created_at', $currentMonth)
+            ->where(DB::raw('WEEK(created_at)'), [$currentWeek])
+            ->groupBy('x_key')
+            ->get();
+    }
+
+    public function last_bookings()
+    {
+        return Booking::select(DB::raw('DAYOFWEEK(created_at) as x_key'), DB::raw('COUNT(id) as count'))
+            ->whereYear('created_at', $currentYear)
+            ->whereMonth('created_at', $currentMonth)
+            ->where(DB::raw('WEEK(created_at)'), [$currentWeek])
+            ->groupBy('x_key')
+            ->get();
+    }
+    public function last_customers()
+    {
         return Booking::select(DB::raw('DAYOFWEEK(created_at) as x_key'), DB::raw('COUNT(id) as count'))
             ->whereYear('created_at', $currentYear)
             ->whereMonth('created_at', $currentMonth)

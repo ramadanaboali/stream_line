@@ -47,4 +47,12 @@ class HomeController extends Controller
         $data=$request->all();
         return response()->apiSuccess($this->service->booking_count_last_week_chart($data));
     }
+    public function last_bookings(Request $request)
+    {
+        return response()->apiSuccess($this->service->last_bookings());
+    }
+    public function last_customers(Request $request)
+    {
+        return response()->apiSuccess($this->service->last_customers());
+    }
 }
