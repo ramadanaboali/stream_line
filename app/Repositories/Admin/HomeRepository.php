@@ -101,4 +101,16 @@ class HomeRepository extends AbstractRepository
         };
     }
 
+
+
+    public function booking_count_with_month_chart(array $data)
+    {
+        $year = array_key_exists('year',$data) ? $data['year'] : '2024';
+
+        return Booking::select(DB::raw('MONTH(created_at) as x_key'), DB::raw('COUNT(id) as count'))
+            ->whereYear('created_at', $year)
+            ->groupBy('x_key')
+            ->get();
+    }
+
 }

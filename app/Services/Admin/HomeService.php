@@ -25,4 +25,8 @@ class HomeService extends AbstractService
     {
         return $this->repo->booking_total_chart($data);
     }
+    public function booking_count_with_month_chart(array $data)
+    {
+        return $this->repo->booking_count_with_month_chart($data);
+    }
 }
