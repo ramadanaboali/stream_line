@@ -122,4 +122,18 @@ class HomeRepository extends AbstractRepository
             ->get();
     }
 
+    public function booking_count_last_week_chart(array $data)
+    {
+        $currentDateTime = Carbon::now();
+        $currentYear = $currentDateTime->year;
+        $currentMonth = $currentDateTime->month;
+        $currentWeek = $currentDateTime->weekOfYear;
+        return Booking::select(DB::raw('DAYOFWEEK(created_at) as x_key'), DB::raw('COUNT(id) as count'))
+            ->whereYear('created_at', $currentYear)
+            ->whereMonth('created_at', $currentMonth)
+            ->where(DB::raw('WEEK(created_at)'), [$currentWeek])
+            ->groupBy('x_key')
+            ->get();
+    }
+
 }

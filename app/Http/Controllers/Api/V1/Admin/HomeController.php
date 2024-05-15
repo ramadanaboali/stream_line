@@ -42,4 +42,9 @@ class HomeController extends Controller
         $data=$request->all();
         return response()->apiSuccess($this->service->register_count_with_month_chart($data));
     }
+    public function booking_count_last_week_chart(Request $request)
+    {
+        $data=$request->all();
+        return response()->apiSuccess($this->service->booking_count_last_week_chart($data));
+    }
 }

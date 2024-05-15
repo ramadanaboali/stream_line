@@ -134,6 +134,7 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
 
     Route::get('booking_count_with_month_chart', [HomeController::class, 'booking_count_with_month_chart'])->middleware('adminPermission:statistics.view');
     Route::get('register_count_with_month_chart', [HomeController::class, 'register_count_with_month_chart'])->middleware('adminPermission:statistics.view');
+    Route::get('booking_count_last_week_chart', [HomeController::class, 'booking_count_last_week_chart'])->middleware('adminPermission:statistics.view');
 
     Route::post('/logout', [AuthController::class, 'logout']);
 
