@@ -140,20 +140,17 @@ class HomeRepository extends AbstractRepository
 
     public function last_bookings()
     {
-        return Booking::select(DB::raw('DAYOFWEEK(created_at) as x_key'), DB::raw('COUNT(id) as count'))
-            ->whereYear('created_at', $currentYear)
-            ->whereMonth('created_at', $currentMonth)
-            ->where(DB::raw('WEEK(created_at)'), [$currentWeek])
-            ->groupBy('x_key')
+        return Booking::select('bookings.*')->with(['createdBy','branch','vendor','vendor.user','reviews','service','user','offer','offer.services','promoCode','employee','employee.user'])
+            ->orderBy('id','desc')
+            ->limit(10)
             ->get();
     }
     public function last_customers()
     {
-        return Booking::select(DB::raw('DAYOFWEEK(created_at) as x_key'), DB::raw('COUNT(id) as count'))
-            ->whereYear('created_at', $currentYear)
-            ->whereMonth('created_at', $currentMonth)
-            ->where(DB::raw('WEEK(created_at)'), [$currentWeek])
-            ->groupBy('x_key')
+        return User::select('users.*')->with(['bookings','reviews'])
+            ->where('users.type','=','customer')
+            ->orderBy('id','desc')
+            ->limit(10)
             ->get();
     }
 
