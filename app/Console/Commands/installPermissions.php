@@ -145,8 +145,8 @@ class installPermissions extends Command
             $vendorPermissions = Permission::whereIn('model_type', ['vendor','general'])->get();
             $vendorRole->syncPermissions($vendorPermissions);
             $users = User::where('type', 'vendor')->get();
-            foreach ($users as $user) {
-                $user->syncRoles($vendorRole->id);
+            foreach ($users as $item) {
+                $item->syncRoles($vendorRole->id);
             }
             Artisan::call('cache:clear');
             $this->info("All Vendor Permissions assigned to user vendors");
