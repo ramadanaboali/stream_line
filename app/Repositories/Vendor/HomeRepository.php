@@ -21,8 +21,10 @@ class HomeRepository extends AbstractRepository
     public function customer_report_list(array $input)
     {
         $itemPerPage = array_key_exists('per_page',$input) && is_numeric($input['per_page']) ? $input['per_page'] : 20;
-        $list = User::select('users.*')->with(['bookings'=> function ($query) use($input) {
-                $query->where('bookings.vendor_id','=',$input['vendor_id']);
+        $list = User::select('users.*')->whereHas('bookings', function ($query) use ($input) {
+            $query->where('vendor_id','=',$input['vendor_id']);
+        })->with(['bookings'=> function ($query) use($input) {
+                $query->where('vendor_id','=',$input['vendor_id']);
             },'bookings.reviews','reviews'])
             ->when(!empty($input['search']), function ($query) use ($input) {
                 $query->where('users.first_name', 'like', '%'.$input['search'].'%');
