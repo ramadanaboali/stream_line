@@ -22,7 +22,7 @@ class HomeRepository extends AbstractRepository
     {
         $itemPerPage = array_key_exists('per_page',$input) && is_numeric($input['per_page']) ? $input['per_page'] : 20;
         $list = User::select('users.*')->with(['bookings'=> function ($query) use($input) {
-                $query->where('vendor_id','=',$input['vendor_id']);
+                $query->where('bookings.vendor_id','=',$input['vendor_id']);
             },'bookings.reviews','reviews'])
             ->when(!empty($input['search']), function ($query) use ($input) {
                 $query->where('users.first_name', 'like', '%'.$input['search'].'%');
