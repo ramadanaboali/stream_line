@@ -91,8 +91,8 @@ class HomeRepository extends AbstractRepository
         $data=[];
         $data['booking_count'] = Booking::where('status','!=','canceled')->where('vendor_id','=',$input['vendor_id'])->count();
         $data['booking_total'] = Booking::where('status','!=','canceled')->where('vendor_id','=',$input['vendor_id'])->sum('total');
-        $data['offer_count'] = Offer::where('is_active','!=','1')->where('vendor_id','=',$input['vendor_id'])->count();
-        $data['offer_total'] = Offer::where('is_active','!=','1')->where('vendor_id','=',$input['vendor_id'])->sum('offer_price');
+        $data['offer_count'] = Offer::where('is_active','!=','0')->where('vendor_id','=',$input['vendor_id'])->count();
+        $data['offer_total'] = Offer::where('is_active','!=','0')->where('vendor_id','=',$input['vendor_id'])->sum('offer_price');
         $data['customer_count'] = User::where('users.type','=','customer')->whereHas('bookings', function ($query) use ($input) {
             $query->where('vendor_id','=',$input['vendor_id']);
         })->count();
