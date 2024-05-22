@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\Vendor\AuthController;
+use App\Http\Controllers\Api\V1\Vendor\HomeController;
 use App\Http\Controllers\Api\V1\Vendor\UserController;
 use App\Http\Controllers\Api\V1\Vendor\BranchController;
 use App\Http\Controllers\Api\V1\Vendor\SectionController;
@@ -113,5 +114,34 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
 
     Route::get('vendor_settings', [VendorSettingController::class, 'getSetting'])->middleware('vendorPermission:vendor_settings.view');
     Route::post('vendor_settings', [VendorSettingController::class, 'updateSetting'])->middleware('vendorPermission:vendor_settings.edit');
+
+
+    Route::get('customer_report_list', [HomeController::class, 'customer_report_list'])->middleware('adminPermission:customer_report.view');
+    Route::get('customer_report_show/{customer}', [HomeController::class, 'customer_report_show'])->middleware('adminPermission:customer_report.view');
+
+    Route::get('subscription_report_list', [HomeController::class, 'subscription_report_list'])->middleware('adminPermission:subscription_report.view');
+    Route::get('subscription_report_show/{subscription}', [HomeController::class, 'subscription_report_show'])->middleware('adminPermission:subscription_report.view');
+
+    Route::get('service_report_list', [HomeController::class, 'service_report_list'])->middleware('adminPermission:service_report.view');
+    Route::get('service_report_show/{service}', [HomeController::class, 'service_report_show'])->middleware('adminPermission:service_report.view');
+
+    Route::get('offer_report_list', [HomeController::class, 'offer_report_list'])->middleware('adminPermission:offer_report.view');
+    Route::get('offer_report_show/{offer}', [HomeController::class, 'offer_report_show'])->middleware('adminPermission:offer_report.view');
+
+    Route::get('booking_report_list', [HomeController::class, 'booking_report_list'])->middleware('adminPermission:booking_report.view');
+    Route::get('booking_report_show/{booking}', [HomeController::class, 'booking_report_show'])->middleware('adminPermission:booking_report.view');
+    Route::post('booking_customer_invoice', [HomeController::class, 'booking_customer_invoice'])->middleware('adminPermission:booking_report.view');
+    Route::post('booking_vendor_invoice', [HomeController::class, 'booking_vendor_invoice'])->middleware('adminPermission:booking_report.view');
+
+    Route::get('home_totals', [HomeController::class, 'home_totals'])->middleware('adminPermission:home.view');
+    Route::get('booking_count_chart', [HomeController::class, 'booking_count_chart'])->middleware('adminPermission:home.view');
+    Route::get('booking_total_chart', [HomeController::class, 'booking_total_chart'])->middleware('adminPermission:home.view');
+
+    Route::get('booking_count_with_month_chart', [HomeController::class, 'booking_count_with_month_chart'])->middleware('adminPermission:statistics.view');
+    Route::get('register_count_with_month_chart', [HomeController::class, 'register_count_with_month_chart'])->middleware('adminPermission:statistics.view');
+    Route::get('booking_count_last_week_chart', [HomeController::class, 'booking_count_last_week_chart'])->middleware('adminPermission:statistics.view');
+    Route::get('last_bookings', [HomeController::class, 'last_bookings'])->middleware('adminPermission:statistics.view');
+    Route::get('last_customers', [HomeController::class, 'last_customers'])->middleware('adminPermission:statistics.view');
+
 
 });
