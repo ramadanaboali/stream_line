@@ -4,7 +4,6 @@ namespace App\Services\Vendor;
 
 use App\Repositories\Vendor\HomeRepository;
 use App\Services\AbstractService;
-
 class HomeService extends AbstractService
 {
     protected $repo;
@@ -44,5 +43,47 @@ class HomeService extends AbstractService
     public function last_customers()
     {
         return $this->repo->last_customers();
+    }
+
+
+    public function customer_report_list(array $input)
+    {
+        return $this->repo->customer_report_list($input);
+    }
+    public function customer_report_show($id)
+    {
+        return $this->repo->customer_report_show($id);
+    }
+    public function subscription_report_list(array $input)
+    {
+        return $this->repo->subscription_report_list($input);
+    }
+    public function subscription_report_show($id)
+    {
+        return $this->repo->subscription_report_show($id);
+    }
+    public function service_report_list(array $input)
+    {
+        return $this->repo->service_report_list($input);
+    }
+    public function service_report_show($id)
+    {
+        return $this->repo->service_report_show($id);
+    }
+    public function offer_report_list(array $input)
+    {
+        return $this->repo->offer_report_list($input);
+    }
+    public function offer_report_show($id)
+    {
+        return $this->repo->offer_report_show($id);
+    }
+    public function booking_report_list(array $input)
+    {
+        return $this->repo->booking_report_list($input);
+    }
+    public function booking_report_show($id)
+    {
+        return $this->repo->booking_report_show($id);
     }
 }

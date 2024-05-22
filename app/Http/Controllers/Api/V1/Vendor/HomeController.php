@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\V1\Vendor;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\BookingCustomerInvoiceRequest;
 use App\Models\Booking;
-use App\Services\Admin\HomeService;
+use App\Services\Vendor\HomeService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,51 +19,6 @@ class HomeController extends Controller
     {
         $this->service = $service;
     }
-
-    public function home_totals(Request $request)
-    {
-        return response()->apiSuccess($this->service->home_totals());
-    }
-    public function booking_count_chart(Request $request)
-    {
-        $data=$request->all();
-        return response()->apiSuccess($this->service->booking_count_chart($data));
-    }
-    public function booking_total_chart(Request $request)
-    {
-        $data=$request->all();
-        return response()->apiSuccess($this->service->booking_total_chart($data));
-    }
-
-
-    public function booking_count_with_month_chart(Request $request)
-    {
-        $data=$request->all();
-        return response()->apiSuccess($this->service->booking_count_with_month_chart($data));
-    }
-    public function register_count_with_month_chart(Request $request)
-    {
-        $data=$request->all();
-        return response()->apiSuccess($this->service->register_count_with_month_chart($data));
-    }
-    public function booking_count_last_week_chart(Request $request)
-    {
-        $data=$request->all();
-        return response()->apiSuccess($this->service->booking_count_last_week_chart($data));
-    }
-    public function last_bookings(Request $request)
-    {
-        return response()->apiSuccess($this->service->last_bookings());
-    }
-    public function last_customers(Request $request)
-    {
-        return response()->apiSuccess($this->service->last_customers());
-    }
-
-
-
-
-
     public function customer_report_list(Request $request)
     {
         $input = $request->all();
@@ -159,6 +114,51 @@ class HomeController extends Controller
         $mpdf->Output($file, 'D');
 
     }
+    public function home_totals(Request $request)
+    {
+        return response()->apiSuccess($this->service->home_totals());
+    }
+    public function booking_count_chart(Request $request)
+    {
+        $data=$request->all();
+        return response()->apiSuccess($this->service->booking_count_chart($data));
+    }
+    public function booking_total_chart(Request $request)
+    {
+        $data=$request->all();
+        return response()->apiSuccess($this->service->booking_total_chart($data));
+    }
+
+
+    public function booking_count_with_month_chart(Request $request)
+    {
+        $data=$request->all();
+        return response()->apiSuccess($this->service->booking_count_with_month_chart($data));
+    }
+    public function register_count_with_month_chart(Request $request)
+    {
+        $data=$request->all();
+        return response()->apiSuccess($this->service->register_count_with_month_chart($data));
+    }
+    public function booking_count_last_week_chart(Request $request)
+    {
+        $data=$request->all();
+        return response()->apiSuccess($this->service->booking_count_last_week_chart($data));
+    }
+    public function last_bookings(Request $request)
+    {
+        return response()->apiSuccess($this->service->last_bookings());
+    }
+    public function last_customers(Request $request)
+    {
+        return response()->apiSuccess($this->service->last_customers());
+    }
+
+
+
+
+
+
 
     public function getMpdf()
     {
