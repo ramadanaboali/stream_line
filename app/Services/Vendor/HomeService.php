@@ -12,9 +12,9 @@ class HomeService extends AbstractService
         parent::__construct($repo);
         $this->repo = $repo;
     }
-    public function home_totals()
+    public function home_totals(array $input)
     {
-        return $this->repo->home_totals();
+        return $this->repo->home_totals($input);
     }
     public function booking_count_chart(array $data)
     {
@@ -36,13 +36,13 @@ class HomeService extends AbstractService
     {
         return $this->repo->booking_count_last_week_chart($data);
     }
-    public function last_bookings()
+    public function last_bookings(array $data)
     {
-        return $this->repo->last_bookings();
+        return $this->repo->last_bookings($data);
     }
-    public function last_customers()
+    public function last_customers(array $data)
     {
-        return $this->repo->last_customers();
+        return $this->repo->last_customers($data);
     }
 
 
@@ -50,9 +50,9 @@ class HomeService extends AbstractService
     {
         return $this->repo->customer_report_list($input);
     }
-    public function customer_report_show($id)
+    public function customer_report_show($id,array $input)
     {
-        return $this->repo->customer_report_show($id);
+        return $this->repo->customer_report_show($id,$input);
     }
     public function subscription_report_list(array $input)
     {

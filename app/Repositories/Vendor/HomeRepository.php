@@ -3,6 +3,7 @@
 namespace App\Repositories\Vendor;
 
 use App\Models\Booking;
+use App\Models\Service;
 use App\Models\Offer;
 use App\Models\Subscription;
 use App\Models\User;
@@ -20,35 +21,20 @@ class HomeRepository extends AbstractRepository
     public function customer_report_list(array $input)
     {
         $itemPerPage = array_key_exists('per_page',$input) && is_numeric($input['per_page']) ? $input['per_page'] : 20;
-        $list = User::select('users.*')->with(['bookings','reviews'])
-            ->leftJoin('bookings', 'users.model_id', '=', 'bookings.vendor_id')
+        $list = User::select('users.*')->with(['bookings'=> function ($query) use($input) {
+                $query->where('vendor_id','=',$input['vendor_id']);
+            },'bookings.reviews','reviews'])
             ->when(!empty($input['search']), function ($query) use ($input) {
                 $query->where('users.first_name', 'like', '%'.$input['search'].'%');
                 $query->orWhere('users.last_name', 'like', '%'.$input['search'].'%');
-            })->where('bookings.vendor_id','=',$input['vendor_id'])
-            ->where('users.type','=','customer');
+            })->where('users.type','=','customer');
         return $list->paginate($itemPerPage);
     }
-    public function customer_report_show($id)
+    public function customer_report_show($id,$input)
     {
-        return User::select('users.*')->with(['bookings','reviews'])
-            ->find($id);
-
-    }
-
-    public function subscription_report_list(array $input)
-    {
-        $itemPerPage = array_key_exists('per_page',$input) && is_numeric($input['per_page']) ? $input['per_page'] : 20;
-        $list = Subscription::select('subscriptions.*')->with(['package','vendor','vendor.user'])
-            ->when(!empty($input['search']), function ($query) use ($input) {
-                $query->where('subscriptions.name_ar', 'like', '%'.$input['search'].'%');
-                $query->orWhere('subscriptions.name_ar', 'like', '%'.$input['search'].'%');
-            });
-        return $list->paginate($itemPerPage);
-    }
-    public function subscription_report_show($id)
-    {
-        return Subscription::select('subscriptions.*')->with(['package','vendor','vendor.user'])
+        return User::select('users.*')->with(['bookings' => function ($query) use($input) {
+            $query->where('vendor_id','=',$input['vendor_id']);
+        },'bookings.reviews','reviews'])
             ->find($id);
 
     }
@@ -60,7 +46,7 @@ class HomeRepository extends AbstractRepository
             ->when(!empty($input['search']), function ($query) use ($input) {
                 $query->where('services.name_ar', 'like', '%'.$input['search'].'%');
                 $query->orWhere('services.name_ar', 'like', '%'.$input['search'].'%');
-            });
+            })->where('services.vendor_id','=',$input['vendor_id']);
         return $list->paginate($itemPerPage);
     }
     public function service_report_show($id)
@@ -75,7 +61,7 @@ class HomeRepository extends AbstractRepository
             ->when(!empty($input['search']), function ($query) use ($input) {
                 $query->where('services.name_ar', 'like', '%'.$input['search'].'%');
                 $query->orWhere('services.name_ar', 'like', '%'.$input['search'].'%');
-            });
+            })->where('offers.vendor_id','=',$input['vendor_id']);
         return $list->paginate($itemPerPage);
     }
     public function offer_report_show($id)
@@ -90,7 +76,7 @@ class HomeRepository extends AbstractRepository
             ->when(!empty($input['search']), function ($query) use ($input) {
                 $query->where('services.payment_status', 'like', '%'.$input['search'].'%');
                 $query->orWhere('services.payment_status', 'like', '%'.$input['search'].'%');
-            });
+            })->where('bookings.vendor_id','=',$input['vendor_id']);
         return $list->paginate($itemPerPage);
     }
     public function booking_report_show($id)
@@ -98,16 +84,16 @@ class HomeRepository extends AbstractRepository
         return Booking::select('bookings.*')->with(['createdBy','branch','vendor','vendor.user','reviews','service','user','offer','offer.services','promoCode','employee','employee.user'])
             ->find($id);
     }
-    public function home_totals()
+    public function home_totals($input)
     {
         $data=[];
-        $data['subscription_count'] = Subscription::where('status','!=','pending')->count();
-        $data['subscription_total'] = Subscription::where('status','!=','pending')->sum('price');
-        $data['booking_count'] = Booking::where('status','!=','canceled')->count();
-        $data['offer_count'] = Offer::where('is_active','!=','1')->count();
-        $data['booking_total'] = Booking::where('status','!=','canceled')->sum('total');
-        $data['customer_count'] = User::where('users.type','=','customer')->count();
-        $data['vendor_count'] = Vendor::where('is_active','=','1')->count();
+        $data['booking_count'] = Booking::where('status','!=','canceled')->where('vendor_id','=',$input['vendor_id'])->count();
+        $data['booking_total'] = Booking::where('status','!=','canceled')->where('vendor_id','=',$input['vendor_id'])->sum('total');
+        $data['offer_count'] = Offer::where('is_active','!=','1')->where('vendor_id','=',$input['vendor_id'])->count();
+        $data['offer_total'] = Offer::where('is_active','!=','1')->where('vendor_id','=',$input['vendor_id'])->sum('offer_price');
+        $data['customer_count'] = User::where('users.type','=','customer')->whereHas('bookings', function ($query) use ($input) {
+            $query->where('vendor_id','=',$input['vendor_id']);
+        })->count();
         return $data;
     }
     public function booking_count_chart(array $data)
@@ -120,21 +106,25 @@ class HomeRepository extends AbstractRepository
         $currentDate = $currentDateTime->toDateString();
         return match ($filter) {
             'all' => Booking::select(DB::raw('YEAR(created_at) as x_key'), DB::raw('COUNT(id) as count'))
+                ->where('vendor_id','=',$data['vendor_id'])
                 ->groupBy('x_key')
                 ->get(),
             'year' => Booking::select(DB::raw('MONTH(created_at) as x_key'), DB::raw('COUNT(id) as count'))
                 ->whereYear('created_at', $currentYear)
+                ->where('vendor_id','=',$data['vendor_id'])
                 ->groupBy('x_key')
                 ->get(),
             'month' => Booking::select(DB::raw('DAY(created_at) as x_key'), DB::raw('COUNT(id) as count'))
                 ->whereYear('created_at', $currentYear)
                 ->whereMonth('created_at', $currentMonth)
+                ->where('vendor_id','=',$data['vendor_id'])
                 ->groupBy('x_key')
                 ->get(),
             'week' => Booking::select(DB::raw('DAYOFWEEK(created_at) as x_key'), DB::raw('COUNT(id) as count'))
                 ->whereYear('created_at', $currentYear)
                 ->whereMonth('created_at', $currentMonth)
                 ->where(DB::raw('WEEK(created_at)'), [$currentWeek])
+                ->where('vendor_id','=',$data['vendor_id'])
                 ->groupBy('x_key')
                 ->get(),
             default => Booking::select(DB::raw('HOUR(created_at) as x_key'), DB::raw('COUNT(id) as count'))
@@ -142,6 +132,7 @@ class HomeRepository extends AbstractRepository
                 ->whereMonth('created_at', $currentMonth)
                 ->where(DB::raw('WEEK(created_at)'), [$currentWeek])
                 ->whereDate('created_at', $currentDate)
+                ->where('vendor_id','=',$data['vendor_id'])
                 ->groupBy('x_key')
                 ->get(),
         };
@@ -156,21 +147,25 @@ class HomeRepository extends AbstractRepository
         $currentDate = $currentDateTime->toDateString();
         return match ($filter) {
             'all' => Booking::select(DB::raw('YEAR(created_at) as x_key'), DB::raw('SUM(total) as total'))
+                ->where('vendor_id','=',$data['vendor_id'])
                 ->groupBy('x_key')
                 ->get(),
             'year' => Booking::select(DB::raw('MONTH(created_at) as x_key'), DB::raw('SUM(total) as total'))
                 ->whereYear('created_at', $currentYear)
+                ->where('vendor_id','=',$data['vendor_id'])
                 ->groupBy('x_key')
                 ->get(),
             'month' => Booking::select(DB::raw('DAY(created_at) as x_key'), DB::raw('SUM(total) as total'))
                 ->whereYear('created_at', $currentYear)
                 ->whereMonth('created_at', $currentMonth)
+                ->where('vendor_id','=',$data['vendor_id'])
                 ->groupBy('x_key')
                 ->get(),
             'week' => Booking::select(DB::raw('DAYOFWEEK(created_at) as x_key'), DB::raw('SUM(total) as total'))
                 ->whereYear('created_at', $currentYear)
                 ->whereMonth('created_at', $currentMonth)
                 ->where(DB::raw('WEEK(created_at)'), [$currentWeek])
+                ->where('vendor_id','=',$data['vendor_id'])
                 ->groupBy('x_key')
                 ->get(),
             default => Booking::select(DB::raw('HOUR(created_at) as x_key'), DB::raw('SUM(total) as total'))
@@ -178,6 +173,7 @@ class HomeRepository extends AbstractRepository
                 ->whereMonth('created_at', $currentMonth)
                 ->where(DB::raw('WEEK(created_at)'), [$currentWeek])
                 ->whereDate('created_at', $currentDate)
+                ->where('vendor_id','=',$data['vendor_id'])
                 ->groupBy('x_key')
                 ->get(),
         };
@@ -191,6 +187,7 @@ class HomeRepository extends AbstractRepository
 
         return Booking::select(DB::raw('MONTH(created_at) as x_key'), DB::raw('COUNT(id) as count'))
             ->whereYear('created_at', $year)
+            ->where('vendor_id','=',$data['vendor_id'])
             ->groupBy('x_key')
             ->get();
     }
@@ -214,22 +211,28 @@ class HomeRepository extends AbstractRepository
             ->whereYear('created_at', $currentYear)
             ->whereMonth('created_at', $currentMonth)
             ->where(DB::raw('WEEK(created_at)'), [$currentWeek])
+            ->where('vendor_id','=',$data['vendor_id'])
             ->groupBy('x_key')
             ->get();
     }
 
-    public function last_bookings()
+    public function last_bookings($data)
     {
         return Booking::select('bookings.*')->with(['createdBy','branch','vendor','vendor.user','reviews','service','user','offer','offer.services','promoCode','employee','employee.user'])
+            ->where('vendor_id','=',$data['vendor_id'])
             ->orderBy('id','desc')
             ->limit(10)
             ->get();
     }
-    public function last_customers()
+    public function last_customers($data)
     {
-        return User::select('users.*')->with(['bookings','reviews'])
+        return User::select('users.*')->with(['bookings'=> function ($query) use($data) {
+            $query->where('vendor_id','=',$data['vendor_id']);
+        },'bookings.reviews','reviews'])
             ->where('users.type','=','customer')
-            ->orderBy('id','desc')
+            ->whereHas('bookings', function ($query) use ($data) {
+                $query->where('vendor_id','=',$data['vendor_id']);
+            })->orderBy('id','desc')
             ->limit(10)
             ->get();
     }
