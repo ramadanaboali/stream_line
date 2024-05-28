@@ -42,7 +42,7 @@ class EmployeeController extends Controller
     }
 
     public function show($id){
-        return response()->apiSuccess($this->service->get($id));
+        return response()->apiSuccess($this->service->getWithRelations($id,["user","vendor","bookings","branches","services","breakHours","officialHours"]));
     }
 
     public function store(EmployeeRequest $request)
