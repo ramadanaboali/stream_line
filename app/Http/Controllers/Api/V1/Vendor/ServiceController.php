@@ -39,7 +39,7 @@ class ServiceController extends Controller
 
     public function show($id)
     {
-        return response()->apiSuccess($this->service->get($id));
+        return response()->apiSuccess($this->service->getWithRelations($id,["category","vendor","createdBy","branches","section","employees"]));
     }
 
     public function store(ServiceRequest $request)
