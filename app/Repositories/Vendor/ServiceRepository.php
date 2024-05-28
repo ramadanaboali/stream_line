@@ -64,6 +64,7 @@ class ServiceRepository extends AbstractRepository
                 'featured' => $data['featured'] ?? $item->featured,
                 'discount_type' => $data['discount_type'] ?? $item->discount_type,
                 'discount' => $data['discount'] ?? $item->discount,
+                'is_active' => $data['is_active'] ?? $item->is_active,
                 'updated_by' => auth()->user()->id,
             ];
             $item->update($input);

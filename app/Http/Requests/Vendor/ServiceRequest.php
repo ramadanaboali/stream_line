@@ -56,6 +56,7 @@ class ServiceRequest extends FormRequest
                 {
                     $rules = [
                         'discount_type' =>'nullable|in:0,1',
+                        'is_active' =>'nullable|in:0,1',
                         'discount' =>'nullable|numeric'
                     ];
                     return $rules;
