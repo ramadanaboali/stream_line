@@ -61,8 +61,25 @@ class EmployeeRequest extends FormRequest
                 {
 
                     $rules = [
-                    'phone' => 'unique:users,phone,'.request()->employee->user->id,
-                    'email' => 'unique:users,email,'.request()->employee->user->id,
+                    'phone' => 'sometimes|unique:users,phone,'.request()->employee->user->id,
+                    'email' => 'sometimes|unique:users,email,'.request()->employee->user->id,
+                    'first_name' => 'sometimes|string|min:2',
+                    'last_name' => 'sometimes|string|min:2',
+                    'salary' => 'sometimes|numeric',
+                    'start_date' => 'sometimes|date',
+                    'end_date' => 'sometimes|date|after:start_date',
+                    'image' => 'sometimes|image|mimes:png,jpg,jpeg',
+                    'officialHours' => 'sometimes|array',
+                    'officialHours.*.day' =>'sometimes|in:sat,sun,mon,tue,wed,thu,fri',
+                    'officialHours.*.start_time' =>'sometimes|date_format:H:i',
+                    'officialHours.*.end_time' =>'sometimes|date_format:H:i',
+                    'breakHours' => 'sometimes|array',
+                    'breakHours.*.day' =>'sometimes|in:sat,sun,mon,tue,wed,thu,fri',
+                    'breakHours.*.start_time' =>'sometimes|date_format:H:i',
+                    'breakHours.*.end_time' =>'sometimes|date_format:H:i',
+                    'branch_id' => 'sometimes|exists:branches,id',
+                    'service_id' => 'sometimes|array',
+                    'service_id.*' => 'sometimes|exists:services,id',
                     ];
 
                     return $rules;
