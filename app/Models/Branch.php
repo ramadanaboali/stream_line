@@ -21,7 +21,7 @@ class Branch extends Model
 
     public function vendor() :BelongsTo
     {
-        return $this->belongsTo(Vendor::class,'vendor_id','id')->where('vendor_id',auth()->user()->model_id);
+        return $this->belongsTo(Vendor::class,'vendor_id','id');
     }
 
     public function officialHours(): ?HasMany
@@ -44,5 +44,5 @@ class Branch extends Model
     {
         return $this->belongsTo(User::class,'updated_by');
     }
-   
+
 }
