@@ -89,13 +89,13 @@ class EmployeeController extends Controller
         if ($employee && $request->officialHours) {
             if($employee->officialHours()){
 
-                // $employee->officialHours()->delete();
+                 $employee->officialHours()->delete();
             }
             $this->service->officialHours($request->officialHours, $employee->id);
         }
         if ($employee && $request->breakHours) {
             if($employee->breakHours()){
-                // $employee->breakHours()->delete();
+                 $employee->breakHours()->delete();
             }
             $this->service->breakHours($request->breakHours, $employee->id);
         }
