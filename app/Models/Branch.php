@@ -44,5 +44,17 @@ class Branch extends Model
     {
         return $this->belongsTo(User::class,'updated_by');
     }
+    public function country(): ?BelongsTo
+    {
+        return $this->belongsTo(Country::class,'country_id');
+    }
+    public function region(): ?BelongsTo
+    {
+        return $this->belongsTo(Region::class,'region_id');
+    }
+    public function city(): ?BelongsTo
+    {
+        return $this->belongsTo(City::class,'city_id');
+    }
 
 }
