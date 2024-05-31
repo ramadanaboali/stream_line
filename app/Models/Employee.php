@@ -36,11 +36,11 @@ class Employee extends Model
 
     public function breakHours(): ?HasMany
     {
-        return $this->hasMany(OfficialHour::class,'model_id')->where('type','break')->where('model_type',OfficialHour::TYPE_EMPLOYEE);
+        return $this->hasMany(OfficialHour::class,'model_id')->where('type','break');
     }
     public function officialHours(): ?HasMany
     {
-        return $this->hasMany(OfficialHour::class,'model_id')->where('model_type','work')->where('model_type',OfficialHour::TYPE_EMPLOYEE);
+        return $this->hasMany(OfficialHour::class,'model_id')->where('type','work');
     }
     public function user(): ?BelongsTo
     {
