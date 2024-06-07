@@ -41,7 +41,24 @@ class PromoCodeController extends Controller
     public function store(PromoCodeRequest $request)
     {
         $data = $request->all();
+        $data["code"] =$this->createUniquePromoCode(10);
         return response()->apiSuccess($this->service->store($data));
+    }
+
+    // Function to generate a random alphanumeric code
+    private function createUniquePromoCode($length = 10)
+    {
+        $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $promoCode = '';
+
+        do {
+            for ($i = 0; $i < $length; $i++) {
+                $promoCode .= $characters[rand(0, $charactersLength - 1)];
+            }
+        } while (PromoCode::where('code', $promoCode)->exists());
+
+        return $promoCode;
     }
 
     public function update(PromoCodeRequest $request, PromoCode $promo_code)
