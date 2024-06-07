@@ -35,7 +35,6 @@ class SubscriptionRequest extends FormRequest
                 {
                     return [
                         'package_id' => 'required|exists:packages,id',
-                        'user_id' => 'required|exists:packages,id',
                         'auto_renew' => 'required|in:0,1'
                     ];
                 }
