@@ -59,7 +59,7 @@ class EmployeeController extends Controller
         $data['created_by'] =Auth::id();
         DB::beginTransaction();
         $employee=$this->service->createItem($data);
-        $employee=Employee::where('vendor_id',$data['vendor_id'])->orderBy('id','desc')->first();
+//        $employee=Employee::where('vendor_id',$data['vendor_id'])->orderBy('id','desc')->first();
         if ($employee && $request->officialHours) {
             $this->service->officialHours($request->officialHours,$employee->id);
         }

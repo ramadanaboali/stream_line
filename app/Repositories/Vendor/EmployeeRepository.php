@@ -77,7 +77,7 @@ class EmployeeRepository extends AbstractRepository
                 $employee->services()->attach($data['service_id']);
             }
             DB::commit();
-            return $user;
+            return $employee;
         } catch (\Exception $e) {
             DB::rollBack();
             return $e->getMessage();
