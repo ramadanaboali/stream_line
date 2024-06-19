@@ -65,6 +65,7 @@ class OfferRequest extends FormRequest
                     'discount_percentage'=>'required_if:price_type,discount|numeric',
                     'offer_price'=>'required_if:price_type,special|numeric',
                     'service_id'=>'sometimes|array',
+                    'is_active'=>'sometimes|in:0,1',
                     'service_id.*'=>'sometimes|exists:services,id'
                 ];
                 return $rules;
