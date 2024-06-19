@@ -25,6 +25,7 @@ class HomeController extends Controller
         $user=Auth::user();
         $input['user_id']=$user['id'];
         $input['vendor_id']=$user['model_id'];
+        return $input;
         $data = $this->service->customer_report_list($input);
         return response()->apiSuccess($data);
     }
