@@ -39,7 +39,7 @@ class BranchController extends Controller
     }
 
     public function show($id){
-        return response()->apiSuccess($this->service->getWithRelations($id,["vendor","officialHours","images","manager","createdBy","country","region","city"]));
+        return response()->apiSuccess($this->service->getWithRelations($id,["vendor","officialHours","images","manager","createdBy","country","region","city","employees"]));
     }
 
     public function store(BranchRequest $request)
