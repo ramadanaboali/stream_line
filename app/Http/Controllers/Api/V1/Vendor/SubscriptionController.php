@@ -36,7 +36,7 @@ class SubscriptionController extends Controller
     }
 
     public function show($id){
-        return response()->apiSuccess($this->service->get($id));
+        return response()->apiSuccess($this->service->getWithRelations($id,['package','vendor']));
     }
 
     public function store(SubscriptionRequest $request)

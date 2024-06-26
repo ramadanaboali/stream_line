@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\V1\Admin\LanguageSettingController;
 use App\Http\Controllers\Api\V1\Admin\PrivacyPolicyController;
 use App\Http\Controllers\Api\V1\Admin\TermConditionController;
 use App\Http\Controllers\Api\V1\General\UserNotificationSettingController;
+use App\Http\Controllers\Api\V1\General\AuthController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -28,6 +29,14 @@ use App\Http\Controllers\Api\V1\General\UserNotificationSettingController;
 |
 */
 Route::group(['prefix' => '/v1'], function() {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
+
+    Route::post('/reset', [AuthController::class, 'resetPassword']);
+    Route::post('/check-code', [AuthController::class, 'checkCode']);
+    Route::post('/confirm-reset', [AuthController::class, 'confirmReset']);
+
+
     Route::get('countries', [CountryController::class, 'index']);
     Route::get('regions', [RegionController::class, 'index']);
     Route::get('cities', [CityController::class, 'index']);
@@ -40,6 +49,14 @@ Route::group(['prefix' => '/v1'], function() {
 });
 
 Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function() {
+
+        Route::post('/update-profile', [AuthController::class, 'updateProfile']);
+        Route::post('/send-code', [AuthController::class, 'sendCode']);
+        Route::post('/change-password', [AuthController::class, 'changePassword']);
+        Route::post('/update-email', [AuthController::class, 'updateEmail']);
+        Route::post('/update-phone', [AuthController::class, 'updatePhone']);
+        Route::get('/profile', [AuthController::class, 'profile']);
+
 
 
         Route::post('countries', [CountryController::class, 'store'])->middleware('generalPermission:countries.create');

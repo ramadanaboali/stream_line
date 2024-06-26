@@ -40,7 +40,7 @@ class OfferController extends Controller
     }
 
     public function show($id){
-        return response()->apiSuccess($this->service->get($id));
+        return response()->apiSuccess($this->service->getWithRelations($id,["vendor","services","section","category","sub_category","createdBy"]));
     }
 
     public function store(OfferRequest $request)

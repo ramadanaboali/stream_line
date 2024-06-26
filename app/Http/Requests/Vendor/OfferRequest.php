@@ -53,6 +53,20 @@ class OfferRequest extends FormRequest
             case 'PUT':
             {
                 $rules= [
+                    'name_ar'=>'sometimes|string|min:2',
+                    'name_en'=>'sometimes|string|min:2',
+                    'description_en'=>'sometimes|string|min:2',
+                    'description_ar'=>'sometimes|string|min:2',
+                    'section_id'=>'sometimes|exists:sections,id',
+                    'category_id'=>'sometimes|exists:service_categories,id',
+                    'sub_category_id'=>'sometimes|exists:service_categories,id',
+                    'service_price'=>'sometimes|numeric',
+                    'price_type'=>'sometimes|in:service,free,special,discount',
+                    'discount_percentage'=>'required_if:price_type,discount|numeric',
+                    'offer_price'=>'required_if:price_type,special|numeric',
+                    'service_id'=>'sometimes|array',
+                    'is_active'=>'sometimes|in:0,1',
+                    'service_id.*'=>'sometimes|exists:services,id'
                 ];
                 return $rules;
             }

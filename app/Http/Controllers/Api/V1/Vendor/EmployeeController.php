@@ -42,7 +42,7 @@ class EmployeeController extends Controller
     }
 
     public function show($id){
-        return response()->apiSuccess($this->service->get($id));
+        return response()->apiSuccess($this->service->getWithRelations($id,["user","vendor","bookings","branches","services","breakHours","officialHours"]));
     }
 
     public function store(EmployeeRequest $request)
@@ -59,6 +59,7 @@ class EmployeeController extends Controller
         $data['created_by'] =Auth::id();
         DB::beginTransaction();
         $employee=$this->service->createItem($data);
+//        $employee=Employee::where('vendor_id',$data['vendor_id'])->orderBy('id','desc')->first();
         if ($employee && $request->officialHours) {
             $this->service->officialHours($request->officialHours,$employee->id);
         }
@@ -89,13 +90,13 @@ class EmployeeController extends Controller
         if ($employee && $request->officialHours) {
             if($employee->officialHours()){
 
-                // $employee->officialHours()->delete();
+                 $employee->officialHours()->delete();
             }
             $this->service->officialHours($request->officialHours, $employee->id);
         }
         if ($employee && $request->breakHours) {
             if($employee->breakHours()){
-                // $employee->breakHours()->delete();
+                 $employee->breakHours()->delete();
             }
             $this->service->breakHours($request->breakHours, $employee->id);
         }

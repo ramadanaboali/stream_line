@@ -16,7 +16,7 @@ class Employee extends Model
 
     public function vendor() :BelongsTo
     {
-        return $this->belongsTo(Vendor::class,'vendor_id','id')->where('vendor_id',auth()->user()->model_id);
+        return $this->belongsTo(Vendor::class,'vendor_id');
     }
 
     public function bookings(): ?HasMany
@@ -40,7 +40,7 @@ class Employee extends Model
     }
     public function officialHours(): ?HasMany
     {
-        return $this->hasMany(OfficialHour::class,'model_id')->where('model_type','work')->where('model_type',OfficialHour::TYPE_EMPLOYEE);
+        return $this->hasMany(OfficialHour::class,'model_id')->where('type','work')->where('model_type',OfficialHour::TYPE_EMPLOYEE);
     }
     public function user(): ?BelongsTo
     {

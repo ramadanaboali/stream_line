@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -21,7 +22,7 @@ class Branch extends Model
 
     public function vendor() :BelongsTo
     {
-        return $this->belongsTo(Vendor::class,'vendor_id','id')->where('vendor_id',auth()->user()->model_id);
+        return $this->belongsTo(Vendor::class,'vendor_id','id');
     }
 
     public function officialHours(): ?HasMany
@@ -44,5 +45,22 @@ class Branch extends Model
     {
         return $this->belongsTo(User::class,'updated_by');
     }
-   
+    public function country(): ?BelongsTo
+    {
+        return $this->belongsTo(Country::class,'country_id');
+    }
+    public function region(): ?BelongsTo
+    {
+        return $this->belongsTo(Region::class,'region_id');
+    }
+    public function city(): ?BelongsTo
+    {
+        return $this->belongsTo(City::class,'city_id');
+    }
+
+    public function employees(): ?BelongsToMany
+    {
+        return $this->belongsToMany(Employee::class, 'employee_branches','branch_id',  'employee_id');
+    }
+
 }

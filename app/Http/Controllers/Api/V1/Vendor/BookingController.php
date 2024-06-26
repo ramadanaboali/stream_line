@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Api\V1\Vendor;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\BookingCustomerInvoiceRequest;
 use App\Http\Requests\PaginateRequest;
 use App\Http\Requests\Vendor\BookingRequest;
 use App\Models\Booking;
 use App\Services\General\StorageService;
 use App\Services\Vendor\BookingService;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Schema;
 use function response;
 
@@ -37,7 +39,7 @@ class BookingController extends Controller
     }
 
     public function show($id){
-        return response()->apiSuccess($this->service->get($id));
+        return response()->apiSuccess($this->service->getWithRelations($id,["user","branch","service","offer","createdBy","employee","vendor","reviews"]));
     }
 
     public function store(BookingRequest $request)
@@ -73,5 +75,49 @@ class BookingController extends Controller
     {
         return response()->apiSuccess($this->service->delete($bokking));
     }
+    public function booking_customer_invoice(BookingCustomerInvoiceRequest $request)
+    {
+        $booking_id=$request->booking_id;
+        $booking = Booking::select('bookings.*')->with(['createdBy','branch','vendor','vendor.user','reviews','service','user','offer','offer.services','promoCode','employee','employee.user'])
+            ->find($booking_id);
 
+        $html = view('booking_customer_invoice_pdf')->with(['data' =>$booking])->render();
+        $mpdf = $this->getMpdf();
+        $mpdf->WriteHTML($html);
+        $file = 'booking_customer_invoice_'.Carbon::now().'.pdf';
+        $mpdf->Output($file, 'D');
+
+    }
+
+
+
+    public function booking_vendor_invoice(BookingCustomerInvoiceRequest $request)
+    {
+        $booking_id=$request->booking_id;
+        $booking = Booking::select('bookings.*')->with(['createdBy','branch','vendor','vendor.user','reviews','service','user','offer','offer.services','promoCode','employee','employee.user'])
+            ->find($booking_id);
+        // $pdf = Pdf::loadView('booking_vendor_invoice_pdf', ['data' =>$booking]);
+
+        // return $pdf->download('booking_vendor_invoice_'.Carbon::now().'.pdf');
+
+        $html = view('booking_vendor_invoice_pdf')->with(['data' => $booking])->render();
+        $mpdf = $this->getMpdf();
+        $mpdf->WriteHTML($html);
+        $file = 'booking_vendor_invoice_'.Carbon::now().'.pdf';
+        $mpdf->Output($file, 'D');
+
+    }
+
+    public function getMpdf()
+    {
+        return new \Mpdf\Mpdf([
+            'tempDir' => public_path('uploads/temp'),
+            'mode' => 'utf-8',
+            'autoScriptToLang' => true,
+            'autoLangToFont' => true,
+            'autoVietnamese' => true,
+            'autoArabic' => true
+        ]);
+
+    }
 }
