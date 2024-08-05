@@ -86,7 +86,7 @@ class BookingRepository extends AbstractRepository
     {
         try {
             $booking = Booking::findOrFail($data['booking_id']);
-            $arbPg = new ArbPg($booking->total, $booking->id);
+            $arbPg = new ArbPg($booking->id, $booking->total);
             return $arbPg->getPaymentId();
             // return $arbPg->getmerchanthostedPaymentid($data['card_number'], $data['expiry_month'], $data['expiry_year'], $data['cvv'], $data['holder_name'], $booking->total, $data['booking_id']);
 

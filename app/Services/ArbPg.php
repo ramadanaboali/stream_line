@@ -4,7 +4,6 @@ namespace App\Services;
 
 class ArbPg
 {
-
     public const ARB_HOSTED_ENDPOINT_TEST = 'https://securepayments.alrajhibank.com.sa/pg/payment/hosted.htm';
     public const ARB_HOSTED_ENDPOINT_PROD = 'https://digitalpayments.alrajhibank.com.sa/pg/payment/hosted.htm';
 
@@ -21,14 +20,14 @@ class ArbPg
     public $order_id ;
     public $amount ;
 
-    public function __construct($order_id,$amount)
-     {
-        $this->Tranportal_ID=config('banck.Tranportal_ID');
-        $this->Tranportal_Password=config('banck.Tranportal_Password');
-        $this->resource_key=config('banck.resource_key');
-        $this->order_id=$order_id;
-        $this->amount=$amount;
-     }
+    public function __construct($order_id, $amount)
+    {
+        $this->Tranportal_ID = config('banck.Tranportal_ID');
+        $this->Tranportal_Password = config('banck.Tranportal_Password');
+        $this->resource_key = config('banck.resource_key');
+        $this->order_id = $order_id;
+        $this->amount = $amount;
+    }
 
     public function getmerchanthostedPaymentid($card_number, $expiry_month, $expiry_year, $cvv, $card_holder, $amount, $trackId)
     {
@@ -110,6 +109,8 @@ class ArbPg
             "trandata" => $this->encrypt($wrappedData, $this->resource_key),
             "errorURL" => route('errorURL'),
             "responseURL" => route('successURL'),
+            "udf1" => $this->order_id,
+
         ];
 
         $wrappedData = $this->wrapData(json_encode($encData, JSON_UNESCAPED_SLASHES));
@@ -171,6 +172,8 @@ class ArbPg
     {
 
 
+$trackId = (string)rand(1, 1000000);
+
 
         $data = [
             "id" => $this->Tranportal_ID,
@@ -179,9 +182,9 @@ class ArbPg
             "currencyCode" => "682",
             "errorURL" => route('errorURL'),
             "responseURL" => route('successURL'),
-            "trackId" => $this->order_id,
+            "trackId" => $trackId,
             "amt" => $this->amount,
-
+            "udf1" => $this->order_id
         ];
 
         $data = json_encode($data, JSON_UNESCAPED_SLASHES);

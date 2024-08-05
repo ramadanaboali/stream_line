@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Models\Booking;
 use App\Models\Service;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
@@ -32,10 +33,33 @@ class HomeController extends Controller
     }
 
     public function responseURL (Request $request){
-        dd($request->all());
+        $encData=$this->decrypt($request->trandata);
+        $data=json_decode($encData);
+        $booking=Booking::find($data[0]->udf1);
+        $booking->update(['payment_status'=>'1']);
+        return response()->apiSuccess($booking);
     }
-    public function errorURL (Request $request){
-        dd($request->all());
+    public function errorURL(Request $request){
+        return response()->apiSuccess($request->all());
+    }
+
+    public function decrypt($code)
+    {
+        $key=config('banck.resource_key');
+        $string = hex2bin(trim($code));
+        $code = unpack('C*', $string);
+        $chars = array_map("chr", $code);
+        $code = join($chars);
+        $code = base64_encode($code);
+        $decrypted = openssl_decrypt($code, "AES-256-CBC", $key, OPENSSL_ZERO_PADDING, "PGKEYENCDECIVSPC");
+        $pad = ord($decrypted[strlen($decrypted) - 1]);
+        if ($pad > strlen($decrypted)) {
+            return false;
+        }
+        if (strspn($decrypted, chr($pad), strlen($decrypted) - $pad) != $pad) {
+            return false;
+        }
+        return urldecode(substr($decrypted, 0, -1 * $pad));
     }
 
 }
