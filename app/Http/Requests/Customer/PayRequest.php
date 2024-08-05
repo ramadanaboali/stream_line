@@ -27,11 +27,11 @@ class PayRequest extends FormRequest
 
 
         return [
-            'card_number' => 'required',
-            'expiry_month' => 'required|in:01,02,03,04,05,06,07,08,09,10,11,12',
-            'expiry_year' => 'required|numeric',
-            'cvv' =>  'required|numeric|digits:3',
-            'holder_name' => 'required|string',
+            // 'card_number' => 'required',
+            // 'expiry_month' => 'required|in:01,02,03,04,05,06,07,08,09,10,11,12',
+            // 'expiry_year' => 'required|numeric',
+            // 'cvv' =>  'required|numeric|digits:3',
+            // 'holder_name' => 'required|string',
             'booking_id' => 'required|exists:bookings,id',
         ];
 

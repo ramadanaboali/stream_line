@@ -31,5 +31,11 @@ class HomeController extends Controller
         return response()->apiSuccess($data);
     }
 
+    public function responseURL (Request $request){
+        dd($request->all());
+    }
+    public function errorURL (Request $request){
+        dd($request->all());
+    }
 
 }

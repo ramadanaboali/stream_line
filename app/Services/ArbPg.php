@@ -18,12 +18,16 @@ class ArbPg
     public $Tranportal_ID ;
     public $Tranportal_Password ;
     public $resource_key ;
+    public $order_id ;
+    public $amount ;
 
-    public function __construct()
+    public function __construct($order_id,$amount)
      {
         $this->Tranportal_ID=config('banck.Tranportal_ID');
         $this->Tranportal_Password=config('banck.Tranportal_Password');
         $this->resource_key=config('banck.resource_key');
+        $this->order_id=$order_id;
+        $this->amount=$amount;
      }
 
     public function getmerchanthostedPaymentid($card_number, $expiry_month, $expiry_year, $cvv, $card_holder, $amount, $trackId)
@@ -104,8 +108,8 @@ class ArbPg
         $encData = [
             "id" => $this->Tranportal_ID,
             "trandata" => $this->encrypt($wrappedData, $this->resource_key),
-            "errorURL" => "http://localhost/arbpg-php-sample-code/result.php",
-            "responseURL" => "http://localhost/arbpg-php-sample-code/result.php",
+            "errorURL" => route('errorURL'),
+            "responseURL" => route('successURL'),
         ];
 
         $wrappedData = $this->wrapData(json_encode($encData, JSON_UNESCAPED_SLASHES));
@@ -132,19 +136,17 @@ class ArbPg
         ));
 
         $response = curl_exec($curl);
-        print_r($response);
         curl_close($curl);
 
         // parse response and get id
         $data = json_decode($response, true)[0];
-        print_r($data);
         if ($data["status"] == "1") {
             $id = explode(":", $data["result"])[0];
             $url = self::ARB_PAYMENT_ENDPOINT_TESTING . $id; //in Production use Production Payment End Point
             return $url;
         } else {
             // handle error either refresh on contact merchant
-            return -1;
+            return $data;
         }
     }
 
@@ -168,19 +170,17 @@ class ArbPg
     private function getRequestData()
     {
 
-        $amount = 100;
 
-        $trackId = (string)rand(1, 1000000); // TODO: Change to real value
 
         $data = [
             "id" => $this->Tranportal_ID,
             "password" => $this->Tranportal_Password,
             "action" => "1",
             "currencyCode" => "682",
-            "errorURL" => "http://localhost/arbpg-php-sample-code/result.php",
-            "responseURL" => "http://localhost/arbpg-php-sample-code/result.php",
-            "trackId" => $trackId,
-            "amt" => $amount,
+            "errorURL" => route('errorURL'),
+            "responseURL" => route('successURL'),
+            "trackId" => $this->order_id,
+            "amt" => $this->amount,
 
         ];
 

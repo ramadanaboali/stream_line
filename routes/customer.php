@@ -25,8 +25,8 @@ Route::group(['prefix' => '/v1'], function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/register', [AuthController::class, 'register']);
     Route::get('search', [HomeController::class, 'search']);
-    Route::get('errorURL', [HomeController::class, 'errorURL'])->name('errorURL');
-    Route::get('successURL', [HomeController::class, 'responseURL'])->name('successURL');
+    Route::post('errorURL', [HomeController::class, 'errorURL'])->name('errorURL');
+    Route::post('successURL', [HomeController::class, 'responseURL'])->name('successURL');
 
 });
 
