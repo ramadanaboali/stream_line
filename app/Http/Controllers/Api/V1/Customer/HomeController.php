@@ -67,6 +67,8 @@ class HomeController extends Controller
     public function errorURL(Request $request){
         Log::debug("error payment callback",$request->all());
         $response=$request->all();
+//        $encData=$this->decrypt($request->trandata);
+//        $data=json_decode($encData);
         $htmlContent = '
             <!DOCTYPE html>
             <html lang="en">
@@ -83,6 +85,7 @@ class HomeController extends Controller
             <body>
                 <h1>Payment Received With Error</h1>
                 <p>Payment Failed Please Close this and Return To main Page.</p>
+                <p>'.$request->errorText.'</p>
             </body>
             </html>
         ';
