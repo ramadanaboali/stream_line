@@ -39,8 +39,30 @@ class HomeController extends Controller
         $data=json_decode($encData);
         Log::debug("Success payment callback",$data);
         $booking=Booking::find($data[0]->udf1);
-        $booking->update(['status'=>'confirmed','payment_status'=>1,'is_active'=>1]);
-        return response()->apiSuccess($booking);
+        $booking->update(['status'=>'confirmed','payment_status'=>'1','is_active'=>'1']);
+        $htmlContent = '
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Callback Response</title>
+                <style>
+                    body { font-family: Arial, sans-serif; margin: 20px; }
+                    h1 { color: #333; }
+                    p { color: #666; }
+                </style>
+            </head>
+            <body>
+                <h1>Payment Received Successfully</h1>
+                <p>Payment Done Please Close this and Return To main Page.</p>
+            </body>
+            </html>
+        ';
+
+        return response($htmlContent, 200)
+            ->header('Content-Type', 'text/html');
+//        return response()->apiSuccess($booking);
     }
     public function errorURL(Request $request){
         Log::debug("error payment callback",$request->all());
