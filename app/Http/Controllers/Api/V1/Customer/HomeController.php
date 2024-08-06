@@ -36,7 +36,7 @@ class HomeController extends Controller
         $encData=$this->decrypt($request->trandata);
         $data=json_decode($encData);
         $booking=Booking::find($data[0]->udf1);
-        $booking->update(['payment_status'=>'1']);
+        $booking->update(['status'=>'confirmed','payment_status'=>1,'is_active'=>1]);
         return response()->apiSuccess($booking);
     }
     public function errorURL(Request $request){
