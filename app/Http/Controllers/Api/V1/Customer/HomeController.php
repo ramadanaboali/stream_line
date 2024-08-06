@@ -66,7 +66,30 @@ class HomeController extends Controller
     }
     public function errorURL(Request $request){
         Log::debug("error payment callback",$request->all());
-        return response()->apiSuccess($request->all());
+        $response=$request->all();
+        $htmlContent = '
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Callback Response</title>
+                <style>
+                    body { font-family: Arial, sans-serif; margin: 20px; }
+                    h1 { color: #333; }
+                    p { color: #666; }
+                </style>
+            </head>
+            <body>
+                <h1>Payment Received With Error</h1>
+                <p>Payment Failed Please Close this and Return To main Page.</p>
+            </body>
+            </html>
+        ';
+
+        return response($htmlContent, 200)
+            ->header('Content-Type', 'text/html');
+//        return response()->apiSuccess($request->all());
     }
 
     public function decrypt($code)
