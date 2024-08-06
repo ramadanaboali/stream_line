@@ -8,6 +8,8 @@ use App\Models\Service;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Log;
+use function Psy\debug;
 use function response;
 
 class HomeController extends Controller
@@ -35,11 +37,13 @@ class HomeController extends Controller
     public function responseURL (Request $request){
         $encData=$this->decrypt($request->trandata);
         $data=json_decode($encData);
+        Log::debug("Success payment callback",$data);
         $booking=Booking::find($data[0]->udf1);
         $booking->update(['status'=>'confirmed','payment_status'=>1,'is_active'=>1]);
         return response()->apiSuccess($booking);
     }
     public function errorURL(Request $request){
+        Log::debug("error payment callback",$request->all());
         return response()->apiSuccess($request->all());
     }
 
