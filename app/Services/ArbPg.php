@@ -62,10 +62,10 @@ class ArbPg
         $wrappedData = $this->wrapData(json_encode($encData, JSON_UNESCAPED_SLASHES));
 
         $curl = curl_init();
-
+        $CURLOPT_URL=app()->isProduction() ? self::ARB_MERCHANT_HOSTED_ENDPOINT_PROD : self::ARB_MERCHANT_HOSTED_ENDPOINT_TEST;
         curl_setopt_array($curl, array(
             //in Production use Production End Point
-            CURLOPT_URL => self::ARB_MERCHANT_HOSTED_ENDPOINT_TEST,
+            CURLOPT_URL => $CURLOPT_URL,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,

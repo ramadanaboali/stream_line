@@ -22,11 +22,11 @@ class EmployeeService extends AbstractService
         }
     }
      public function employeeService($data){
-        try{
+//        try{
             return $this->repo->employeeService($data);
-        } catch (\Exception $e) {
-            return $e->getMessage();
-        }
+//        } catch (\Exception $e) {
+//            return $e->getMessage();
+//        }
     }
     public function updateItem($data,$item){
         try{
