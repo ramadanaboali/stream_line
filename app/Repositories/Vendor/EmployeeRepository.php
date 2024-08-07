@@ -85,10 +85,11 @@ class EmployeeRepository extends AbstractRepository
     }
     public function employeeService(array $data)
     {
-        dd($data['employee_id']);
 //        try {
             $employee=Employee::findOrFail($data['employee_id']);
-            $employee->services()->attach($data['service_id']);
+            dd($employee);
+
+        $employee->services()->attach($data['service_id']);
             return $employee;
 //        } catch (\Exception $e) {
 //            DB::rollBack();
