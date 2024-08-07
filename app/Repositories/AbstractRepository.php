@@ -17,7 +17,7 @@ class AbstractRepository
 
     public function findOrFail($id)
     {
-        return $this->model::findOrfail($id);
+        return $this->model::withTrashed()->findOrFail($id);
     }
     public function getWithRelations($id,array $relations){
         return $this->model::with($relations)->findOrfail($id);
@@ -87,7 +87,9 @@ class AbstractRepository
 
         }else if ($input["deleted"] == "deleted") {
             $this->model = $this->model->onlyTrashed();
-        }else  {
+        }else  if ($input["deleted"] == "undeleted")  {
+            $this->model = $this->model->withoutTrashed();
+        }else{
             $this->model = $this->model->withTrashed();
         }
         if ($input["with"] != []) {

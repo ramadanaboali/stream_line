@@ -20,7 +20,7 @@ class BookingRepository extends AbstractRepository
     }
     public function createItem($data)
     {
-        $service = Service::findOrFail($data['service_id']);
+        $service = Service::withTrashed()->findOrFail($data['service_id']);
         if (key_exists("employee_id", $data)) {
             $employee_id = $data["employee_id"];
         } else {
@@ -85,7 +85,7 @@ class BookingRepository extends AbstractRepository
     public function pay($data)
     {
         try {
-            $booking = Booking::findOrFail($data['booking_id']);
+            $booking = Booking::withTrashed()->findOrFail($data['booking_id']);
             $arbPg = new ArbPg($booking->id, $booking->total);
             return $arbPg->getPaymentId();
             // return $arbPg->getmerchanthostedPaymentid($data['card_number'], $data['expiry_month'], $data['expiry_year'], $data['cvv'], $data['holder_name'], $booking->total, $data['booking_id']);
@@ -97,7 +97,7 @@ class BookingRepository extends AbstractRepository
     public function cancel($id)
     {
         try {
-            $booking = Booking::findOrFail($id);
+            $booking = Booking::withTrashed()->findOrFail($id);
             $booking->status = 'canceled';
             return $booking->save();
         } catch (\Exception $e) {

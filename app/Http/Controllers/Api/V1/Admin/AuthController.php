@@ -53,7 +53,7 @@ class AuthController extends Controller
     public function sendCode(SendCodeRequest $request)
     {
         try {
-            $user = User::findOrFail(auth()->user()->id);
+            $user = User::withTrashed()->findOrFail(auth()->user()->id);
             $MsgID = rand(100000, 999999);
             $user->update(['reset_code' => $MsgID]);
             if($request->filled('username')) {
@@ -144,7 +144,7 @@ class AuthController extends Controller
     public function updateProfile(ProfileRequest $request)
     {
         try {
-            $currentUser = User::findOrFail(auth()->user()->id);
+            $currentUser = User::withTrashed()->findOrFail(auth()->user()->id);
             $inputs = [
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
@@ -172,14 +172,14 @@ class AuthController extends Controller
             if(auth()->user()->reset_code != $request->code) {
                 return apiResponse(true, null, __('api.code_success'), null, 200);
             }
-            $currentUser = User::findOrFail(auth()->user()->id);
+            $currentUser = User::withTrashed()->findOrFail(auth()->user()->id);
             $inputs = [
                 'email' => $request->email,
                 'reset_code' => null
             ];
             $data = $currentUser->update($inputs);
             if ($data) {
-                $currentUser = User::findOrFail(auth()->user()->id);
+                $currentUser = User::withTrashed()->findOrFail(auth()->user()->id);
                 return apiResponse(true, $currentUser, __('api.update_success'), null, 200);
             } else {
                 return apiResponse(false, null, __('api.cant_update'), null, 401);
@@ -194,7 +194,7 @@ class AuthController extends Controller
             if(auth()->user()->reset_code != $request->code) {
                 return apiResponse(true, null, __('api.code_success'), null, 200);
             }
-            $currentUser = User::findOrFail(auth()->user()->id);
+            $currentUser = User::withTrashed()->findOrFail(auth()->user()->id);
             $inputs = [
                 'phone' => $request->phone,
                 'reset_code' => null
@@ -202,7 +202,7 @@ class AuthController extends Controller
             $data = $currentUser->update($inputs);
             if ($data) {
 
-                $currentUser = User::findOrFail(auth()->user()->id);
+                $currentUser = User::withTrashed()->findOrFail(auth()->user()->id);
                 return apiResponse(true, $currentUser, __('api.update_success'), null, 200);
             } else {
                 return apiResponse(false, null, __('api.cant_update'), null, 401);

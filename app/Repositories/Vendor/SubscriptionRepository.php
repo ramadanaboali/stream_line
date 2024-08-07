@@ -15,7 +15,7 @@ class SubscriptionRepository extends AbstractRepository
         parent::__construct(Subscription::class);
     }
     public function subscribe($data){
-        $package=Package::findOrFail($data['package_id']);
+        $package=Package::withTrashed()->findOrFail($data['package_id']);
         $days=0;
         $price=0;
         switch($package->period){
@@ -67,7 +67,7 @@ class SubscriptionRepository extends AbstractRepository
         return $subscription;
     }
     public function pay($data){
-        $subscription=Subscription::findOrFail($data['subscription_id']);
+        $subscription=Subscription::withTrashed()->findOrFail($data['subscription_id']);
         $today =Carbon::now();
         $activeSubscription=Subscription::where('vendor_id',$subscription->user_id)->where('status','active')->first();
         DB::beginTransaction();

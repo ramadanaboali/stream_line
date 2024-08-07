@@ -21,7 +21,7 @@ class WalletTransactionRepository extends AbstractRepository
         try {
             $transaction=WalletTransaction::create($data);
             if($transaction){
-                $wallet=Wallet::findOrFail($transaction->wallet_id);
+                $wallet=Wallet::withTrashed()->findOrFail($transaction->wallet_id);
                 if($transaction->type =="credit"){
                     $wallet->balance=$wallet->balance+$transaction->value;
                     $wallet->save();

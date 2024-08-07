@@ -85,23 +85,21 @@ class EmployeeRepository extends AbstractRepository
     }
     public function employeeService(array $data)
     {
-//        try {
-            $employee=Employee::findOrFail($data['employee_id']);
-            dd($employee);
-
-        $employee->services()->attach($data['service_id']);
+        try {
+            $employee=Employee::withTrashed()->findOrFail($data['employee_id']);
+            $employee->services()->attach($data['service_id']);
             return $employee;
-//        } catch (\Exception $e) {
-//            DB::rollBack();
-//            return $e->getMessage();
-//        }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $e->getMessage();
+        }
     }
     public function updateItem($data,$item)
     {
         try {
 
             DB::beginTransaction();
-            $user = User::findOrFail($item->user_id);
+            $user = User::withTrashed()->findOrFail($item->user_id);
             $inputUser = [
                 'first_name' => $data['first_name'] ?? $user->first_name,
                 'last_name' => $data['last_name'] ?? $user->last_name,
