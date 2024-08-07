@@ -44,7 +44,7 @@ class PaginateRequest extends FormRequest
             'with' => 'sometimes|array',
             'has' => 'sometimes|string|min:1',
             'field' => 'sometimes|string|min:1',
-            "deleted"=>'sometimes|in:all,deleted',
+            "deleted"=>'sometimes|in:all,deleted,undeleted',
             "paginate"=>'sometimes|in:true,false',
         ];
     }
