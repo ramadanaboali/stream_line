@@ -5,6 +5,7 @@ namespace App\Repositories\Vendor;
 use App\Models\Package;
 use App\Models\Subscription;
 use App\Repositories\AbstractRepository;
+use App\Services\ArbPg;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -67,51 +68,14 @@ class SubscriptionRepository extends AbstractRepository
         return $subscription;
     }
     public function pay($data){
-        $subscription=Subscription::withTrashed()->findOrFail($data['subscription_id']);
-        $today =Carbon::now();
-        $activeSubscription=Subscription::where('vendor_id',$subscription->user_id)->where('status','active')->first();
-        DB::beginTransaction();
         try {
-            if(!$activeSubscription){
-                $subscription->payment_date=$today->toDateString();
-                $subscription->start_date=$today->toDateString();
-                $subscription->end_date=Carbon::now()->addDays($subscription->days)->toDateString();
-                $subscription->status='active';
-                $subscription->save();
-            } else if( $activeSubscription->end_date <= $today->toDateString()){
-                $activeSubscription->status='finished';
-                $activeSubscription->save();
-                $subscription->payment_date=$today->toDateString();
-                $subscription->start_date=$today->toDateString();
-                $subscription->end_date=Carbon::now()->addDays($subscription->days)->toDateString();
-                $subscription->status='active';
-                $subscription->save();
-            }else if($activeSubscription->package_id != $subscription->package_id){
-                $activeSubscription->status='cancelled';
-                $activeSubscription->save();
-                $subscription->payment_date=$today->toDateString();
-                $subscription->start_date=$today->toDateString();
-                $subscription->end_date=Carbon::now()->addDays($subscription->days)->toDateString();
-                $subscription->status='active';
-                $subscription->save();
-            }else{
-                $activeSubscription->status='expanded';
-                $activeSubscription->save();
-                $diffInDays = Carbon::today()->diffInDays(Carbon::parse($activeSubscription->end_date));
-                $subscription->payment_date=$today->toDateString();
-                $subscription->start_date=$today->toDateString();
-                $subscription->end_date=Carbon::now()->addDays($subscription->days+$diffInDays)->toDateString();
-                $subscription->status='active';
-                $subscription->save();
-            }
+            $subscription=Subscription::withTrashed()->findOrFail($data['subscription_id']);
+            $arbPg = new ArbPg($subscription->id, $subscription->price);
+            return $arbPg->getSubscriptionPaymentId();
 
-            DB::commit();
-            return $subscription;
         } catch (\Exception $e) {
-            DB::rollback();
-            return ['error'=>$e->getMessage()];
+        return  $e->getMessage();
         }
-
     }
 
 }

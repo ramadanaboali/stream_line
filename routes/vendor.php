@@ -35,6 +35,9 @@ Route::group(['prefix' => '/v1'], function () {
     Route::post('/check-code', [AuthController::class, 'checkCode']);
     Route::post('/confirm-reset', [AuthController::class, 'confirmReset']);
 
+    Route::post('errorSubscribe', [HomeController::class, 'errorSubscribe'])->name('errorSubscribe');
+    Route::post('successSubscribe', [HomeController::class, 'successSubscribe'])->name('successSubscribe');
+
 });
 
 Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {

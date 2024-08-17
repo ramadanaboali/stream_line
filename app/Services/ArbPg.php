@@ -150,7 +150,59 @@ class ArbPg
             return $data;
         }
     }
+    public function getSubscriptionPaymentId()
+    {
 
+        $plainData = $this->getRequestData();
+
+        $wrappedData = $this->wrapData($plainData);
+
+        $encData = [
+            "id" => $this->Tranportal_ID,
+            "trandata" => $this->encrypt($wrappedData, $this->resource_key),
+            "errorURL" => route('errorSubscribe'),
+            "responseURL" => route('successSubscribe'),
+            "udf1" => $this->order_id,
+
+        ];
+
+        $wrappedData = $this->wrapData(json_encode($encData, JSON_UNESCAPED_SLASHES));
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            //in Production use Production End Point
+            CURLOPT_URL => self::ARB_HOSTED_ENDPOINT_TEST,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => $wrappedData,
+
+            CURLOPT_HTTPHEADER => array(
+                'Accept: application/json',
+                'Accept-Language: application/json',
+                'Content-Type: application/json',
+            ),
+        ));
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+
+        // parse response and get id
+        $data = json_decode($response, true)[0];
+        if ($data["status"] == "1") {
+            $id = explode(":", $data["result"])[0];
+            $url = self::ARB_PAYMENT_ENDPOINT_TESTING . $id; //in Production use Production Payment End Point
+            return $url;
+        } else {
+            // handle error either refresh on contact merchant
+            return $data;
+        }
+    }
 
     public function getResult($trandata)
     {

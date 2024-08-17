@@ -5,10 +5,13 @@ namespace App\Http\Controllers\Api\V1\Vendor;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\BookingCustomerInvoiceRequest;
 use App\Models\Booking;
+use App\Models\Subscription;
 use App\Services\Vendor\HomeService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use function response;
 
 class HomeController extends Controller
@@ -19,6 +22,109 @@ class HomeController extends Controller
     {
         $this->service = $service;
     }
+    public function responseURL (Request $request){
+        $encData=$this->decrypt($request->trandata);
+        $data=json_decode($encData);
+        Log::debug("Success payment callback",$data);
+        $subscription=Subscription::withTrashed()->findOrFail($data[0]->udf1);
+        $today =Carbon::now();
+        $activeSubscription=Subscription::where('vendor_id',$subscription->user_id)->where('status','active')->first();
+        DB::beginTransaction();
+        try {
+            if(!$activeSubscription){
+                $subscription->payment_date=$today->toDateString();
+                $subscription->start_date=$today->toDateString();
+                $subscription->end_date=Carbon::now()->addDays($subscription->days)->toDateString();
+                $subscription->status='active';
+                $subscription->save();
+            } else if( $activeSubscription->end_date <= $today->toDateString()){
+                $activeSubscription->status='finished';
+                $activeSubscription->save();
+                $subscription->payment_date=$today->toDateString();
+                $subscription->start_date=$today->toDateString();
+                $subscription->end_date=Carbon::now()->addDays($subscription->days)->toDateString();
+                $subscription->status='active';
+                $subscription->save();
+            }else if($activeSubscription->package_id != $subscription->package_id){
+                $activeSubscription->status='cancelled';
+                $activeSubscription->save();
+                $subscription->payment_date=$today->toDateString();
+                $subscription->start_date=$today->toDateString();
+                $subscription->end_date=Carbon::now()->addDays($subscription->days)->toDateString();
+                $subscription->status='active';
+                $subscription->save();
+            }else{
+                $activeSubscription->status='expanded';
+                $activeSubscription->save();
+                $diffInDays = Carbon::today()->diffInDays(Carbon::parse($activeSubscription->end_date));
+                $subscription->payment_date=$today->toDateString();
+                $subscription->start_date=$today->toDateString();
+                $subscription->end_date=Carbon::now()->addDays($subscription->days+$diffInDays)->toDateString();
+                $subscription->status='active';
+                $subscription->save();
+            }
+
+            DB::commit();
+//            return $subscription;
+            $htmlContent = '
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Callback Response</title>
+                <style>
+                    body { font-family: Arial, sans-serif; margin: 20px; }
+                    h1 { color: #333; }
+                    p { color: #666; }
+                </style>
+            </head>
+            <body>
+                <h1>Payment Received Successfully</h1>
+                <p>Payment Done Please Close this and Return To main Page.</p>
+            </body>
+            </html>
+        ';
+
+            return response($htmlContent, 200)
+                ->header('Content-Type', 'text/html');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return ['error'=>$e->getMessage()];
+        }
+
+    }
+    public function errorURL(Request $request){
+        Log::debug("error payment callback",$request->all());
+        $response=$request->all();
+//        $encData=$this->decrypt($request->trandata);
+//        $data=json_decode($encData);
+        $htmlContent = '
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Callback Response</title>
+                <style>
+                    body { font-family: Arial, sans-serif; margin: 20px; }
+                    h1 { color: #333; }
+                    p { color: #666; }
+                </style>
+            </head>
+            <body>
+                <h1>Payment Received With Error</h1>
+                <p>Payment Failed Please Close this and Return To main Page.</p>
+                <p>'.$request->errorText.'</p>
+            </body>
+            </html>
+        ';
+
+        return response($htmlContent, 200)
+            ->header('Content-Type', 'text/html');
+//        return response()->apiSuccess($request->all());
+    }
+
     public function customer_report_list(Request $request)
     {
         $input = $request->all();
