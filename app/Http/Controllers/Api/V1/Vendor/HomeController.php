@@ -22,7 +22,7 @@ class HomeController extends Controller
     {
         $this->service = $service;
     }
-    public function responseURL (Request $request){
+    public function successSubscribe (Request $request){
         $encData=$this->decrypt($request->trandata);
         $data=json_decode($encData);
         Log::debug("Success payment callback",$data);
@@ -94,7 +94,7 @@ class HomeController extends Controller
         }
 
     }
-    public function errorURL(Request $request){
+    public function errorSubscribe(Request $request){
         Log::debug("error payment callback",$request->all());
         $response=$request->all();
 //        $encData=$this->decrypt($request->trandata);
