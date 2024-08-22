@@ -41,9 +41,12 @@ class installPermissions extends Command
 
     private function installRoutesPermissions(): void
     {
-        $permissions = Permission::where('guard_name', 'api')->get()->pluck('name')->toArray();
+        $adminpermissions = Permission::where('guard_name', 'api')->where('model_type','admin')->get()->pluck('name')->toArray();
+        $generalpermissions = Permission::where('guard_name', 'api')->where('model_type','general')->get()->pluck('name')->toArray();
+        $vendorpermissions = Permission::where('guard_name', 'api')->where('model_type','vendor')->get()->pluck('name')->toArray();
         $routes = Route::getRoutes();
         $arr = [];
+        app()->setLocale('ar');
         $tempPermissions = [];
         foreach ($routes as $route) {
             $middleware = $route->middleware();
@@ -51,12 +54,14 @@ class installPermissions extends Command
                 foreach ($middleware as $middleware) {
                     if (strpos($middleware, 'adminPermission:') > -1) {
                         $permission = explode(':', $middleware);
-                        if (!in_array($permission[1], $tempPermissions) && !in_array($permission[1], $permissions)) {
+                        if (!in_array($permission[1], $tempPermissions)) {
                             array_push($tempPermissions, $permission[1]);
                             $group = explode('.', $permission[1]);
                             $arr[] = [
                                 'name' => $permission[1],
                                 'model_type' => 'admin',
+                                'group_display_name' => __('permissions.'.($group[0]??null)),
+                                'display_name' => __('permissions.'.($group[1]??null)),
                                 'group' => $group[0] ?? null,
                                 'guard_name' => 'api',
                                 'created_at' => now(),
@@ -66,12 +71,31 @@ class installPermissions extends Command
                     }
                     if (strpos($middleware, 'vendorPermission:') > -1) {
                         $permission = explode(':', $middleware);
-                        if (!in_array($permission[1], $tempPermissions) && !in_array($permission[1], $permissions)) {
+                        if (!in_array($permission[1], $tempPermissions) ) {
                             array_push($tempPermissions, $permission[1]);
                             $group = explode('.', $permission[1]);
                             $arr[] = [
                                 'name' => $permission[1],
                                 'model_type' => 'vendor',
+                                'group_display_name' => __('permissions.'.($group[0]??null)),
+                                'display_name' => __('permissions.'.($group[1]??null)),
+                                'group' => $group[0] ?? null,
+                                'guard_name' => 'api',
+                                'created_at' => now(),
+                                'updated_at' => now(),
+                            ];
+                        }
+                    }
+                    if (strpos($middleware, 'generalPermission:') > -1) {
+                        $permission = explode(':', $middleware);
+                        if (!in_array($permission[1], $tempPermissions) ) {
+                            array_push($tempPermissions, $permission[1]);
+                            $group = explode('.', $permission[1]);
+                            $arr[] = [
+                                'name' => $permission[1],
+                                'model_type' => 'general',
+                                'group_display_name' => __('permissions.'.($group[0]??null)),
+                                'display_name' => __('permissions.'.($group[1]??null)),
                                 'group' => $group[0] ?? null,
                                 'guard_name' => 'api',
                                 'created_at' => now(),
@@ -83,7 +107,14 @@ class installPermissions extends Command
             }
         }
         if (count($arr) > 0) {
-            Permission::insert($arr);
+            foreach ($arr as $row) {
+                Permission::updateOrCreate(
+                    ['name' => $row['name'],
+                    'model_type' => $row['model_type'],
+                    'guard_name' => $row['guard_name']],
+                    $row
+                );
+            }
             $this->info('Routes Permissions installed');
         }
     }
@@ -93,26 +124,32 @@ class installPermissions extends Command
     private function assignPermissionsToAdmin(): void
     {
         $user = User::where('email', config('admin.email'))->first();
-        $role = Role::where('name', 'superadmin')->where('model_type','admin')->first();
+        $role = Role::where('name', 'superadmin')->where('model_type', 'admin')->first();
         if(!$role) {
             $role = Role::Create([
                 'name' => 'superadmin',
                 'model_type' => 'admin',
                 'guard_name' => 'api',
-                'can_edit'=>0,
+                'can_edit' => 0,
                 'display_name' => 'سوبر ادمن'
             ]);
         }
         if ($user && $role) {
             $user->syncRoles($role->id);
-            $role->syncPermissions(Permission::where('model_type', 'admin')->get());
+            $role->syncPermissions(Permission::whereIn('model_type', ['admin','general'])->get());
             Artisan::call('cache:clear');
             $this->info("All Permissions assigned to user {$user->email}");
         }
-        $vendorRole = Role::firstOrCreate(['name'=>'admin','model_type'=>'vendor','can_edit'=>0],['name'=>'admin','model_type'=>'vendor','can_edit'=>0,'guard_name' => 'api','display_name' => ' ادمن']);
+        $vendorRole = Role::firstOrCreate(['name' => 'admin','model_type' => 'vendor','can_edit' => 0], ['name' => 'admin','model_type' => 'vendor','can_edit' => 0,'guard_name' => 'api','display_name' => ' ادمن']);
         if ($vendorRole) {
-            $vendorPermissions = Permission::where('model_type', 'vendor')->get();
+            $vendorPermissions = Permission::whereIn('model_type', ['vendor','general'])->get();
             $vendorRole->syncPermissions($vendorPermissions);
+            $users = User::where('type', 'vendor')->get();
+            foreach ($users as $item) {
+                $item->syncRoles($vendorRole->id);
+            }
+            Artisan::call('cache:clear');
+            $this->info("All Vendor Permissions assigned to user vendors");
         }
     }
 }

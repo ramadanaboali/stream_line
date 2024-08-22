@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Api\V1\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CheckCodeRequest;
+use App\Http\Requests\Customer\RegisterRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\ConfirmResetRequest;
 use App\Http\Requests\Admin\ProfileRequest;
 use App\Http\Requests\ChangePasswordRequest;
-use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\ResetRequest;
 use App\Http\Requests\SendCodeRequest;
 use App\Http\Requests\EmailRequest;
@@ -52,44 +52,23 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request)
     {
-        try {
-            DB::beginTransaction();
-            $vendorInput = [
-                'name' => $request->provider_name,
-                'commercial_no' => $request->commercial_no,
-                'tax_number' => $request->tax_number,
-                'description' => $request->description,
-                'website_url' => $request->website_url,
-                'twitter' => $request->twitter,
-                'instagram' => $request->instagram,
-                'snapchat' => $request->snapchat,
-            ];
-            if($vendor = Vendor::create($vendorInput)) {
+
                 $userInput = [
                     'email' => $request->email,
                     'first_name' => $request->first_name,
                     'last_name' => $request->last_name,
                     'phone' => $request->phone,
-                    'model_id' => $vendor->id,
                     'type' => 'customer',
                     'password' => Hash::make($request->password),
                 ];
-                User::create($userInput);
-                $vendor->vendorCategories()->attach($request->category_id);
-            }
-            DB::commit();
-            return apiResponse(true, $vendor, __('api.register_success'), null, Response::HTTP_CREATED);
-        } catch (Exception $e) {
-            DB::rollBack();
-            return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
+               return User::create($userInput);
 
     }
 
     public function sendCode(SendCodeRequest $request)
     {
         try {
-            $user = User::findOrFail(auth()->user()->id);
+            $user = User::withTrashed()->findOrFail(auth()->user()->id);
             $MsgID = rand(100000, 999999);
             $user->update(['reset_code' => $MsgID]);
             if($request->filled('username'))
@@ -179,7 +158,7 @@ class AuthController extends Controller
     public function updateProfile(ProfileRequest $request)
     {
         try{
-            $currentUser = User::findOrFail(auth()->user()->id);
+            $currentUser = User::withTrashed()->findOrFail(auth()->user()->id);
             $inputs = [
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
@@ -207,7 +186,7 @@ class AuthController extends Controller
             if(auth()->user()->reset_code != $request->code) {
                 return apiResponse(true, null, __('api.code_success'), null, 200);
             }
-            $currentUser = User::findOrFail(auth()->user()->id);
+            $currentUser = User::withTrashed()->findOrFail(auth()->user()->id);
             $inputs = [
                 'email' => $request->email,
                 'reset_code' => null
@@ -228,7 +207,7 @@ class AuthController extends Controller
             if(auth()->user()->reset_code != $request->code) {
                 return apiResponse(true, null, __('api.code_success'), null, 200);
             }
-            $currentUser = User::findOrFail(auth()->user()->id);
+            $currentUser = User::withTrashed()->findOrFail(auth()->user()->id);
             $inputs = [
                 'phone' => $request->phone,
                 'reset_code' => null

@@ -10,12 +10,12 @@ use App\Http\Controllers\Api\V1\Admin\TaxSettingController;
 use App\Http\Controllers\Api\V1\Admin\NotificationSettingController;
 use App\Http\Controllers\Api\V1\Admin\SystemNotificationController;
 use App\Http\Controllers\Api\V1\Admin\HelpCenterController;
-use App\Http\Controllers\Api\V1\Admin\TermConditionController;
-use App\Http\Controllers\Api\V1\Admin\PrivacyPolicyController;
 use App\Http\Controllers\Api\V1\Admin\FAQController;
 use App\Http\Controllers\Api\V1\Admin\ContactMessageController;
-use App\Http\Controllers\Api\V1\Admin\LanguageSettingController;
-
+use App\Http\Controllers\Api\V1\Admin\BannerController;
+use App\Http\Controllers\Api\V1\Admin\UserController;
+use App\Http\Controllers\Api\V1\Admin\VendorController;
+use App\Http\Controllers\Api\V1\Admin\HomeController;
 Route::group(['prefix' => '/v1'], function () {
 
     Route::post('/login', [AuthController::class, 'login']);
@@ -26,13 +26,16 @@ Route::group(['prefix' => '/v1'], function () {
     Route::get('packages', [PackageController::class, 'index']);
     Route::get('help_centers', [HelpCenterController::class, 'index']);
     Route::get('f_a_q_s', [FAQController::class, 'index']);
+    Route::get('banners', [BannerController::class, 'index']);
 
     Route::post('contact_messages', [ContactMessageController::class, 'store']);
+    Route::get('vendors', [VendorController::class, 'index']);
 
 });
 
 Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
 
+    Route::get('permissions', [RoleController::class, 'permissions']);
     Route::get('roles', [RoleController::class, 'index'])->middleware('adminPermission:roles.view');
     Route::post('roles', [RoleController::class, 'store'])->middleware('adminPermission:roles.create');
     Route::get('roles/{role}', [RoleController::class, 'show'])->middleware('adminPermission:roles.view');
@@ -45,6 +48,20 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
     Route::post('/update-email', [AuthController::class, 'updateEmail']);
     Route::post('/update-phone', [AuthController::class, 'updatePhone']);
     Route::get('/profile', [AuthController::class, 'profile']);
+
+
+    Route::get('users', [UserController::class, 'index'])->middleware('adminPermission:users.view');
+    Route::post('users', [UserController::class, 'store'])->middleware('adminPermission:users.create');
+    Route::get('users/{user}', [UserController::class, 'show'])->middleware('adminPermission:users.view');
+    Route::put('users/{user}', [UserController::class, 'update'])->middleware('adminPermission:users.edit');
+    Route::delete('users/{user}', [UserController::class, 'delete'])->middleware('adminPermission:users.delete');
+
+    Route::post('vendors', [VendorController::class, 'store'])->middleware('adminPermission:vendors.create');
+    Route::get('vendors/{vendor}', [VendorController::class, 'show'])->middleware('adminPermission:vendors.view');
+    Route::put('vendors/{vendor}', [VendorController::class, 'update'])->middleware('adminPermission:vendors.edit');
+    Route::delete('vendors/{vendor}', [VendorController::class, 'delete'])->middleware('adminPermission:vendors.delete');
+
+
 
     Route::post('packages', [PackageController::class, 'store'])->middleware('adminPermission:packages.create');
     Route::get('packages/{package}', [PackageController::class, 'show'])->middleware('adminPermission:packages.view');
@@ -74,12 +91,6 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
     Route::put('help_centers/{help_center}', [HelpCenterController::class, 'update'])->middleware('adminPermission:help_centers.edit');
     Route::delete('help_centers/{help_center}', [HelpCenterController::class, 'delete'])->middleware('adminPermission:help_centers.delete');
 
-    Route::get('term_conditions', [TermConditionController::class, 'getSetting'])->middleware('adminPermission:term_conditions.view');
-    Route::post('term_conditions', [TermConditionController::class, 'updateSetting'])->middleware('adminPermission:term_conditions.edit');
-
-    Route::get('privacy_policies', [PrivacyPolicyController::class, 'getSetting'])->middleware('adminPermission:privacy_policies.view');
-    Route::post('privacy_policies', [PrivacyPolicyController::class, 'updateSetting'])->middleware('adminPermission:privacy_policies.edit');
-
     Route::post('f_a_q_s', [FAQController::class, 'store'])->middleware('adminPermission:f_a_q_s.create');
     Route::get('f_a_q_s/{f_a_q}', [FAQController::class, 'show'])->middleware('adminPermission:f_a_q_s.view');
     Route::put('f_a_q_s/{f_a_q}', [FAQController::class, 'update'])->middleware('adminPermission:f_a_q_s.edit');
@@ -91,10 +102,41 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
     Route::put('contact_messages/{contact_message}', [ContactMessageController::class, 'update'])->middleware('adminPermission:contact_messages.edit');
     Route::delete('contact_messages/{contact_message}', [ContactMessageController::class, 'delete'])->middleware('adminPermission:contact_messages.delete');
 
+    Route::post('banners', [BannerController::class, 'store'])->middleware('adminPermission:banners.create');
+    Route::get('banners/{banner}', [BannerController::class, 'show'])->middleware('adminPermission:banners.view');
+    Route::put('banners/{banner}', [BannerController::class, 'update'])->middleware('adminPermission:banners.edit');
+    Route::delete('banners/{banner}', [BannerController::class, 'delete'])->middleware('adminPermission:banners.delete');
 
-    Route::get('language_settings', [LanguageSettingController::class, 'getSetting'])->middleware('adminPermission:language_settings.view');
-    Route::post('language_settings', [LanguageSettingController::class, 'updateSetting'])->middleware('adminPermission:language_settings.edit');
 
+    Route::get('vendor_report_list', [VendorController::class, 'vendor_report_list'])->middleware('adminPermission:vendor_report.view');
+    Route::get('vendor_report_show/{vendor}', [VendorController::class, 'vendor_report_show'])->middleware('adminPermission:vendor_report.view');
+
+    Route::get('customer_report_list', [VendorController::class, 'customer_report_list'])->middleware('adminPermission:customer_report.view');
+    Route::get('customer_report_show/{customer}', [VendorController::class, 'customer_report_show'])->middleware('adminPermission:customer_report.view');
+
+    Route::get('subscription_report_list', [VendorController::class, 'subscription_report_list'])->middleware('adminPermission:subscription_report.view');
+    Route::get('subscription_report_show/{subscription}', [VendorController::class, 'subscription_report_show'])->middleware('adminPermission:subscription_report.view');
+
+    Route::get('service_report_list', [VendorController::class, 'service_report_list'])->middleware('adminPermission:service_report.view');
+    Route::get('service_report_show/{service}', [VendorController::class, 'service_report_show'])->middleware('adminPermission:service_report.view');
+
+    Route::get('offer_report_list', [VendorController::class, 'offer_report_list'])->middleware('adminPermission:offer_report.view');
+    Route::get('offer_report_show/{offer}', [VendorController::class, 'offer_report_show'])->middleware('adminPermission:offer_report.view');
+
+    Route::get('booking_report_list', [VendorController::class, 'booking_report_list'])->middleware('adminPermission:booking_report.view');
+    Route::get('booking_report_show/{booking}', [VendorController::class, 'booking_report_show'])->middleware('adminPermission:booking_report.view');
+    Route::post('booking_customer_invoice', [VendorController::class, 'booking_customer_invoice'])->middleware('adminPermission:booking_report.view');
+    Route::post('booking_vendor_invoice', [VendorController::class, 'booking_vendor_invoice'])->middleware('adminPermission:booking_report.view');
+
+    Route::get('home_totals', [HomeController::class, 'home_totals'])->middleware('adminPermission:home.view');
+    Route::get('booking_count_chart', [HomeController::class, 'booking_count_chart'])->middleware('adminPermission:home.view');
+    Route::get('booking_total_chart', [HomeController::class, 'booking_total_chart'])->middleware('adminPermission:home.view');
+
+    Route::get('booking_count_with_month_chart', [HomeController::class, 'booking_count_with_month_chart'])->middleware('adminPermission:statistics.view');
+    Route::get('register_count_with_month_chart', [HomeController::class, 'register_count_with_month_chart'])->middleware('adminPermission:statistics.view');
+    Route::get('booking_count_last_week_chart', [HomeController::class, 'booking_count_last_week_chart'])->middleware('adminPermission:statistics.view');
+    Route::get('last_bookings', [HomeController::class, 'last_bookings'])->middleware('adminPermission:statistics.view');
+    Route::get('last_customers', [HomeController::class, 'last_customers'])->middleware('adminPermission:statistics.view');
 
     Route::post('/logout', [AuthController::class, 'logout']);
 

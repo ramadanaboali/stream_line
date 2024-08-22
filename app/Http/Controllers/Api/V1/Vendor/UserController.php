@@ -47,14 +47,15 @@ class UserController extends Controller
     public function store(UserRequest $request)
     {
         $data = $request->all();
-        $folder_path = "images/category";
+        $folder_path = "images/user";
         $storedPath = null;
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $storedPath = $this->storageService->storeFile($file, $folder_path);
         }
         $data['image'] = $storedPath;
-
+        $data['type'] = 'admin';
+        $data['model_id'] = auth()->user()->model_id;
         return response()->apiSuccess($this->service->createUser($data));
     }
 

@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\Api\V1\Customer\AuthController;
+use App\Http\Controllers\Api\V1\Customer\BookingController;
+use App\Http\Controllers\Api\V1\Customer\HomeController;
+use App\Http\Controllers\Api\V1\Customer\WishListController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,17 +19,34 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => '/v1'], function () {
 
-
     Route::post('/reset', [AuthController::class, 'resetPassword']);
     Route::post('/check-code', [AuthController::class, 'checkCode']);
     Route::post('/confirm-reset', [AuthController::class, 'confirmReset']);
     Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::get('search', [HomeController::class, 'search']);
+    Route::post('errorURL', [HomeController::class, 'errorURL'])->name('errorURL');
+    Route::post('successURL', [HomeController::class, 'responseURL'])->name('successURL');
 
 });
 
 Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
+    Route::get('check/promocode/{code}', [BookingController::class, 'checkPromocode']);
 
+    Route::post('bookings/pay', [BookingController::class, 'pay']);
+    Route::get('bookings/cancel/{id}', [BookingController::class, 'cancel']);
 
+    Route::get('bookings', [BookingController::class, 'index']);
+    Route::post('bookings', [BookingController::class, 'store']);
+    Route::get('bookings/{booking}', [BookingController::class, 'show']);
+    Route::put('bookings/{booking}', [BookingController::class, 'update']);
+    Route::delete('bookings/{booking}', [BookingController::class, 'delete']);
+
+    Route::get('wish_lists', [WishListController::class, 'index']);
+    Route::post('wish_lists', [WishListController::class, 'store']);
+    Route::get('wish_lists/{wish_list}', [WishListController::class, 'show']);
+    Route::put('wish_lists/{wish_list}', [WishListController::class, 'update']);
+    Route::delete('wish_lists/{wish_list}', [WishListController::class, 'delete']);
 
     Route::post('/update-profile', [AuthController::class, 'updateProfile']);
     Route::post('/send-code', [AuthController::class, 'sendCode']);
@@ -36,6 +56,5 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
     Route::get('/profile', [AuthController::class, 'profile']);
 
     Route::post('/logout', [AuthController::class, 'logout']);
-
 
 });

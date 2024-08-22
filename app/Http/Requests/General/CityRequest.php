@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests\General;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\ValidationException;
 
 class CityRequest extends FormRequest
 {
@@ -60,5 +63,10 @@ class CityRequest extends FormRequest
         return [
 
         ];
+    }
+    protected function failedValidation(Validator $validator)
+    {
+        $errors = (new ValidationException($validator))->errors();
+        throw new HttpResponseException(apiResponse(false, null, 'Validation Error', $errors, 401));
     }
 }

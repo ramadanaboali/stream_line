@@ -10,6 +10,13 @@ return [
     'update_success' => 'تم التحديث بنجاح',
     'register_success' => 'تم التسجيل بنجاح',
     'current_password_invalid' => 'كلمة المرور الحالية خطأ',
+    'no_employee_available_in_this_time' => 'لا يوجد اى موظف متاح فى هذا الوقت يرجى اختيار وقت اخر',
+    'promocode_dosnt_belong_to_you' => 'لا يمكنك استخدام هذا الكود',
+    'promocode_expired' => 'هذا الكود منتهى الصلاحية',
+    'promocode_not_started' => 'لا يمكن تطبيق كود الخصم هذا فى الوقت الحالى',
+    'promocode_success' => 'تم تطبيق كود الخصم بنجاح',
+    'promocode_not_found' => 'كود الخصم غير موجود',
+    'promocode_expired_count' => 'تم الوصول للحد الاقصى من هذا الكود',
     'xxxxxxxx' => 'xxxxxxxx',
 
 ];

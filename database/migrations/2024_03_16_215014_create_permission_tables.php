@@ -28,7 +28,7 @@ return new class () extends Migration {
             $table->string('name');       // For MySQL 8.0 use string('name', 125);
             $table->string('guard_name'); // For MySQL 8.0 use string('guard_name', 125);
             $table->string('group'); // For MySQL 8.0 use string('guard_name', 125);
-            $table->enum('model_type', ['admin','vendor'])->default('admin');
+            $table->enum('model_type', ['admin','vendor','general'])->default('admin');
             $table->timestamps();
 
             $table->unique(['name', 'guard_name']);
@@ -42,6 +42,7 @@ return new class () extends Migration {
             }
             $table->string('name');
             $table->tinyInteger('can_edit')->default(1);
+            $table->enum('is_active', [0,1])->default(1);
             $table->string('display_name')->nullable();
             $table->enum('model_type', ['admin','vendor'])->default('admin');
             $table->unsignedBigInteger('model_id')->nullable();
@@ -50,7 +51,7 @@ return new class () extends Migration {
             if ($teams || config('permission.testing')) {
                 $table->unique([$columnNames['team_foreign_key'], 'name', 'guard_name']);
             } else {
-                $table->unique(['name', 'guard_name']);
+                $table->unique(['name', 'guard_name','model_type']);
             }
         });
 

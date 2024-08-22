@@ -15,9 +15,11 @@ class LanguageSettingService extends AbstractService
     }
 
     public function getSetting(){
-        return $this->repo->getSetting();
+        $user_id= auth()->user()->id;
+        return $this->repo->getSetting($user_id);
     }
     public function updateSetting(array $data){
-        return $this->repo->updateSetting($data);
+        $user_id= auth()->user()->id;
+        return $this->repo->updateSetting($data,$user_id);
     }
 }

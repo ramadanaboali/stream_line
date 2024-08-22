@@ -12,13 +12,27 @@ class LanguageSettingRepository extends AbstractRepository
         parent::__construct(LanguageSetting::class);
     }
 
-    public function getSetting()
+    public function getSetting($user_id)
     {
-        return LanguageSetting::where('is_active', '1')->firstOrFail();
+        return  LanguageSetting::firstOrCreate([
+            'is_active' => '1',
+            "user_id"=> $user_id,
+        ], [
+            "default"=> "ar",
+            "user_id"=> $user_id,
+            "created_by"=> $user_id,
+        ]);
     }
-    public function updateSetting($data)
+    public function updateSetting($data,$user_id)
     {
-        $item=LanguageSetting::where('is_active', '1')->firstOrFail();
+        $item= LanguageSetting::firstOrCreate([
+            'is_active' => '1',
+            "user_id"=> $user_id,
+        ], [
+            "default"=> "ar",
+            "user_id"=> $user_id,
+            "created_by"=> $user_id,
+        ]);
         return $item->update($data);
     }
 

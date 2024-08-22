@@ -46,7 +46,7 @@ class BranchRequest extends FormRequest
                         'images' => 'nullable|array',
                         'images.*' =>'image|mimes:png,jpg,jpeg',
                         'officialHours' => 'required|array',
-                        'officialHours.*.day' =>'required|in:sa,su,mo,tu,we,th,fr',
+                        'officialHours.*.day' =>'required|in:sat,sun,mon,tue,wed,thu,fri',
                         'officialHours.*.start_time' =>'required|date_format:H:i',
                         'officialHours.*.end_time' =>'required|date_format:H:i',
                         'show_rates' =>'required|in:0,1',

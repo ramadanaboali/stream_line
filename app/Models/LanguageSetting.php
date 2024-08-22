@@ -11,7 +11,10 @@ class LanguageSetting extends Model
 {
     use HasFactory,SoftDeletes;
     protected $guarded = [];
-
+    public function user(): ?BelongsTo
+    {
+        return $this->belongsTo(User::class,'user_id');
+    }
     public function createdBy(): ?BelongsTo
     {
         return $this->belongsTo(User::class,'created_by');

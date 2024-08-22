@@ -13,4 +13,9 @@ class WalletTransactionService extends AbstractService
         parent::__construct($repo);
         $this->repo = $repo;
     }
+    public function storeTransaction($data){
+
+        $data['created_by']= auth()->user()->id;
+        return $this->repo->storeTransaction($data);
+    }
 }

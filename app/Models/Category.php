@@ -26,6 +26,7 @@ class Category extends Model
     }
     public function getImageAttribute()
     {
-        return url($this->icon);
+        return array_key_exists('icon', $this->attributes) ? ($this->attributes['icon'] != null ? asset('storage/' . $this->attributes['icon']) : null) : null;
+
     }
 }

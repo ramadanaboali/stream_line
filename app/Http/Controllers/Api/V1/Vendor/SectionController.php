@@ -59,7 +59,7 @@ class SectionController extends Controller
     public function update(SectionRequest $request, Section $section)
     {
 
-        $data = $request->except(['image']);
+        $data = $request->except(['image','_method']);
         if ($request->hasFile('image')) {
             $folder_path = "images/section";
             $storedPath = null;
@@ -67,7 +67,6 @@ class SectionController extends Controller
             $storedPath = $this->storageService->storeFile($file, $folder_path);
             $data['image'] = $storedPath;
         }
-
         return response()->apiSuccess($this->service->update($data,$section));
     }
     public function delete(Section $section)

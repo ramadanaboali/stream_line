@@ -2,7 +2,11 @@
 
 namespace App\Http\Requests\General;
 
+
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\ValidationException;
 
 class RoleRequest extends FormRequest
 {
@@ -33,8 +37,8 @@ class RoleRequest extends FormRequest
                 return [
                     'permissions' => 'required|array',
                     'permissions.*' => 'required|exists:permissions,id',
-                    'name_en' => 'required|string|min:2',
-                    'name_ar' => 'required|string|min:2',
+                    'name' => 'required|string|min:2|unique:roles,name',
+                    'display_name' => 'required|string|min:2',
                     'is_active' => 'required|in:0,1',
                 ];
             }
@@ -44,8 +48,8 @@ class RoleRequest extends FormRequest
                 $rules= [
                     'permissions' => 'required|array',
                     'permissions.*' => 'required|exists:permissions,id',
-                    'name_en' => 'required|string|min:2',
-                    'name_ar' => 'required|string|min:2',
+                    'name' => 'required|string|min:2',
+                    'display_name' => 'required|string|min:2',
                     'is_active' => 'required|in:0,1',
                 ];
                 return $rules;
@@ -55,10 +59,9 @@ class RoleRequest extends FormRequest
         }
 
     }
-    public function attributes()
+     protected function failedValidation(Validator $validator)
     {
-        return [
-
-        ];
+        $errors = (new ValidationException($validator))->errors();
+        throw new HttpResponseException(apiResponse(false, null, 'Validation Error', $errors, 401));
     }
 }

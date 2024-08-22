@@ -17,8 +17,8 @@ class BranchController extends Controller
     protected StorageService $storageService;
     public function __construct(BranchService $service,StorageService $storageService)
     {
-        $this->storageService = $storageService;
         $this->service = $service;
+        $this->storageService = $storageService;
 
     }
     public function index(PaginateRequest $request)
@@ -39,7 +39,7 @@ class BranchController extends Controller
     }
 
     public function show($id){
-        return response()->apiSuccess($this->service->get($id));
+        return response()->apiSuccess($this->service->getWithRelations($id,["vendor","officialHours","images","manager","createdBy","country","region","city","employees","employees.user"]));
     }
 
     public function store(BranchRequest $request)
@@ -61,7 +61,7 @@ class BranchController extends Controller
         if ($branch && $request->officialHours) {
             $this->service->officialHours($request->officialHours,$branch->id);
         }
-        return response()->apiSuccess($this->service->store($data));
+        return response()->apiSuccess($branch);
     }
 
     public function update(BranchRequest $request, Branch $branch)

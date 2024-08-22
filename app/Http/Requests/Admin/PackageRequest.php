@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests\Admin;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\ValidationException;
 
 class PackageRequest extends FormRequest
 {
@@ -48,8 +51,13 @@ class PackageRequest extends FormRequest
                     'manager_role_id' => 'sometimes|integer',
                     'commission' => 'sometimes|numeric|min:1',
                     'features' => 'sometimes|string|min:2',
-                    'sms_messages' => 'required|integer',
-                    'whatsapp_messages' => 'required|integer',
+                    'sms_messages' => 'required|integer|min:1',
+                    'whatsapp_messages' => 'required|integer|min:1',
+                    'branches' => 'required|integer|min:1',
+                    'employees' => 'required|integer|min:1',
+                    'customers' => 'required|integer|min:1',
+                    'remove_copy_right' => 'required|in:0,1',
+                    'payments' => 'required|in:cash,percentage',
                     'policy' => 'required|string|min:2',
                     'is_default' => 'required|in:0,1',
                     'is_active' => 'required|in:0,1',
@@ -64,6 +72,28 @@ class PackageRequest extends FormRequest
                     'name_en' => 'required|string|min:2',
                     'description_ar' => 'required|string|min:2',
                     'description_en' => 'required|string|min:2',
+                    'period' => 'required|in:unknown,days,month,quarter,half_year,year',
+                    'type' => 'required|in:public,private',
+                    'subscription_type' => 'required|in:subscribe,commission,subscribe_and_commission',
+                    'days' => 'required_if:period,days|integer|min:1',
+                    'unknown_price' => 'required_if:period,unknown|numeric|min:1',
+                    'days_price' => 'required_if:period,days|numeric|min:1',
+                    'month_price' => 'required_if:period,month|numeric|min:1',
+                    'quarter_price' => 'required_if:period,quarter|numeric|min:1',
+                    'half_year_price' => 'required_if:period,half_year|numeric|min:1',
+                    'year_price' => 'required_if:period,year|numeric|min:1',
+                    'manager_role_id' => 'sometimes|integer',
+                    'commission' => 'sometimes|numeric|min:1',
+                    'features' => 'sometimes|string|min:2',
+                    'sms_messages' => 'required|integer|min:1',
+                    'whatsapp_messages' => 'required|integer|min:1',
+                    'branches' => 'required|integer|min:1',
+                    'employees' => 'required|integer|min:1',
+                    'customers' => 'required|integer|min:1',
+                    'remove_copy_right' => 'required|in:0,1',
+                    'payments' => 'required|in:cash,percentage',
+                    'policy' => 'required|string|min:2',
+                    'is_default' => 'required|in:0,1',
                     'is_active' => 'required|in:0,1',
                 ];
                 return $rules;
@@ -79,5 +109,10 @@ class PackageRequest extends FormRequest
         return [
 
         ];
+    }
+    protected function failedValidation(Validator $validator)
+    {
+        $errors = (new ValidationException($validator))->errors();
+        throw new HttpResponseException(apiResponse(false, null, 'Validation Error', $errors, 401));
     }
 }

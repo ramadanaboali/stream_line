@@ -16,6 +16,7 @@ return new class extends Migration
             $table->enum('discount_type',["percentage","fixed"])->default("percentage");
             $table->enum('category_type',["public","private"])->default("public");
             $table->float('value')->default(1);
+            $table->string('code');
             $table->string('start_date');
             $table->string('end_date');
             $table->unsignedBigInteger('user_id')->nullable();

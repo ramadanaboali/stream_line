@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
@@ -52,11 +53,11 @@ class User extends Authenticatable
         return $this->first_name.' '.$this->last_name;
     }
 
-    public function vendor() :BelongsTo
+    public function vendor() :?BelongsTo
     {
-        return $this->belongsTo(Vendor::class,'model_id','id')->where('type','vendor')->where('model_id',auth()->user()->model_id);
+        return $this->belongsTo(Vendor::class,'model_id','id');
     }
-    public function branches() :HasMany
+    public function branches() :?HasMany
     {
         return $this->hasMany(Branch::class,'user_id');
     }
@@ -64,9 +65,21 @@ class User extends Authenticatable
     {
         return $this->belongsTo(User::class,'created_by','id');
     }
+    public function wallet() :?HasOne
+    {
+        return $this->hasOne(Wallet::class,'user_id');
+    }
 
     public function updatedBy() :BelongsTo
     {
         return $this->belongsTo(User::class,'updated_by','id');
+    }
+    public function bookings() :?HasMany
+    {
+        return $this->hasMany(Booking::class,'user_id');
+    }
+    public function reviews(): ?HasMany
+    {
+        return $this->hasMany(Review::class, 'created_by');
     }
 }

@@ -4,6 +4,7 @@ namespace App\Services\General;
 
 use App\Repositories\General\RoleRepository;
 use App\Services\AbstractService;
+use Spatie\Permission\Models\Permission;
 
 class RoleService extends AbstractService
 {
@@ -14,13 +15,26 @@ class RoleService extends AbstractService
         $this->repo = $repo;
     }
     public function store($data){
-        $roleData =  ['display_name' => $data['display_name'], 'name' => $data['name']];
+
+
+        $roleData =  ['display_name' => $data['display_name'], 'name' => $data['name'],'guard_name'=>$data['guard_name'],'model_type'=>$data['model_type']];
         $item = $this->repo->create($roleData);
-        return $item->syncPermissions($data['permissions']);
+
+        if (isset($data['permissions']) && is_array($data['permissions']) && count($data['permissions']) > 0) {
+
+            $item->syncPermissions(Permission::whereIn('id', $data['permissions'])->get());
+        }
+
+        return $item;
 
     }
     public function update($data, $role){
-        $role->syncPermissions($data['permissions']);
+
+        if (isset($data['permissions']) && is_array($data['permissions']) && count($data['permissions']) > 0) {
+
+            $role->syncPermissions(Permission::whereIn('id', $data['permissions'])->get());
+        }
+
         return $role->update($data);
     }
 }

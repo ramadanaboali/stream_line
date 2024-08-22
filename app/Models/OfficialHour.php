@@ -13,7 +13,7 @@ class OfficialHour extends Model
     protected $guarded = [];
 
     const TYPE_BRANCH = 1;
-    const TYPE_CUSTOMER = 2;
+    const TYPE_EMPLOYEE = 2;
 
     public function createdBy(): ?BelongsTo
     {
