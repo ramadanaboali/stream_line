@@ -116,10 +116,12 @@ class ArbPg
         $wrappedData = $this->wrapData(json_encode($encData, JSON_UNESCAPED_SLASHES));
 
         $curl = curl_init();
+        $CURLOPT_URL=app()->isProduction() ? self::ARB_HOSTED_ENDPOINT_PROD : self::ARB_HOSTED_ENDPOINT_TEST;
 
         curl_setopt_array($curl, array(
             //in Production use Production End Point
-            CURLOPT_URL => self::ARB_HOSTED_ENDPOINT_TEST,
+
+        CURLOPT_URL => $CURLOPT_URL,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -153,7 +155,7 @@ class ArbPg
     public function getSubscriptionPaymentId()
     {
 
-        $plainData = $this->getRequestData();
+        $plainData = $this->getRequestSubscriptionData();
 
         $wrappedData = $this->wrapData($plainData);
 
@@ -169,10 +171,11 @@ class ArbPg
         $wrappedData = $this->wrapData(json_encode($encData, JSON_UNESCAPED_SLASHES));
 
         $curl = curl_init();
+        $CURLOPT_URL=app()->isProduction() ? self::ARB_HOSTED_ENDPOINT_PROD : self::ARB_HOSTED_ENDPOINT_TEST;
 
         curl_setopt_array($curl, array(
             //in Production use Production End Point
-            CURLOPT_URL => self::ARB_HOSTED_ENDPOINT_TEST,
+            CURLOPT_URL => $CURLOPT_URL,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -234,6 +237,29 @@ $trackId = (string)rand(1, 1000000);
             "currencyCode" => "682",
             "errorURL" => route('errorURL'),
             "responseURL" => route('successURL'),
+            "trackId" => $trackId,
+            "amt" => $this->amount,
+            "udf1" => $this->order_id
+        ];
+
+        $data = json_encode($data, JSON_UNESCAPED_SLASHES);
+        return $data;
+    }
+
+    private function getRequestSubscriptionData()
+    {
+
+
+        $trackId = (string)rand(1, 1000000);
+
+
+        $data = [
+            "id" => $this->Tranportal_ID,
+            "password" => $this->Tranportal_Password,
+            "action" => "1",
+            "currencyCode" => "682",
+            "errorURL" => route('errorSubscribe'),
+            "responseURL" => route('successSubscribe'),
             "trackId" => $trackId,
             "amt" => $this->amount,
             "udf1" => $this->order_id
