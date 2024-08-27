@@ -124,7 +124,24 @@ class HomeController extends Controller
             ->header('Content-Type', 'text/html');
 //        return response()->apiSuccess($request->all());
     }
-
+    public function decrypt($code)
+    {
+        $key=config('banck.resource_key');
+        $string = hex2bin(trim($code));
+        $code = unpack('C*', $string);
+        $chars = array_map("chr", $code);
+        $code = join($chars);
+        $code = base64_encode($code);
+        $decrypted = openssl_decrypt($code, "AES-256-CBC", $key, OPENSSL_ZERO_PADDING, "PGKEYENCDECIVSPC");
+        $pad = ord($decrypted[strlen($decrypted) - 1]);
+        if ($pad > strlen($decrypted)) {
+            return false;
+        }
+        if (strspn($decrypted, chr($pad), strlen($decrypted) - $pad) != $pad) {
+            return false;
+        }
+        return urldecode(substr($decrypted, 0, -1 * $pad));
+    }
     public function customer_report_list(Request $request)
     {
         $input = $request->all();
