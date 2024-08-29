@@ -16,6 +16,9 @@ class VendorService extends AbstractService
     public function createVendor(array $data){
         return $this->repo->createVendor($data);
     }
+    public function activate_vendor(array $data){
+        return $this->repo->activate_vendor($data);
+    }
     public function updateVendor(array $data,$vendor){
         return $this->repo->updateVendor($data,$vendor);
     }

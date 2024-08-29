@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\ActivateVendorRequest;
 use App\Http\Requests\Admin\BannerRequest;
 use App\Http\Requests\Admin\BookingCustomerInvoiceRequest;
 use App\Http\Requests\PaginateRequest;
@@ -56,6 +57,12 @@ class VendorController extends Controller
         $data = $request->all();
         $data['created_by']=Auth::id();
         return response()->apiSuccess($this->service->createVendor($data));
+    }
+    public function activate_vendor(ActivateVendorRequest $request)
+    {
+        $data = $request->all();
+        $data['updated_by']=Auth::id();
+        return response()->apiSuccess($this->service->activate_vendor($data));
     }
 
     public function update(VendorRequest $request, Vendor $vendor)

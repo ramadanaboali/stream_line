@@ -70,6 +70,17 @@ class VendorRepository extends AbstractRepository
             return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
     }
+    public function activate_vendor($data)
+    {
+
+            $vendorInput = [
+                'updated_by' => $data['updated_by'],
+                'is_active' => $data['is_active'],
+            ];
+            $vendor = Vendor::where('id',$data['vendor_id'])->update($vendorInput);
+
+            return $vendor;
+    }
 
     public function updateVendor($data,$vendor)
     {

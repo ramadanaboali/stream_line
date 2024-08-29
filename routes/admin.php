@@ -60,6 +60,7 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
     Route::get('vendors/{vendor}', [VendorController::class, 'show'])->middleware('adminPermission:vendors.view');
     Route::put('vendors/{vendor}', [VendorController::class, 'update'])->middleware('adminPermission:vendors.edit');
     Route::delete('vendors/{vendor}', [VendorController::class, 'delete'])->middleware('adminPermission:vendors.delete');
+    Route::post('activate_vendor', [VendorController::class, 'activate_vendor'])->middleware('adminPermission:vendors.edit');
 
 
 
