@@ -16,13 +16,13 @@ class HomeController extends Controller
 {
     public function search(Request $request)
     {
-        $data['vendors'] = Vendor::where(function($query)use ($request){
+        $data['vendors'] = Vendor::with(["vendorCategories","bookings","services","offers","branches","createdBy","user"])->where(function($query)use ($request){
                                     if($request->filled('search_text')) {
                                         $query->where("name", 'like', '%' . $request->search_text . '%');
                                     }
                                 })->get();
 
-        $data['services']=Service::where(function($query) use ($request){
+        $data['services']=Service::with(["category","vendor","createdBy","branches","section","employees","employees.user"])->where(function($query) use ($request){
                                 if($request->filled('category_id')){
                                     $query->where('category_id',$request->category_id);
                                 }
