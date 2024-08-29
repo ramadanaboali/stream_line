@@ -16,7 +16,7 @@ class HomeController extends Controller
 {
     public function search(Request $request)
     {
-        $data['vendors'] = Vendor::with(["bookings","services","offers","branches","createdBy","user"])->where(function($query)use ($request){
+        $data['vendors'] = Vendor::with(["bookings","services","services.section","services.category","offers","branches","createdBy","user"])->where(function($query)use ($request){
                                     if($request->filled('search_text')) {
                                         $query->where("name", 'like', '%' . $request->search_text . '%');
                                     }
