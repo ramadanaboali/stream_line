@@ -34,7 +34,7 @@ class ActivateVendorRequest extends FormRequest
             {
                 return [
                     'vendor_id'  => 'required|exists:vendors,id',
-                    "is_Active"      => 'required|in:0,1',
+                    "is_active"      => 'required|in:0,1',
                 ];
             }
             case 'PATCH':
