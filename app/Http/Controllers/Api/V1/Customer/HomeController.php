@@ -37,6 +37,7 @@ class HomeController extends Controller
                 ->pluck('id') // Get only the 'id' column as a collection
                 ->toArray(); // Convert the collection to an array
         }
+        $branchIds = $branchIds ?? [];
         $data['vendors'] = Vendor::with(["bookings","services","services.section","services.category","offers","branches","createdBy","user"])->where(function($query)use ($request,$branchIds){
                                     if($request->filled('search_text')) {
                                         $query->where("name", 'like', '%' . $request->search_text . '%');
