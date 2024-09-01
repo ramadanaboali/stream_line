@@ -3,31 +3,62 @@
 namespace App\Http\Controllers\Api\V1\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Customer\SearchRequest;
 use App\Models\Booking;
 use App\Models\Service;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use function Psy\debug;
 use function response;
 
 class HomeController extends Controller
 {
-    public function search(Request $request)
+    public function search(SearchRequest $request)
     {
-        $data['vendors'] = Vendor::with(["bookings","services","services.section","services.category","offers","branches","createdBy","user"])->where(function($query)use ($request){
+        $branchIds=null;
+        if($request->filled('lat')){
+            $latitude=$request->lat;
+            $longitude=$request->long;
+            $city_id=$request->city_id;
+            $branchIds = DB::table('branches')
+                ->select('id') // Select only the 'id' column
+                ->selectRaw("(6371 * acos(cos(radians(?))
+                 * cos(radians(lat))
+                 * cos(radians(long) - radians(?))
+                 + sin(radians(?))
+                 * sin(radians(lat)))) AS distance", [$latitude, $longitude, $latitude])
+                ->having('distance', '<=', 10);
+                if($request->filled('city_id')) {
+                    $branchIds->where('cit_id', $city_id);
+                }
+                $branchIds->orderBy('distance')
+                ->pluck('id') // Get only the 'id' column as a collection
+                ->toArray(); // Convert the collection to an array
+        }
+        $data['vendors'] = Vendor::with(["bookings","services","services.section","services.category","offers","branches","createdBy","user"])->where(function($query)use ($request,$branchIds){
                                     if($request->filled('search_text')) {
                                         $query->where("name", 'like', '%' . $request->search_text . '%');
                                     }
+                                    if($request->filled('search_text')) {
+                                        $query->whereHas('branches', function ($queryIn) use ($branchIds) {
+                                            $queryIn->whereIn('id', $branchIds);
+                                        });
+                                    }
                                 })->get();
 
-        $data['services']=Service::with(["category","vendor","createdBy","branches","section","employees","employees.user"])->where(function($query) use ($request){
+        $data['services']=Service::with(["category","vendor","createdBy","branches","section","employees","employees.user"])->where(function($query) use ($request,$branchIds){
                                 if($request->filled('category_id')){
                                     $query->where('category_id',$request->category_id);
                                 }
                                 if($request->filled('search_text')){
                                     $query->where("name_ar", 'like', '%' . $request->search_text . '%')->orWhere("name_en", 'like', '%' . $request->search_text . '%');
+                                }
+                                if($request->filled('search_text')) {
+                                    $query->whereHas('branches', function ($queryIn) use ($branchIds) {
+                                        $queryIn->whereIn('branch_id', $branchIds);
+                                    });
                                 }
                             })->get();
 
