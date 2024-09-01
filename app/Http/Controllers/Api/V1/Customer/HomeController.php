@@ -42,7 +42,7 @@ class HomeController extends Controller
                                     if($request->filled('search_text')) {
                                         $query->where("name", 'like', '%' . $request->search_text . '%');
                                     }
-                                    if($request->filled('search_text')) {
+                                    if($request->filled('lat')) {
                                         $query->whereHas('branches', function ($queryIn) use ($branchIds) {
                                             $queryIn->whereIn('id', $branchIds);
                                         });
@@ -56,7 +56,7 @@ class HomeController extends Controller
                                 if($request->filled('search_text')){
                                     $query->where("name_ar", 'like', '%' . $request->search_text . '%')->orWhere("name_en", 'like', '%' . $request->search_text . '%');
                                 }
-                                if($request->filled('search_text')) {
+                                if($request->filled('lat')) {
                                     $query->whereHas('branches', function ($queryIn) use ($branchIds) {
                                         $queryIn->whereIn('branch_id', $branchIds);
                                     });
