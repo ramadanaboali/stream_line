@@ -27,13 +27,11 @@ class SearchRequest extends FormRequest
 
 
         return [
-            // 'card_number' => 'required',
              'lat' => 'nullable|numeric|between:-90,90|required_with:long',
              'long' => 'nullable|numeric|between:-180,180|required_with:lat',
              'category_id' =>  'sometimes|exists:categories,id',
              'city_id' =>  'sometimes|exists:cities,id',
              'search_text' => 'sometimes',
-             'booking_id' => 'required|exists:bookings,id'
         ];
 
     }
