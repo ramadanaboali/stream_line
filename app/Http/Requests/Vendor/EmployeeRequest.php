@@ -35,6 +35,7 @@ class EmployeeRequest extends FormRequest
                 {
                     return [
                         'first_name' => 'required|string|min:2',
+                        'job_title' => 'sometimes|string|min:2',
                         'last_name' => 'required|string|min:2',
                         'email' => 'required|email|unique:users,email',
                         'phone' => 'required|numeric|unique:users,phone',

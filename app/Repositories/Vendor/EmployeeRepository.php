@@ -53,6 +53,7 @@ class EmployeeRepository extends AbstractRepository
             $inputUser = [
                 'first_name' => $data['first_name'],
                 'last_name' => $data['last_name'],
+                'job_title' => $data['job_title'] ?? null,
                 'email' => $data['email'],
                 'phone' => $data['phone'],
                 'image' => $data['image'],
@@ -103,6 +104,7 @@ class EmployeeRepository extends AbstractRepository
             $inputUser = [
                 'first_name' => $data['first_name'] ?? $user->first_name,
                 'last_name' => $data['last_name'] ?? $user->last_name,
+                'job_title' => $data['job_title'] ?? $user->job_title,
                 'email' => $data['email'] ?? $user->email,
                 'phone' => $data['phone'] ?? $user->phone,
                 'image' => $data['image'] ?? $user->image,
