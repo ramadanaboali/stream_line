@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
+use App\Http\Controllers\Api\V1\Admin\ContactMessageController;
 Route::group(['prefix' => '/v1'], function () {
 
     Route::post('/reset', [AuthController::class, 'resetPassword']);
@@ -27,6 +27,8 @@ Route::group(['prefix' => '/v1'], function () {
     Route::get('search', [HomeController::class, 'search']);
     Route::post('errorURL', [HomeController::class, 'errorURL'])->name('errorURL');
     Route::post('successURL', [HomeController::class, 'responseURL'])->name('successURL');
+
+    Route::post('contact_messages', [ContactMessageController::class, 'store']);
 
 });
 
