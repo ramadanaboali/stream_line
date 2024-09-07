@@ -55,7 +55,7 @@ class HomeController extends Controller
                                             $queryIn->whereIn('id', $branchIds);
                                         });
                                     }
-                                })->get();
+                                })->limit(20)->get();
 
         $data['services']=Service::with(["category","vendor","createdBy","branches","section","employees","employees.user"])->where(function($query) use ($request,$branchIds){
                                 if($request->filled('category_id')){
@@ -69,7 +69,7 @@ class HomeController extends Controller
                                         $queryIn->whereIn('branch_id', $branchIds);
                                     });
                                 }
-                            })->get();
+                            })->limit(20)->get();
 
             $data['offers']=Offer::with(["category","services","services.section","services.category","createdBy","section"])->where(function($query) use ($request,$branchIds){
                 if($request->filled('category_id')){
@@ -78,7 +78,7 @@ class HomeController extends Controller
                 if($request->filled('search_text')){
                     $query->where("name_ar", 'like', '%' . $request->search_text . '%')->orWhere("name_en", 'like', '%' . $request->search_text . '%');
                 }
-            })->get();
+            })->limit(20)->get();
 
         return response()->apiSuccess($data);
     }
