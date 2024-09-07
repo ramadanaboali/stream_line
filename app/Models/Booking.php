@@ -22,9 +22,9 @@ class Booking extends Model
     {
         return $this->belongsTo(Branch::class, 'branch_id');
     }
-    public function service(): ?BelongsTo
+    public function bookingService(): ?HasMany
     {
-        return $this->belongsTo(Service::class, 'service_id');
+        return $this->hasMany(BookingService::class, 'booking_id');
     }
     public function offer(): ?BelongsTo
     {

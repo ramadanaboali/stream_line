@@ -141,7 +141,7 @@ class HomeRepository extends AbstractRepository
 
     public function last_bookings()
     {
-        return Booking::select('bookings.*')->with(['createdBy','branch','vendor','vendor.user','reviews','service','user','offer','offer.services','promoCode','employee','employee.user'])
+        return Booking::select('bookings.*')->with(['createdBy','branch','vendor','vendor.user','reviews','bookingService','bookingService.service','user','offer','offer.services','promoCode','employee','employee.user'])
             ->orderBy('id','desc')
             ->limit(10)
             ->get();

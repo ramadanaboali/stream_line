@@ -41,7 +41,7 @@ class BookingController extends Controller
 
     public function show($id)
     {
-        return response()->apiSuccess($this->service->get($id));
+        return response()->apiSuccess($this->service->getWithRelations($id,['bookingService','bookingService.service','offer']));
     }
 
     public function store(BookingRequest $request)

@@ -32,30 +32,28 @@ class BookingController extends Controller
         if (count($input["columns"]) < 1 || (count($input["columns"]) != count($input["column_values"])) || (count($input["columns"]) != count($input["operand"]))) {
             $wheres = [];
         } else {
+
             $wheres = $this->service->whereOptions($input, $columns);
         }
+        $wheres[] = ['vendor_id','=', auth()->id()];
         $data = $this->service->Paginate($input, $wheres);
         return response()->apiSuccess($data);
     }
 
     public function show($id){
-        return response()->apiSuccess($this->service->getWithRelations($id,["user","branch","service","offer","createdBy","employee","vendor","reviews"]));
+        return response()->apiSuccess($this->service->getWithRelations($id,["user","branch",'bookingService','bookingService.service',"offer","createdBy","employee","vendor","reviews"]));
     }
 
     public function store(BookingRequest $request)
     {
 
-        $data = $request->except(['image']);
-        $folder_path = "images/Booking";
-        $storedPath = null;
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $storedPath = $this->storageService->storeFile($file, $folder_path);
+        $data = $request->all();
+        $result = $this->service->createItem($data);
+        if($result['success']){
+            return response()->apiSuccess($result['data'],$result['message']);
         }
-        $data['image'] = $storedPath;
-        $data['vendor_id'] = auth()->user()->model_id;
+        return response()->apiFail($result['message']);
 
-        return response()->apiSuccess($this->service->store($data));
     }
 
     public function update(BookingRequest $request, Booking $bokking)
@@ -74,6 +72,10 @@ class BookingController extends Controller
     public function delete(Booking $bokking)
     {
         return response()->apiSuccess($this->service->delete($bokking));
+    }
+    public function cancel($id)
+    {
+        return response()->apiSuccess($this->service->cancel($id));
     }
     public function booking_customer_invoice(BookingCustomerInvoiceRequest $request)
     {

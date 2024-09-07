@@ -33,13 +33,23 @@ class BookingRequest extends FormRequest
                 }
             case 'POST':
                 {
-                    return [
-                        'name_en' => 'required|string|min:2',
-                        'name_ar' => 'required|string|min:2',
-                        'image' => 'required|image|mimes:png,jpg,jpeg',
-                        'description_en' => 'required|string|min:2',
-                        'description_ar' => 'required|string|min:2',
-                    ];
+                         return [
+                             'branch_id' => 'sometimes|exists:branches,id',
+                             'customer_id' => 'required|exists:users,id',
+                             'employee_id' => 'sometimes|exists:employees,id',
+                             'booking_day' => 'required|date',
+                             'booking_time' => 'required|date_format:H:i',
+                             'attendance' => 'required|in:0,1',
+                             'sub_total'=>'required|numeric',
+                             'discount'=>'required|numeric',
+                             'total'=>'required|numeric',
+                             'payment_way' => 'required|in:online,cash',
+                             'promocode_id' => 'sometimes|exists:promo_codes,id',
+                             'notes' => 'sometimes|string|min:3',
+                             'services' => 'required|array',
+                             'services.*' => 'required|exists:services,id',
+                             'offer_id' => 'sometimes|exists:offers,id',
+                         ];
                 }
             case 'PATCH':
             case 'PUT':

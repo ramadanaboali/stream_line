@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories\Vendor;
+namespace App\Repositories\Customer;
 
 use App\Models\Booking;
 use App\Models\Employee;
@@ -48,7 +48,7 @@ class BookingRepository extends AbstractRepository
         }
         $total = $services_cost - $promocode_value;
         $inputs = [
-            'user_id' => $data['customer_id'],
+            'user_id' => auth()->id(),
             'created_by' => auth()->id(),
             'employee_id' => $employee_id,
             'branch_id' => $data['branch_id'],

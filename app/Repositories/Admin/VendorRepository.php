@@ -212,7 +212,7 @@ class VendorRepository extends AbstractRepository
     public function booking_report_list(array $input)
     {
         $itemPerPage = array_key_exists('per_page',$input) && is_numeric($input['per_page']) ? $input['per_page'] : 20;
-        $list = Booking::select('bookings.*')->with(['createdBy','branch','vendor','vendor.user','reviews','service','user','offer','offer.services','promoCode','employee','employee.user'])
+        $list = Booking::select('bookings.*')->with(['createdBy','branch','vendor','vendor.user','reviews','bookingService','bookingService.service','user','offer','offer.services','promoCode','employee','employee.user'])
             ->when(!empty($input['search']), function ($query) use ($input) {
                 $query->where('services.payment_status', 'like', '%'.$input['search'].'%');
                 $query->orWhere('services.payment_status', 'like', '%'.$input['search'].'%');
@@ -221,7 +221,7 @@ class VendorRepository extends AbstractRepository
     }
     public function booking_report_show($id)
     {
-        return Booking::select('bookings.*')->with(['createdBy','branch','vendor','vendor.user','reviews','service','user','offer','offer.services','promoCode','employee','employee.user'])
+        return Booking::select('bookings.*')->with(['createdBy','branch','vendor','vendor.user','reviews','bookingService','bookingService.service','user','offer','offer.services','promoCode','employee','employee.user'])
             ->find($id);
     }
 

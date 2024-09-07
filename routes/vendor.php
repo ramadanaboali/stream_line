@@ -76,6 +76,8 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
     Route::delete('bookings/{booking}', [BookingController::class, 'delete'])->middleware('vendorPermission:bookings.delete');
     Route::post('booking_customer_invoice', [BookingController::class, 'booking_customer_invoice'])->middleware('vendorPermission:vendor_booking_report.view');
     Route::post('booking_vendor_invoice', [BookingController::class, 'booking_vendor_invoice'])->middleware('vendorPermission:vendor_booking_report.view');
+//    Route::post('bookings/pay', [BookingController::class, 'pay']);
+    Route::get('bookings/cancel/{id}', [BookingController::class, 'cancel']);
 
     Route::get('offers', [OfferController::class, 'index'])->middleware('vendorPermission:offers.view');
     Route::post('offers', [OfferController::class, 'store'])->middleware('vendorPermission:offers.create');

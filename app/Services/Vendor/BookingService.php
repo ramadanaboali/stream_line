@@ -12,4 +12,10 @@ class BookingService extends AbstractService
         parent::__construct($repo);
         $this->repo = $repo;
     }
+    public function createItem($data){
+        return $this->repo->createItem($data);
+    }
+    public function cancel($id){
+        return $this->repo->cancel($id);
+    }
   }

@@ -2,7 +2,7 @@
 
 namespace App\Services\Customer;
 
-use App\Repositories\Vendor\BookingRepository;
+use App\Repositories\Customer\BookingRepository;
 use App\Services\AbstractService;
 class BookingService extends AbstractService
 {

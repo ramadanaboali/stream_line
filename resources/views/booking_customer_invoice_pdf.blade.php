@@ -35,7 +35,7 @@
     </tr>
     <tr style="margin-bottom:30px">
         <td>اسم الخدمة</td>
-        <td>{{ $data->service?->name_ar }} </td>
+        <td>{{ $data->bookingService?->service?->name_ar }} </td>
     </tr>
     <tr style="margin-bottom:30px">
         <td>اسم الموظف</td>
