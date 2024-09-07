@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api\V1\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Customer\SearchRequest;
+use App\Http\Requests\Customer\VendorDetailsRequest;
 use App\Models\Booking;
+use App\Models\Offer;
 use App\Models\Service;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
@@ -15,6 +17,12 @@ use function response;
 
 class HomeController extends Controller
 {
+    public function vendor_details(VendorDetailsRequest $request)
+    {
+        $vendor_id=$request->vendor_id;
+        $data = Vendor::with(["services","services.section","services.category","offers","offers.section","offers.category","branches","createdBy","user"])->find($vendor_id);
+        return response()->apiSuccess($data);
+    }
     public function search(SearchRequest $request)
     {
         $branchIds=null;
@@ -38,7 +46,7 @@ class HomeController extends Controller
                 ->toArray(); // Convert the collection to an array
         }
         $branchIds = $branchIds ?? [];
-        $data['vendors'] = Vendor::with(["bookings","services","services.section","services.category","offers","branches","createdBy","user"])->where(function($query)use ($request,$branchIds){
+        $data['vendors'] = Vendor::with(["services","services.section","services.category","offers","branches","createdBy","user"])->where(function($query)use ($request,$branchIds){
                                     if($request->filled('search_text')) {
                                         $query->where("name", 'like', '%' . $request->search_text . '%');
                                     }
@@ -62,6 +70,15 @@ class HomeController extends Controller
                                     });
                                 }
                             })->get();
+
+            $data['offers']=Offer::with(["category","services","services.section","services.category","createdBy","section"])->where(function($query) use ($request,$branchIds){
+                if($request->filled('category_id')){
+                    $query->where('category_id',$request->category_id);
+                }
+                if($request->filled('search_text')){
+                    $query->where("name_ar", 'like', '%' . $request->search_text . '%')->orWhere("name_en", 'like', '%' . $request->search_text . '%');
+                }
+            })->get();
 
         return response()->apiSuccess($data);
     }
