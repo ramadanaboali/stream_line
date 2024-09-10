@@ -10,6 +10,7 @@ use App\Repositories\AbstractRepository;
 use App\Services\General\StorageService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class EmployeeRepository extends AbstractRepository
 {
@@ -53,7 +54,6 @@ class EmployeeRepository extends AbstractRepository
             $inputUser = [
                 'first_name' => $data['first_name'],
                 'last_name' => $data['last_name'],
-                'job_title' => $data['job_title'] ?? null,
                 'email' => $data['email'],
                 'phone' => $data['phone'],
                 'image' => $data['image'],
@@ -66,6 +66,7 @@ class EmployeeRepository extends AbstractRepository
             $inputEmployee = [
                 'user_id'=> $user->id,
                 'vendor_id'=> $data['vendor_id'],
+                'job_title' => $data['job_title'] ?? null,
                 'salary'=> $data['salary'] ?? null,
                 'start_date'=> $data['start_date'],
                 'end_date'=> $data['end_date'] ?? null,
@@ -80,6 +81,7 @@ class EmployeeRepository extends AbstractRepository
             DB::commit();
             return $employee;
         } catch (\Exception $e) {
+            Log::error($e->getMessage());
             DB::rollBack();
             return $e->getMessage();
         }

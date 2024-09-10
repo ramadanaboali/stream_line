@@ -4,6 +4,7 @@ namespace App\Services\Vendor;
 
 use App\Repositories\Vendor\EmployeeRepository;
 use App\Services\AbstractService;
+use Illuminate\Support\Facades\Log;
 
 class EmployeeService extends AbstractService
 {
@@ -18,6 +19,7 @@ class EmployeeService extends AbstractService
         try{
             return $this->repo->createItem($data);
         } catch (\Exception $e) {
+            Log::error($e->getMessage());
             return $e->getMessage();
         }
     }
