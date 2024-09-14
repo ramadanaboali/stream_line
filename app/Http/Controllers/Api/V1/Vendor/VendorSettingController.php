@@ -22,7 +22,7 @@ class VendorSettingController extends Controller
 
     public function updateSetting(VendorSettingRequest $request)
     {
-        $data = $request->only(['content']);
+        $data = $request->all();
         return response()->apiSuccess($this->service->updateSetting($data));
     }
 
