@@ -14,7 +14,7 @@ class VendorSettingService extends AbstractService
     }
     public function getSetting(){
         $user_id= auth()->user()->id;
-        $vendor= auth()->user()->vendor();
+        $vendor= auth()->user()->vendor;
         return $this->repo->getSetting($user_id,$vendor);
     }
     public function updateSetting(array $data){
