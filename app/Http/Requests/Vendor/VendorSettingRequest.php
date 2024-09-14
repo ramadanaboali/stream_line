@@ -35,7 +35,7 @@ class VendorSettingRequest extends FormRequest
                 {
                     return [
                         'stock_alert' => 'required|integer|min:0',
-                        'calender_differance' => 'required|integer|min:10:max:30',
+                        'calender_differance' => 'required|integer|min:10|max:30',
                         'calender_differance_type' => 'required|in:fixed,vary',
                         'booking_differance' => 'required|integer|min:0',
                         'booking_range' => 'required|in:one_month,two_month,three_month,four_month,five_month,six_month,seven_month,eight_month,nine_month,ten_month,eleven_month,twelve_month',
