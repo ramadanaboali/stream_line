@@ -98,6 +98,14 @@ class HomeRepository extends AbstractRepository
         })->count();
         return $data;
     }
+    public function pos_totals($input)
+    {
+        $data=[];
+        $data['booking_count'] = Booking::where('status','!=','canceled')->whereDate('created_at', Carbon::today())->where('vendor_id','=',$input['vendor_id'])->count();
+        $data['booking_cash_total'] = Booking::where('status','!=','canceled')->whereDate('created_at', Carbon::today())->where('payment_way','=','cash')->where('vendor_id','=',$input['vendor_id'])->sum('total');
+        $data['booking_online_total'] = Booking::where('status','!=','canceled')->whereDate('created_at', Carbon::today())->where('payment_way','=','online')->where('vendor_id','=',$input['vendor_id'])->sum('total');
+        return $data;
+    }
     public function booking_count_chart(array $data)
     {
         $filter = array_key_exists('filter',$data) ? $data['filter'] : 'day';

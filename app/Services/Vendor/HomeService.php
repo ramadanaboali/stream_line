@@ -16,6 +16,10 @@ class HomeService extends AbstractService
     {
         return $this->repo->home_totals($input);
     }
+    public function pos_totals(array $input)
+    {
+        return $this->repo->pos_totals($input);
+    }
     public function booking_count_chart(array $data)
     {
         return $this->repo->booking_count_chart($data);

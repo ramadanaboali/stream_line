@@ -141,6 +141,7 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
     Route::get('home_totals', [HomeController::class, 'home_totals'])->middleware('vendorPermission:vendor_home.view');
     Route::get('booking_count_chart', [HomeController::class, 'booking_count_chart'])->middleware('vendorPermission:vendor_home.view');
     Route::get('booking_total_chart', [HomeController::class, 'booking_total_chart'])->middleware('vendorPermission:vendor_home.view');
+    Route::get('pos_totals', [HomeController::class, 'pos_totals'])->middleware('vendorPermission:vendor_home.view');
 
     Route::get('booking_count_with_month_chart', [HomeController::class, 'booking_count_with_month_chart'])->middleware('vendorPermission:vendor_statistics.view');
     Route::get('register_count_with_month_chart', [HomeController::class, 'register_count_with_month_chart'])->middleware('vendorPermission:vendor_statistics.view');

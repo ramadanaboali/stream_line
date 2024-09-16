@@ -264,6 +264,13 @@ class HomeController extends Controller
         $input['vendor_id']=$user['model_id'];
         return response()->apiSuccess($this->service->home_totals($input));
     }
+    public function pos_totals(Request $request)
+    {
+        $user=Auth::user();
+        $input['user_id']=$user['id'];
+        $input['vendor_id']=$user['model_id'];
+        return response()->apiSuccess($this->service->pos_totals($input));
+    }
     public function booking_count_chart(Request $request)
     {
         $data=$request->all();
