@@ -22,5 +22,8 @@ class SubscriptionService extends AbstractService
     public function pay($data){
         return $this->repo->pay($data);
     }
+    public function check_is_paid($data){
+        return $this->repo->check_is_paid($data);
+    }
 
   }

@@ -105,6 +105,11 @@ class BookingRepository extends AbstractRepository
             return  $e->getMessage();
         }
     }
+    public function check_is_paid($data)
+    {
+            $booking = Booking::withTrashed()->findOrFail($data['booking_id']);
+            return ['payment_status' =>$booking->payment_status];
+    }
     public function cancel($id)
     {
         try {

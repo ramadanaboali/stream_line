@@ -35,8 +35,8 @@ Route::group(['prefix' => '/v1'], function () {
 
 Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
     Route::get('check/promocode/{code}', [BookingController::class, 'checkPromocode']);
-
     Route::post('bookings/pay', [BookingController::class, 'pay']);
+    Route::post('bookings/check_is_paid', [BookingController::class, 'check_is_paid']);
     Route::get('bookings/cancel/{id}', [BookingController::class, 'cancel']);
 
     Route::get('bookings', [BookingController::class, 'index']);

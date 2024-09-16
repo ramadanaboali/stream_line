@@ -78,4 +78,9 @@ class SubscriptionRepository extends AbstractRepository
         }
     }
 
+    public function check_is_paid($data){
+            $subscription=Subscription::withTrashed()->findOrFail($data['subscription_id']);
+            return ['payment_status' =>$subscription->status];
+    }
+
 }

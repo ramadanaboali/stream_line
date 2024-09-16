@@ -54,5 +54,10 @@ class SubscriptionController extends Controller
         $data = $request->all();
         return response()->apiSuccess($this->service->pay($data));
     }
+    public function check_is_paid(PayRequest $request)
+    {
+        $data = $request->all();
+        return response()->apiSuccess($this->service->check_is_paid($data));
+    }
 
 }

@@ -112,6 +112,7 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
     Route::get('subscriptions/{subscription}', [SubscriptionController::class, 'show'])->middleware('vendorPermission:subscriptions.view');
     Route::put('subscriptions/{subscription}', [SubscriptionController::class, 'update'])->middleware('vendorPermission:subscriptions.edit');
     Route::post('subscriptions/pay', [SubscriptionController::class, 'pay'])->middleware('vendorPermission:subscriptions.pay');
+    Route::post('subscriptions/check_is_paid', [SubscriptionController::class, 'check_is_paid'])->middleware('vendorPermission:subscriptions.pay');
 
     Route::get('tax_invoices', [TaxInvoiceController::class, 'index'])->middleware('vendorPermission:tax_invoices.view');
     Route::post('tax_invoices', [TaxInvoiceController::class, 'store'])->middleware('vendorPermission:tax_invoices.create');
