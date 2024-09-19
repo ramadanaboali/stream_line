@@ -25,7 +25,7 @@ class BookingRepository extends AbstractRepository
         if (key_exists("employee_id", $data)) {
             $employee_id = $data["employee_id"];
         } else {
-            $employee_id = $this->getAvailableEmployee($data['service_id'], $data['booking_day'], $data['booking_time'], $service->vendor_id);
+            $employee_id = $this->getAvailableEmployee($data['service_id'], $data['booking_day'], $data['booking_time'], $services[0]->vendor_id);
             if(empty($employee_id)) {
                 return ['data' => null,'message' => __('api.no_employee_available_in_this_time'),'success' => false];
             }
@@ -53,7 +53,7 @@ class BookingRepository extends AbstractRepository
             'employee_id' => $employee_id,
             'branch_id' => $data['branch_id'],
             'booking_day' => $data['booking_day'],
-            'vendor_id' => $service->vendor_id,
+            'vendor_id' => $services[0]->vendor_id,
             'booking_time' => $data['booking_time'],
             'attendance' => $data['attendance'],
             'sub_total' => $services_cost,
@@ -64,7 +64,7 @@ class BookingRepository extends AbstractRepository
             'notes' => $data['notes'] ?? null,
 //            'service_id' => $data['service_id'],
             'offer_id' => $data['offer_id'] ?? null,
-            'is_active' => $data['payment_way'] == 'online' ? 0 : 1,
+            'is_active' => $data['payment_way'] == 'online' ? '0' : '1',
         ];
         $booking = Booking::create($inputs);
         foreach ($services as $service) {
