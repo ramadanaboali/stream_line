@@ -57,7 +57,7 @@ class HomeController extends Controller
                                     }
                                 })->limit(20)->get();
 
-        $data['services']=Service::with(["category","vendor","createdBy","branches","section","employees","employees.user"])->where(function($query) use ($request,$branchIds){
+        $data['services']=Service::with(["category","vendor","createdBy","branches","section","employees","employees.officialHours","employees.user"])->where(function($query) use ($request,$branchIds){
                                 if($request->filled('category_id')){
                                     $query->where('category_id',$request->category_id);
                                 }
