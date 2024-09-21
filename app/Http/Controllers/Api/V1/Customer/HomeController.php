@@ -9,7 +9,9 @@ use App\Models\Booking;
 use App\Models\Offer;
 use App\Models\Service;
 use App\Models\Vendor;
+use App\Models\VendorSetting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use function Psy\debug;
@@ -22,6 +24,23 @@ class HomeController extends Controller
         $vendor_id=$request->vendor_id;
         $data = Vendor::with(["services","services.section","services.category","offers","offers.section","offers.category","branches","createdBy","user"])->find($vendor_id);
         return response()->apiSuccess($data);
+    }
+    public function getSetting(VendorDetailsRequest $request)
+    {
+        $vendor_id=$request->vendor_id;
+            $query = [
+                'is_active' => '1',
+                "vendor_id"=> $vendor_id,
+            ];
+
+        $item=  VendorSetting::firstOrCreate($query, [
+            "stock_alert"=> 1,
+            "calender_differance"=> 10,
+            "booking_differance"=> 1,
+            "cancel_booking"=> 1,
+            "reschedule_booking"=> 1,
+        ]);
+        return response()->apiSuccess($item);
     }
     public function search(SearchRequest $request)
     {
