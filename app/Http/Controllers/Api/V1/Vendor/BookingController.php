@@ -10,6 +10,7 @@ use App\Models\Booking;
 use App\Services\General\StorageService;
 use App\Services\Vendor\BookingService;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
 use function response;
 
@@ -35,7 +36,8 @@ class BookingController extends Controller
 
             $wheres = $this->service->whereOptions($input, $columns);
         }
-        $wheres[] = ['vendor_id','=', auth()->id()];
+        $user=Auth::user();
+        $wheres[] = ['vendor_id','=', $user['model_id']];
         $data = $this->service->Paginate($input, $wheres);
         return response()->apiSuccess($data);
     }
