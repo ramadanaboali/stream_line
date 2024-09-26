@@ -33,10 +33,13 @@
         <td>اسم التاجر</td>
         <td>{{ $data->vendor->name }} </td>
     </tr>
-    <tr style="margin-bottom:30px">
-        <td>اسم الخدمة</td>
-        <td>{{ $data->bookingService?->service?->name_ar }} </td>
-    </tr>
+    @foreach($data->bookingService as $service)
+        <tr style="margin-bottom:30px">
+            <td>اسم الخدمة</td>
+            <td>{{ $service->service?->name_ar }} </td>
+        </tr>
+    @endforeach
+
     <tr style="margin-bottom:30px">
         <td>اسم الموظف</td>
         <td>{{ $data->employee?->user?->first_name.' '.$data->employee?->user?->last_name}} </td>
