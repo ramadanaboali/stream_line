@@ -82,7 +82,7 @@ class BookingController extends Controller
     public function booking_customer_invoice(BookingCustomerInvoiceRequest $request)
     {
         $booking_id=$request->booking_id;
-        $booking = Booking::select('bookings.*')->with(['createdBy','branch','vendor','vendor.user','reviews','service','user','offer','offer.services','promoCode','employee','employee.user'])
+        $booking = Booking::select('bookings.*')->with(['createdBy','branch','vendor','vendor.user','reviews','bookingService','bookingService.service','user','offer','offer.services','promoCode','employee','employee.user'])
             ->find($booking_id);
 
         $html = view('booking_customer_invoice_pdf')->with(['data' =>$booking])->render();
@@ -98,7 +98,7 @@ class BookingController extends Controller
     public function booking_vendor_invoice(BookingCustomerInvoiceRequest $request)
     {
         $booking_id=$request->booking_id;
-        $booking = Booking::select('bookings.*')->with(['createdBy','branch','vendor','vendor.user','reviews','service','user','offer','offer.services','promoCode','employee','employee.user'])
+        $booking = Booking::select('bookings.*')->with(['createdBy','branch','vendor','vendor.user','reviews','bookingService','bookingService.service','user','offer','offer.services','promoCode','employee','employee.user'])
             ->find($booking_id);
         // $pdf = Pdf::loadView('booking_vendor_invoice_pdf', ['data' =>$booking]);
 
