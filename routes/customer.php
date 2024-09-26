@@ -45,6 +45,7 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
     Route::get('bookings/{booking}', [BookingController::class, 'show']);
     Route::put('bookings/{booking}', [BookingController::class, 'update']);
     Route::delete('bookings/{booking}', [BookingController::class, 'delete']);
+    Route::post('booking_customer_invoice', [BookingController::class, 'booking_customer_invoice']);
 
     Route::get('wish_lists', [WishListController::class, 'index']);
     Route::post('wish_lists', [WishListController::class, 'store']);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\BookingCustomerInvoiceRequest;
 use App\Http\Requests\PaginateRequest;
 use App\Http\Requests\Customer\PayRequest;
 use App\Http\Requests\Customer\BookingRequest;
@@ -10,6 +11,7 @@ use App\Models\Booking;
 use App\Models\PromoCode;
 use App\Services\General\StorageService;
 use App\Services\Customer\BookingService;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Schema;
 
 use function response;
@@ -89,6 +91,30 @@ class BookingController extends Controller
     public function delete(Booking $bokking)
     {
         return response()->apiSuccess($this->service->delete($bokking));
+    }
+    public function getMpdf()
+    {
+        return new \Mpdf\Mpdf([
+            'tempDir' => public_path('uploads/temp'),
+            'mode' => 'utf-8',
+            'autoScriptToLang' => true,
+            'autoLangToFont' => true,
+            'autoVietnamese' => true,
+            'autoArabic' => true
+        ]);
+
+    }
+    public function booking_customer_invoice(BookingCustomerInvoiceRequest $request)
+    {
+        $booking_id = $request->booking_id;
+        $booking = Booking::select('bookings.*')->with(['createdBy', 'branch', 'vendor', 'vendor.user', 'reviews', 'bookingService', 'bookingService.service', 'user', 'offer', 'offer.services', 'promoCode', 'employee', 'employee.user'])
+            ->find($booking_id);
+
+        $html = view('booking_customer_invoice_pdf')->with(['data' => $booking])->render();
+        $mpdf = $this->getMpdf();
+        $mpdf->WriteHTML($html);
+        $file = 'booking_customer_invoice_' . Carbon::now() . '.pdf';
+        $mpdf->Output($file, 'D');
     }
 
 }
