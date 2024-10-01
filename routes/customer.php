@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 use App\Http\Controllers\Api\V1\Admin\ContactMessageController;
-Route::group(['prefix' => '/v1'], function () {
+Route::group(['prefix' => '/v1','middleware' => ['cors']], function () {
 
     Route::post('/reset', [AuthController::class, 'resetPassword']);
     Route::post('/check-code', [AuthController::class, 'checkCode']);
@@ -34,7 +34,7 @@ Route::group(['prefix' => '/v1'], function () {
 
 });
 
-Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
+Route::group(['prefix' => '/v1','middleware' => ['cors','auth:api']], function () {
     Route::get('check/promocode/{code}', [BookingController::class, 'checkPromocode']);
     Route::post('bookings/pay', [BookingController::class, 'pay']);
     Route::post('bookings/check_is_paid', [BookingController::class, 'check_is_paid']);

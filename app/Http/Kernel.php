@@ -76,7 +76,7 @@ class Kernel extends HttpKernel
         'vendorPermission' => \App\Http\Middleware\AdminPermission::class,
         'checkSubscription' => \App\Http\Middleware\CheckSubscription::class,
         'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
-//        'cors'    => \App\Http\Middleware\Cors::class, // added for enable cors
+        'cors'    => \App\Http\Middleware\Cors::class, // added for enable cors
 //        'client.credentials' => Laravel\Passport\Http\Middleware\CheckClientCredentials::class,
     ];
 
