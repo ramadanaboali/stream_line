@@ -14,10 +14,12 @@ class Vendor extends Model
 {
   use HasFactory,SoftDeletes;
     protected $guarded = [];
+    protected $appends = ['average_rate'];
     public function vendorCategories():?BelongsToMany
     {
         return $this->belongsToMany(VendorCategory::class, 'vendor_categories','vendor_id','category_id');
     }
+
     public function bookings():?HasMany
     {
         return $this->hasMany(Booking::class, 'vendor_id','id');
@@ -49,5 +51,16 @@ class Vendor extends Model
     public function updatedBy(): ?BelongsTo
     {
         return $this->belongsTo(User::class,'updated_by');
+    }
+    public function getAverageRateAttribute()
+    {
+        $reviews = $this->bookings->load('reviews')->pluck('reviews.service_rate')->filter();
+
+        // Check if there are any reviews to calculate the average
+        if ($reviews->count() > 0) {
+            return $reviews->avg();
+        }
+
+        return 0;
     }
 }

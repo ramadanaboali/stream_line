@@ -13,6 +13,7 @@ class Booking extends Model
     use HasFactory;
     use SoftDeletes;
     protected $guarded = [];
+    protected $appends = ['average_rate'];
 //    protected $appends = ['customerInvoiceUrl','vendorInvoiceUrl'];
     public function user(): ?BelongsTo
     {
@@ -53,6 +54,15 @@ class Booking extends Model
     public function reviews(): ?HasMany
     {
         return $this->hasMany(Review::class, 'booking_id');
+    }
+
+    public function getAverageRateAttribute()
+    {
+        if ($this->reviews->count() > 0) {
+            return $this->bookings->avg('service_rate');
+        }
+
+        return 0;
     }
 //    public function getCustomerInvoiceUrlAttribute()
 //    {
