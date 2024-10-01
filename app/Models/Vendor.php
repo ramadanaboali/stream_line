@@ -54,7 +54,7 @@ class Vendor extends Model
     }
     public function getAverageRateAttribute()
     {
-        $reviews = $this->bookings->load('reviews')->pluck('reviews.service_rate')->filter();
+        $reviews = $this->bookings->load('reviews')->pluck('reviews.*.service_rate')->collapse()->filter();
 
         // Check if there are any reviews to calculate the average
         if ($reviews->count() > 0) {
