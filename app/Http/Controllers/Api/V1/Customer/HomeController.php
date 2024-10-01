@@ -25,12 +25,6 @@ class HomeController extends Controller
         $data = Vendor::with(["services","services.section","services.category","offers","offers.section","offers.category","branches","createdBy","user"])->find($vendor_id);
         return response()->apiSuccess($data);
     }
-    public function vendor_rate(VendorDetailsRequest $request)
-    {
-        $vendor_id=$request->vendor_id;
-        $data = Vendor::with(["services","services.section","services.category","offers","offers.section","offers.category","branches","createdBy","user"])->find($vendor_id);
-        return response()->apiSuccess($data);
-    }
     public function getSetting(VendorDetailsRequest $request)
     {
         $vendor_id=$request->vendor_id;
