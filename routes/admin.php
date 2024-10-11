@@ -112,8 +112,14 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
     Route::get('vendor_report_list', [VendorController::class, 'vendor_report_list'])->middleware('adminPermission:vendor_report.view');
     Route::get('vendor_report_show/{vendor}', [VendorController::class, 'vendor_report_show'])->middleware('adminPermission:vendor_report.view');
 
+    Route::get('customer_counts', [VendorController::class, 'customer_counts'])->middleware('adminPermission:customer_report.view');
+
     Route::get('customer_report_list', [VendorController::class, 'customer_report_list'])->middleware('adminPermission:customer_report.view');
     Route::get('customer_report_show/{customer}', [VendorController::class, 'customer_report_show'])->middleware('adminPermission:customer_report.view');
+
+    Route::get('employee_report_list', [VendorController::class, 'employee_report_list'])->middleware('adminPermission:customer_report.view');
+    Route::get('employee_report_show/{customer}', [VendorController::class, 'employee_report_show'])->middleware('adminPermission:customer_report.view');
+
 
     Route::get('subscription_report_list', [VendorController::class, 'subscription_report_list'])->middleware('adminPermission:subscription_report.view');
     Route::get('subscription_report_show/{subscription}', [VendorController::class, 'subscription_report_show'])->middleware('adminPermission:subscription_report.view');

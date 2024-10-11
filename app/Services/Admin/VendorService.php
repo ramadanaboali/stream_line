@@ -39,6 +39,14 @@ class VendorService extends AbstractService
     {
         return $this->repo->customer_report_show($id);
     }
+    public function employee_report_list(array $input)
+    {
+        return $this->repo->employee_report_list($input);
+    }
+    public function employee_report_show($id)
+    {
+        return $this->repo->employee_report_show($id);
+    }
     public function subscription_report_list(array $input)
     {
         return $this->repo->subscription_report_list($input);

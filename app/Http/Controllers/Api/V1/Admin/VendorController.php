@@ -9,6 +9,7 @@ use App\Http\Requests\Admin\BookingCustomerInvoiceRequest;
 use App\Http\Requests\PaginateRequest;
 use App\Http\Requests\Admin\VendorRequest;
 use App\Models\Booking;
+use App\Models\User;
 use App\Models\Vendor;
 use App\Services\Admin\VendorService;
 use App\Services\General\StorageService;
@@ -89,6 +90,14 @@ class VendorController extends Controller
     }
 
 
+    public function customer_counts(Request $request)
+    {
+        $data['all_customers'] = User::where('users.type','=','customer')->count();
+        $data['new_customers'] = User::where('users.type','=','customer')->where('created_at', '>=', Carbon::now()->subDays(7))->count();
+        $data['old_customers'] = User::where('users.type','=','customer')->where('created_at', '<', Carbon::now()->subDays(7))->count();
+
+        return response()->apiSuccess($data);
+    }
     public function customer_report_list(Request $request)
     {
         $input = $request->all();
@@ -99,6 +108,17 @@ class VendorController extends Controller
     public function customer_report_show($id)
     {
         return response()->apiSuccess($this->service->customer_report_show($id));
+    }
+    public function employee_report_list(Request $request)
+    {
+        $input = $request->all();
+        $data = $this->service->employee_report_list($input);
+        return response()->apiSuccess($data);
+    }
+
+    public function employee_report_show($id)
+    {
+        return response()->apiSuccess($this->service->employee_report_show($id));
     }
 
     public function subscription_report_list(Request $request)

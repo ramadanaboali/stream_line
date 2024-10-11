@@ -4,6 +4,7 @@ namespace App\Repositories\Admin;
 
 use App\Models\Banner;
 use App\Models\Booking;
+use App\Models\Employee;
 use App\Models\Offer;
 use App\Models\Package;
 use App\Models\Service;
@@ -160,6 +161,19 @@ class VendorRepository extends AbstractRepository
     {
         return User::select('users.*')->with(['bookings','reviews'])
            ->find($id);
+
+    }
+
+    public function employee_report_list(array $input)
+    {
+        $itemPerPage = array_key_exists('per_page',$input) && is_numeric($input['per_page']) ? $input['per_page'] : 20;
+        $list = Employee::select('employees.*')->with('user')->withCount(['bookings','branches','services']);
+        return $list->paginate($itemPerPage);
+    }
+    public function employee_report_show($id)
+    {
+        return Employee::select('employees.*')->with(['bookings','branches','services','user'])
+            ->find($id);
 
     }
 
