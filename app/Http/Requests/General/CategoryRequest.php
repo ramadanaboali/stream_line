@@ -44,7 +44,7 @@ class CategoryRequest extends FormRequest
             {
                 $rules= [
 
-                    'name' => 'required|string|min:2',
+                    'name_ar' => 'required|string|min:2',
                     'name_en' => 'required|string|min:2',
                     'icon' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:20000',
                     'is_active' => 'required|in:0,1',
