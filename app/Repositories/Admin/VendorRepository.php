@@ -128,7 +128,7 @@ class VendorRepository extends AbstractRepository
     public function vendor_report_list(array $input)
     {
         $itemPerPage = array_key_exists('per_page',$input) && is_numeric($input['per_page']) ? $input['per_page'] : 20;
-        $list = Vendor::select('vendors.*')->withCount(['bookings','services','offers','branches','user','user.wallet','user.wallet.transactions'])
+        $list = Vendor::select('vendors.*')->withCount(['bookings','services','offers','branches','user'])
             ->leftJoin('users', 'users.model_id', '=', 'vendors.id')
             ->leftJoin('wallets', 'users.id', '=', 'wallets.user_id')
             ->when(!empty($input['search']), function ($query) use ($input) {
