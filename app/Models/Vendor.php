@@ -58,7 +58,7 @@ class Vendor extends Model
 
         // Check if there are any reviews to calculate the average
         if ($reviews->count() > 0) {
-            return $reviews->sum()/5;
+            return $reviews->sum()/$reviews->count();
         }
 
         return 0;

@@ -59,7 +59,7 @@ class Booking extends Model
     public function getAverageRateAttribute()
     {
         if ($this->reviews->count() > 0) {
-            return $this->reviews->sum('service_rate')/5;
+            return $this->reviews->sum('service_rate')/$this->reviews->count('service_rate');
         }
 
         return 0;
