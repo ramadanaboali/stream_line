@@ -121,6 +121,10 @@ Route::group(['prefix' => '/v1','middleware' => ['auth:api']], function () {
     Route::get('service_report_list', [VendorController::class, 'service_report_list'])->middleware('adminPermission:service_report.view');
     Route::get('service_report_show/{service}', [VendorController::class, 'service_report_show'])->middleware('adminPermission:service_report.view');
 
+    Route::get('package_report_list', [VendorController::class, 'package_report_list'])->middleware('adminPermission:service_report.view');
+    Route::get('package_report_show/{service}', [VendorController::class, 'package_report_show'])->middleware('adminPermission:service_report.view');
+
+
     Route::get('offer_report_list', [VendorController::class, 'offer_report_list'])->middleware('adminPermission:offer_report.view');
     Route::get('offer_report_show/{offer}', [VendorController::class, 'offer_report_show'])->middleware('adminPermission:offer_report.view');
 

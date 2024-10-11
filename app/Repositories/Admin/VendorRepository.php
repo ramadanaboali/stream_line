@@ -5,6 +5,7 @@ namespace App\Repositories\Admin;
 use App\Models\Banner;
 use App\Models\Booking;
 use App\Models\Offer;
+use App\Models\Package;
 use App\Models\Service;
 use App\Models\Subscription;
 use App\Models\User;
@@ -165,7 +166,7 @@ class VendorRepository extends AbstractRepository
     public function subscription_report_list(array $input)
     {
         $itemPerPage = array_key_exists('per_page',$input) && is_numeric($input['per_page']) ? $input['per_page'] : 20;
-        $list = Subscription::select('subscriptions.*')->withCount(['package','vendor'])
+        $list = Subscription::select('subscriptions.*')->with(['package','vendor'])
             ->when(!empty($input['search']), function ($query) use ($input) {
                 $query->where('subscriptions.name_ar', 'like', '%'.$input['search'].'%');
                 $query->orWhere('subscriptions.name_ar', 'like', '%'.$input['search'].'%');
@@ -175,6 +176,23 @@ class VendorRepository extends AbstractRepository
     public function subscription_report_show($id)
     {
         return Subscription::select('subscriptions.*')->with(['package','vendor','vendor.user'])
+            ->find($id);
+
+    }
+
+    public function package_report_list(array $input)
+    {
+        $itemPerPage = array_key_exists('per_page',$input) && is_numeric($input['per_page']) ? $input['per_page'] : 20;
+        $list = Package::select('packages.*')->withCount(['subscriptions'])
+            ->when(!empty($input['search']), function ($query) use ($input) {
+                $query->where('packages.name_ar', 'like', '%'.$input['search'].'%');
+                $query->orWhere('packages.name_ar', 'like', '%'.$input['search'].'%');
+            });
+        return $list->paginate($itemPerPage);
+    }
+    public function package_report_show($id)
+    {
+        return Package::select('packages.*')->withCount(['subscriptions'])
             ->find($id);
 
     }

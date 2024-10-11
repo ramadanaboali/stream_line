@@ -112,6 +112,17 @@ class VendorController extends Controller
     {
         return response()->apiSuccess($this->service->subscription_report_show($id));
     }
+    public function package_report_list(Request $request)
+    {
+        $input = $request->all();
+        $data = $this->service->package_report_list($input);
+        return response()->apiSuccess($data);
+    }
+
+    public function package_report_show($id)
+    {
+        return response()->apiSuccess($this->service->package_report_show($id));
+    }
 
     public function service_report_list(Request $request)
     {
