@@ -41,5 +41,9 @@ class Service extends Model
     {
         return $this->belongsTo(User::class,'updated_by');
     }
+    public function bookings()
+    {
+        return $this->belongsToMany(Booking::class, 'booking_services', 'service_id', 'booking_id');
+    }
 
 }

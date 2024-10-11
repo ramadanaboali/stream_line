@@ -55,6 +55,10 @@ class Booking extends Model
     {
         return $this->hasMany(Review::class, 'booking_id');
     }
+    public function services()
+    {
+        return $this->belongsToMany(Service::class, 'booking_services', 'booking_id', 'service_id');
+    }
 
     public function getAverageRateAttribute()
     {
