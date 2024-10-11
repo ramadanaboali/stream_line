@@ -216,7 +216,8 @@ class VendorRepository extends AbstractRepository
     public function offer_report_list(array $input)
     {
         $itemPerPage = array_key_exists('per_page',$input) && is_numeric($input['per_page']) ? $input['per_page'] : 20;
-        $list = Offer::select('offers.*')->withCount(['services','section','category','sub_category','vendor'])
+        //->withCount(['bookings','services','section','category','sub_category','vendor'])
+        $list = Offer::select('offers.*')->withCount(['bookings','services'])
             ->when(!empty($input['search']), function ($query) use ($input) {
                 $query->where('services.name_ar', 'like', '%'.$input['search'].'%');
                 $query->orWhere('services.name_ar', 'like', '%'.$input['search'].'%');
