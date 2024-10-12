@@ -15,6 +15,7 @@ use App\Http\Requests\PhoneRequest;
 use App\Http\Resources\UserResource;
 use App\Mail\SendCodeResetPassword;
 use App\Models\User;
+use App\Models\Wallet;
 use App\Traits\ApiResponser;
 use Exception;
 use Illuminate\Http\Request;
@@ -33,6 +34,13 @@ class AuthController extends Controller
         $user = User::where('email', $request->username)->where('type', 'admin')->orWhere('phone', $request->username)->where('active', 1)->first();
 
         if($user) {
+            Wallet::firstOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'balance' => 0,
+                    'is_active' => "1",
+                ]
+            );
             if (!Auth::attempt(["email" => $request->username, "password" => $request->password])) {
                 if (!Auth::attempt(["phone" => $request->username, "password" => $request->password])) {
                     return apiResponse(false, null, __('api.check_username_passowrd'), null, Response::HTTP_UNPROCESSABLE_ENTITY);
