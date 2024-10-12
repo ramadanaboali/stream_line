@@ -68,7 +68,7 @@ class PackageRequest extends FormRequest
             {
                 $rules= [
 
-                    'name' => 'required|string|min:2',
+                    'name_ar' => 'required|string|min:2',
                     'name_en' => 'required|string|min:2',
                     'description_ar' => 'required|string|min:2',
                     'description_en' => 'required|string|min:2',
